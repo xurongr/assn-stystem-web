@@ -41,7 +41,7 @@
           <Tag type="dot" closable color="primary">标签一</Tag>
         </div>
         <Content :style="{margin: '10px 20px', background: '#fff', minHeight: '260px'}">
-          Content
+          <router-view/>
         </Content>
       </Layout>
     </Layout>
