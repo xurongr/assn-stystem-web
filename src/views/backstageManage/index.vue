@@ -9,7 +9,7 @@
           <Submenu name="1">
             <template slot="title">
               <Icon type="ios-navigate"></Icon>
-              Item 1
+              用户管理
             </template>
             <MenuItem name="1-1">Option 1</MenuItem>
             <MenuItem name="1-2">Option 2</MenuItem>
@@ -40,8 +40,8 @@
         <div class="tags">
           <Tag type="dot" closable color="primary">标签一</Tag>
         </div>
-        <Content :style="{margin: '10px 20px', background: '#fff', minHeight: '260px'}">
-          <router-view/>
+        <Content :style="{margin: '5px 10px', background: '#fff', minHeight: '260px', padding: '12px'}">
+          <router-view></router-view>
         </Content>
       </Layout>
     </Layout>
@@ -133,6 +133,6 @@ export default {
     height: 100%;
   }
   .tags {
-    margin: 10px 20px 0 20px;
+    margin: 5px 20px 0 20px;
   }
 </style>

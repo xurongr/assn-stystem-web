@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import manageIndex from "@/views/backstageManage/index";
+import manageIndex from "@/views/backstageManage";
 import userManage from "@/views/backstageManage/userManage/index";
+import addUser from "@/views//backstageManage/userManage/addUser";
 
 Vue.use(Router)
 
@@ -11,21 +12,30 @@ export default new Router({
     {
       path: '/',
       redirect: 'manageIndex',
-      component:manageIndex
     },
     {
       path: '/manageIndex',
       name: 'manageIndex',
       component:manageIndex,
-      // meta: {
-      //   title: '后台管理首页'
-      // },
       children: [
         {
-          path: '/userManage',
-          name:'userManage',
-          component: userManage
+          path:"",
+          title:"用户管理",
+          name:"userManage",
+          component:userManage
         },
+        {
+          path: 'userManage',
+          title: '用户管理',
+          name: 'userManage',
+          component:userManage,
+        },
+        {
+          path: '/manageIndex/addUser',
+          title: '添加用户',
+          name: 'addUser',
+          component:addUser,
+        }
       ]
     }
   ]

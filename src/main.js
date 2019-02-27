@@ -3,7 +3,10 @@ import App from './App';
 import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+import Axios from './api/axios';
 
+require('./mock.js');
+Vue.prototype.$axios = Axios;
 Vue.config.productionTip = false;
 Vue.use(iView);
 
