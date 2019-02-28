@@ -6,14 +6,13 @@
       </Router-link>
     </div>
     <Table border ref="selection" :columns="columns4" :data="userInfo.slice(0,10)"></Table>
-    <div style="margin: 20px 0; display: flex;justify-content: space-between">
+    <div style="margin-top: 20px; display: flex;justify-content: space-between">
       <div>
         <Button @click="handleSelectAll(true)" type="primary">全选</Button>
         <Button @click="handleSelectAll(false)">取消全选</Button>
       </div>
       <Page :total="userInfo.length" :key="userInfo.length" show-elevator />
     </div>
-
   </div>
 </template>
 

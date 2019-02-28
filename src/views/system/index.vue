@@ -6,15 +6,19 @@
           <div style="height: 64px;background-color:#41c8ff">
 
           </div>
-          <Submenu name="1">
-            <template slot="title">
-              <Icon type="ios-navigate"></Icon>
-              用户管理
-            </template>
-            <MenuItem name="1-1">Option 1</MenuItem>
-            <MenuItem name="1-2">Option 2</MenuItem>
-            <MenuItem name="1-3">Option 3</MenuItem>
-          </Submenu>
+          <!--<Submenu name="1">-->
+            <!--<template slot="title">-->
+              <!--<Icon type="ios-navigate"></Icon>-->
+                <!--用户管理-->
+            <!--</template>-->
+          <!--</Submenu>-->
+          <MenuItem name="1">
+            <Icon type="ios-navigate"></Icon>
+            <Router-link to="./userIndex">
+              <span>用户管理</span>
+            </Router-link>
+
+          </MenuItem>
           <Submenu name="2">
             <template slot="title">
               <Icon type="ios-keypad"></Icon>
