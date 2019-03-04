@@ -4,6 +4,7 @@ import router from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import Axios from './api/axios';
+import "@/style/common.less";
 
 require('./mock.js');
 Vue.prototype.$axios = Axios;

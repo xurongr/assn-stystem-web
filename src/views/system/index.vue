@@ -6,26 +6,22 @@
           <div style="height: 64px;background-color:#41c8ff">
 
           </div>
-          <!--<Submenu name="1">-->
-            <!--<template slot="title">-->
-              <!--<Icon type="ios-navigate"></Icon>-->
-                <!--用户管理-->
-            <!--</template>-->
-          <!--</Submenu>-->
           <MenuItem name="1">
             <Icon type="ios-navigate"></Icon>
             <Router-link to="./userIndex">
               <span>用户管理</span>
             </Router-link>
-
           </MenuItem>
           <Submenu name="2">
             <template slot="title">
               <Icon type="ios-keypad"></Icon>
-              Item 2
+              社团管理
             </template>
-            <MenuItem name="2-1">Option 1</MenuItem>
-            <MenuItem name="2-2">Option 2</MenuItem>
+            <MenuItem name="2-1"><Router-link to="./assnManage">我的社团</Router-link></MenuItem>
+            <MenuItem name="2-2">信息管理</MenuItem>
+            <MenuItem name="2-3">公告管理</MenuItem>
+            <MenuItem name="2-4">成员管理</MenuItem>
+            <MenuItem name="2-5">活动管理</MenuItem>
           </Submenu>
           <Submenu name="3">
             <template slot="title">

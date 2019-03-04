@@ -5,6 +5,8 @@ import index from "@/views/system";
 import userIndex from "@/views/system/userManage/index";
 import addUser from "@/views/system/userManage/addUser";
 
+import assnManage from "@/views/system/assnManage";
+
 Vue.use(Router)
 
 export default new Router({
@@ -35,8 +37,15 @@ export default new Router({
           name: 'addUser',
           component:addUser,
         },
-
+        {
+          path: '/assnManage',
+          name: 'assnManage',
+          component: assnManage,
+          meta: {
+            title: '社团管理'
+          },
+        },
       ]
-    }
+    },
   ]
 })
