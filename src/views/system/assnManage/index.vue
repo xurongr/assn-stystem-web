@@ -77,7 +77,7 @@
                   on: {
                     click: () => {
                       this.$router.push({
-                        path: '/index/infoManage',
+                        path: '/index/assnManage/infoManage',
                       })
                     }
                   }
