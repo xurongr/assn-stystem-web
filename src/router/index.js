@@ -6,6 +6,11 @@ import userIndex from "@/views/system/userManage/index";
 import addUser from "@/views/system/userManage/addUser";
 
 import assnManage from "@/views/system/assnManage";
+import addAssn from "@/views/system/assnManage/addAssn";
+import infoManage from "@/views/system/assnManage/infoManage";
+import announcementManage from "@/views/system/assnManage/announcementManage";
+
+import memberManage from "@/views/system/memberManage/index";
 
 Vue.use(Router)
 
@@ -21,30 +26,62 @@ export default new Router({
       component:index,
       children: [
         {
-          path:"",
+          path:"/index",
           name:"userIndex",
           component: userIndex,
         },
         {
-          path: '/userIndex',
+          path: '/index/userIndex',
           title: '用户管理',
           name: 'userIndex',
           component:userIndex,
         },
         {
-          path: '/addUser',
+          path: '/index/userIndex/addUser',
           title: '添加用户',
           name: 'addUser',
           component:addUser,
         },
         {
-          path: '/assnManage',
+          path: '/index/assnManage',
           name: 'assnManage',
           component: assnManage,
           meta: {
-            title: '社团管理'
+            title: '我的社团',
           },
         },
+        {
+          path: '/index/assnManage/addAssn',
+          name: 'addAssn',
+          component: addAssn,
+          meta: {
+            title: '创建社团',
+          },
+        },
+        {
+          path: '/index/infoManage',
+          name: 'infoManage',
+          component: infoManage,
+          meta: {
+            title: '编辑社团信息',
+          },
+        },
+        {
+          path: '/index/announcementManage',
+          name: 'announcementManage',
+          component: announcementManage,
+          meta: {
+            title: '社团公告列表',
+          }
+        },
+        {
+          path: '/index/memberManage',
+          name: 'memberManage',
+          component: memberManage,
+          meta: {
+            title: '社团成员管理',
+          }
+        }
       ]
     },
   ]

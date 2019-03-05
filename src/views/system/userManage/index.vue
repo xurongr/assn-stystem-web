@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 10px">
-      <Router-link to="./addUser">
+      <Router-link to="/index/userIndex/addUser">
         <Button type="primary">添加用户</Button>
       </Router-link>
     </div>

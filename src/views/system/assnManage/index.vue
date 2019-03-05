@@ -2,7 +2,7 @@
   <div>
     <!--系统管理员创建社团-->
     <div style="margin-bottom: 10px">
-      <Router-link to="./addUser">
+      <Router-link to="/index/assnManage/addAssn">
         <Button type="primary">创建社团</Button>
       </Router-link>
     </div>
@@ -76,7 +76,9 @@
                   },
                   on: {
                     click: () => {
-                      this.show(params.index)
+                      this.$router.push({
+                        path: '/index/infoManage',
+                      })
                     }
                   }
                 }, '编辑'),

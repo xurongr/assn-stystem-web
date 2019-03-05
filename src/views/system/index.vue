@@ -8,25 +8,39 @@
           </div>
           <MenuItem name="1">
             <Icon type="ios-navigate"></Icon>
-            <Router-link to="./userIndex">
+            <Router-link to="/index/userIndex">
               <span>用户管理</span>
             </Router-link>
           </MenuItem>
           <Submenu name="2">
             <template slot="title">
               <Icon type="ios-keypad"></Icon>
-              社团管理
+              社团信息管理
             </template>
-            <MenuItem name="2-1"><Router-link to="./assnManage">我的社团</Router-link></MenuItem>
-            <MenuItem name="2-2">信息管理</MenuItem>
-            <MenuItem name="2-3">公告管理</MenuItem>
-            <MenuItem name="2-4">成员管理</MenuItem>
-            <MenuItem name="2-5">活动管理</MenuItem>
+            <MenuItem name="2-1"><Router-link to="/index/assnManage">我的社团</Router-link></MenuItem>
+            <MenuItem name="2-2"><Router-link to="/index/infoManage">社团信息管理</Router-link></MenuItem>
+            <MenuItem name="2-3"><Router-link to="/index/announcementManage">社团公告管理</Router-link></MenuItem>
           </Submenu>
           <Submenu name="3">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
-              Item 3
+              <Router-link to="/index/memberManage">社团成员管理</Router-link>
+            </template>
+            <MenuItem name="3-1">Option 1</MenuItem>
+            <MenuItem name="3-2">Option 2</MenuItem>
+          </Submenu>
+          <Submenu name="4">
+            <template slot="title">
+              <Icon type="ios-analytics"></Icon>
+              社团部门管理
+            </template>
+            <MenuItem name="3-1">Option 1</MenuItem>
+            <MenuItem name="3-2">Option 2</MenuItem>
+          </Submenu>
+          <Submenu name="5">
+            <template slot="title">
+              <Icon type="ios-analytics"></Icon>
+              社团活动管理
             </template>
             <MenuItem name="3-1">Option 1</MenuItem>
             <MenuItem name="3-2">Option 2</MenuItem>
@@ -34,8 +48,9 @@
         </Menu>
       </Sider>
       <Layout>
-        <Header :style="{padding: 0}" class="layout-header-bar">
+        <Header :style="{padding: 0}" class="layout-header-bar" style="display: flex">
           <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="md-menu" size="24"></Icon>
+          <!--<breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>-->
         </Header>
         <div class="tags">
           <Tag type="dot" closable color="primary">标签一</Tag>
@@ -49,7 +64,11 @@
 </template>
 
 <script>
+  import breadcrumbNav from "@/views/components/breadcrumb-nav";
 export default {
+  components: {
+    breadcrumbNav
+  },
   data () {
     return {
       isCollapsed: false
