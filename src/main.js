@@ -17,6 +17,14 @@ Vue.use(iView);
 
 Vue.prototype.BaseConfig = 'http://localhost:8082';
 
+/* 路由发生变化修改页面title */
+router.beforeEach((to, from, next) => {
+  if (to.meta.title) {
+    document.title = to.meta.title
+  }
+  next();
+})
+
 new Vue({
   el: '#app',
   router,

@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import index from "@/views/system";
 import userIndex from "@/views/system/userManage/index";
 import addUser from "@/views/system/userManage/addUser";
+import userInfomation from "@/views/system/userManage/userInfomation";
 
 import assnManage from "@/views/system/assnManage";
 import addAssn from "@/views/system/assnManage/addAssn";
@@ -40,7 +41,7 @@ export default new Router({
           path: '/index/userIndex/addUser',
           title: '添加用户',
           name: 'addUser',
-          component:addUser,
+          component: addUser,
         },
         {
           path: '/index/assnManage',
@@ -57,6 +58,12 @@ export default new Router({
           meta: {
             title: '创建社团',
           },
+        },
+        {
+          path: '/index/assnManage/userInfomation',
+          title: '查看用户信息',
+          name: 'userInfomation',
+          component: userInfomation,
         },
         {
           path: '/index/assnManage/infoManage',

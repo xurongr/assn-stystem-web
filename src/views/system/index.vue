@@ -57,7 +57,7 @@
         <div class="tags">
           <Tag type="dot" closable color="primary">标签一</Tag>
         </div>
-        <Content :style="{margin: '5px 10px', background: '#fff', minHeight: '260px', padding: '12px'}">
+        <Content :style="{margin: '5px 10px 30px', background: '#fff', padding: '12px'}">
           <router-view></router-view>
         </Content>
       </Layout>

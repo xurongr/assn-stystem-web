@@ -26,8 +26,13 @@
         columns4: [
           {
             type: 'selection',
-            width: 60,
+            width: 30,
             align: 'center'
+          },
+          {
+            title: 'id',
+            key: 'id',
+            width: 60,
           },
           {
             title: '社团名称',
