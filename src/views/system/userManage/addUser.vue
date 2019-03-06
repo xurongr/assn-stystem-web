@@ -9,7 +9,6 @@
         </Row>
         <Row>
           <Col span="8">姓&nbsp;&nbsp;&nbsp;&nbsp;名：<Input v-model="valueNum" clearable /></Col>
-          <!--<Col span="8">性别：<Input v-model="valueNum" clearable /></Col>-->
           <Col span="8">性别：
             <Select v-model="sex" style="width:200px">
               <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -149,13 +148,13 @@
       font-weight: 600;
     }
     .add-selfinfo {
-      .boxSize(100%,146px);
+      width: 100%;
       border: 1px solid #a2a2a2;
       margin: 5px auto 16px;
       padding: 12px;
       border-radius: 5px;
       .ivu-row {
-        margin-bottom: 12px;
+        margin: 12px 0;
       }
       .ivu-input-wrapper {
         width: 200px;

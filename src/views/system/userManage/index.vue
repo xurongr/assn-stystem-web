@@ -24,46 +24,63 @@
         columns4: [
           {
             type: 'selection',
-            width: 60,
+            width: 30,
             align: 'center'
           },
           {
+            title: 'id',
+            key: 'id',
+            width: 60,
+          },
+          {
             title: '用户名',
-            key: 'author_name',
-            filters: [
-              {
-                label: '贺平',
-                value: 1
-              },
-              {
-                label: '江洋',
-                value: 2
-              }
-            ],
-            filterMultiple: false,
-            filterMethod (value, row) {
-              if (value === 1) {
-                return row.name === '贺平';
-              } else if (value === 2) {
-                return row.name === '江洋';
-              }
-            }
+            key: 'userName'
           },
           {
-            title: 'date',
-            key: 'date'
+            title: '姓名',
+            key: 'name'
           },
           {
-            title: 'title',
-            key: 'title'
+            title: '年级',
+            key: 'grade'
+          },
+          {
+            title: '专业',
+            key: 'major'
+          },
+          {
+            title: '参与社团',
+            key: 'assnName'
+          },
+          {
+            title: '联系方式',
+            key: 'tel'
+          },
+          {
+            title: '用户权限',
+            key: 'identity'
           },
           {
             title: '操作',
             key: 'action',
-            width: 150,
+            width: 170,
             align: 'center',
             render: (h, params) => {
               return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.show(params.index)
+                    }
+                  }
+                }, '查看'),
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -106,7 +123,6 @@
       },
       getInfo() {
         let that = this;
-        let url =
           that
             .$axios.JH_news('/news/index', 'type=top&key=123456')
             .then(res => {
@@ -119,5 +135,7 @@
 </script>
 
 <style lang="less" scoped>
-
+  /deep/ .ivu-table-cell {
+    padding: 0;
+  }
 </style>
