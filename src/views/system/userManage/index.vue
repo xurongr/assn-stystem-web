@@ -5,6 +5,7 @@
         <Button type="primary">添加用户</Button>
       </Router-link>
     </div>
+    <Button type="primary" @click="getInfo">添加</Button>
     <Table border ref="selection" :columns="columns4" :data="userInfo.slice(0,10)"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: space-between">
       <div>
@@ -24,63 +25,46 @@
         columns4: [
           {
             type: 'selection',
-            width: 30,
+            width: 60,
             align: 'center'
           },
           {
-            title: 'id',
-            key: 'id',
-            width: 60,
-          },
-          {
             title: '用户名',
-            key: 'userName'
+            key: 'author_name',
+            filters: [
+              {
+                label: '贺平',
+                value: 1
+              },
+              {
+                label: '江洋',
+                value: 2
+              }
+            ],
+            filterMultiple: false,
+            filterMethod (value, row) {
+              if (value === 1) {
+                return row.name === '贺平';
+              } else if (value === 2) {
+                return row.name === '江洋';
+              }
+            }
           },
           {
-            title: '姓名',
-            key: 'name'
+            title: 'date',
+            key: 'date'
           },
           {
-            title: '年级',
-            key: 'grade'
-          },
-          {
-            title: '专业',
-            key: 'major'
-          },
-          {
-            title: '参与社团',
-            key: 'assnName'
-          },
-          {
-            title: '联系方式',
-            key: 'tel'
-          },
-          {
-            title: '用户权限',
-            key: 'identity'
+            title: 'title',
+            key: 'title'
           },
           {
             title: '操作',
             key: 'action',
-            width: 170,
+            width: 150,
             align: 'center',
             render: (h, params) => {
               return h('div', [
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.show(params.index)
-                    }
-                  }
-                }, '查看'),
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -114,7 +98,7 @@
     },
 
     created() {
-      this.getInfo();
+      this.getU();
     },
 
     methods: {
@@ -123,11 +107,47 @@
       },
       getInfo() {
         let that = this;
-          that
-            .$axios.JH_news('/news/index', 'type=top&key=123456')
-            .then(res => {
-              that.userInfo = res.articles;
-            })
+        let url = that.BaseConfig + '/insertUser';
+        let user = {
+          id: 1,
+          age: 18,
+          associationId: 1,
+          associationName: "计算机协会",
+          departmentId: 2,
+          departmentName: "外联部",
+          grade: 2015,
+          identityId: 1,
+          identityName: "徐徐",
+          job: "会长",
+          major: "阿",
+          name: "B2015102210",
+          pwd: "123456",
+          sex: 1,
+          telNumber: 17705032963,
+          userImg: "",
+          userName: "B2015102210"
+        }
+        that
+          .$http(url,'',user, 'post')
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+
+      getU() {
+        let that = this;
+        let url = that.BaseConfig + '/selectIdentityList';
+        that
+          .$http(url,'','', 'get')
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
       },
 
     },
@@ -135,7 +155,5 @@
 </script>
 
 <style lang="less" scoped>
-  /deep/ .ivu-table-cell {
-    padding: 0;
-  }
+
 </style>

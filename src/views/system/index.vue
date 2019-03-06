@@ -15,16 +15,18 @@
           <Submenu name="2">
             <template slot="title">
               <Icon type="ios-keypad"></Icon>
-              社团信息管理
+              社团管理
             </template>
             <MenuItem name="2-1"><Router-link to="/index/assnManage">我的社团</Router-link></MenuItem>
-            <MenuItem name="2-2"><Router-link to="/index/infoManage">社团信息管理</Router-link></MenuItem>
-            <MenuItem name="2-3"><Router-link to="/index/announcementManage">社团公告管理</Router-link></MenuItem>
+            <MenuItem name="2-2"><Router-link to="/index/announcementManage">社团公告管理</Router-link></MenuItem>
+            <MenuItem name="2-3"><Router-link to="/index/memberManage">社团成员管理</Router-link></MenuItem>
+            <MenuItem name="2-4"><Router-link to="/index/memberManage">社团活动管理</Router-link></MenuItem>
+            <MenuItem name="2-5"><Router-link to="/index/memberManage">社团部门管理</Router-link></MenuItem>
           </Submenu>
           <Submenu name="3">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
-              <Router-link to="/index/memberManage">社团成员管理</Router-link>
+              权限管理
             </template>
             <MenuItem name="3-1">Option 1</MenuItem>
             <MenuItem name="3-2">Option 2</MenuItem>
@@ -32,7 +34,7 @@
           <Submenu name="4">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
-              社团部门管理
+              审核管理
             </template>
             <MenuItem name="3-1">Option 1</MenuItem>
             <MenuItem name="3-2">Option 2</MenuItem>
@@ -40,7 +42,7 @@
           <Submenu name="5">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
-              社团活动管理
+
             </template>
             <MenuItem name="3-1">Option 1</MenuItem>
             <MenuItem name="3-2">Option 2</MenuItem>

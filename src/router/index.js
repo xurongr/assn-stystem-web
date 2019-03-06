@@ -59,7 +59,7 @@ export default new Router({
           },
         },
         {
-          path: '/index/infoManage',
+          path: '/index/assnManage/infoManage',
           name: 'infoManage',
           component: infoManage,
           meta: {
