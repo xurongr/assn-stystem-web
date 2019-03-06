@@ -1,96 +1,100 @@
 <template>
-    <div class="addUser">
-      <p>个人信息</p>
-      <div class="add-selfinfo">
-        <Row>
-          <Col span="8">用户名：<Input v-model="userInfo.userName" clearable /></Col>
-          <Col span="8">密码：<Input v-model="userInfo.pwd" clearable/></Col>
-          <Col span="8">确认密码：<Input v-model="userInfo.password" clearable/></Col>
-        </Row>
-        <Row>
-          <Col span="8">姓&nbsp;&nbsp;&nbsp;&nbsp;名：<Input v-model="userInfo.name" clearable /></Col>
-          <Col span="8">性别：
-            <Select v-model="userInfo.sex" style="width:200px">
-              <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </Col>
-          <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：<Input v-model="userInfo.age" clearable /></Col>
-        </Row>
-        <Row>
-          <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;级：<Input v-model="userInfo.grade" clearable /></Col>
-          <Col span="8">
-            <div style="display: flex; line-height: 32px;">
-              专业：<Cascader :data="majorData" v-model="userInfo.major" style="width:200px;padding-left: 4px;"></Cascader>
-            </div>
-          </Col>
-          <Col span="8">联系方式：<Input v-model="userInfo.telNumber" clearable /></Col>
-        </Row>
-      </div>
-      <p>加入社团1</p>
-      <div class="add-selfinfo">
-        <Row>
-          <Col span="8">社团名称：
-            <Select v-model="userInfo.enjoyAssn[0].associationName" style="width:200px">
-              <Option v-for="item in assoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </Col>
-          <Col span="8">部门名称：
-            <Select v-model="userInfo.enjoyAssn[0].departmentName" style="width:200px">
-              <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </Col>
-          <Col span="8">职务：<Input v-model="userInfo.enjoyAssn[0].job" clearable /></Col>
-        </Row>
-        <Row>
-          <Col span="8">身份权限：
-            <Select v-model="userInfo.enjoyAssn[0].identityName" style="width:200px">
-              <Option v-for="item in identityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </Col>
-        </Row>
-      </div>
-      <p>加入社团2</p>
-      <div class="add-selfinfo">
-        <Row>
-          <Col span="8">社团名称：
-          <Select v-model="userInfo.enjoyAssn[0].associationName" style="width:200px">
+  <div class="addUser">
+    <p>个人信息</p>
+    <div class="add-selfinfo">
+      <Row>
+        <Col span="8">用户名：<Input v-model="userInfo.userName" clearable /></Col>
+        <Col span="8">密码：<Input v-model="userInfo.pwd" clearable/></Col>
+        <Col span="8">确认密码：<Input v-model="userInfo.password" clearable/></Col>
+      </Row>
+      <Row>
+        <Col span="8">姓&nbsp;&nbsp;&nbsp;&nbsp;名：<Input v-model="userInfo.name" clearable /></Col>
+        <Col span="8">性别：
+          <Select v-model="userInfo.sex" style="width:200px">
+            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </Col>
+        <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：<Input v-model="userInfo.age" clearable /></Col>
+      </Row>
+      <Row>
+        <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;级：<Input v-model="userInfo.grade" clearable /></Col>
+        <Col span="8">
+          <!--<div style="display: flex; line-height: 32px;">-->
+            <!--专业：<Cascader :data="majorData" v-model="userInfo.major" style="width:200px;padding-left: 4px;"></Cascader>-->
+          <!--</div>-->
+          专业：<Input v-model="userInfo.major" clearable />
+        </Col>
+        <Col span="8">联系方式：<Input v-model="userInfo.telNumber" clearable /></Col>
+      </Row>
+    </div>
+    <p>加入社团1</p>
+    <div class="add-selfinfo">
+      <Row>
+        <Col span="8">社团名称：
+          <Select v-model="userInfo.assnBasicList[0].associationName" style="width:200px">
             <Option v-for="item in assoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          </Col>
-          <Col span="8">部门名称：
-          <Select v-model="userInfo.enjoyAssn[0].departmentName" style="width:200px">
+        </Col>
+        <Col span="8">部门名称：
+          <Select v-model="userInfo.assnBasicList[0].departmentBasicList[0].departmentName" style="width:200px">
             <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          </Col>
-          <Col span="8">职务：<Input v-model="userInfo.enjoyAssn[0].job" clearable /></Col>
-        </Row>
-        <Row>
-          <Col span="8">身份权限：
-          <Select v-model="userInfo.enjoyAssn[0].identityName" style="width:200px">
+        </Col>
+        <Col span="8">职务：<Input v-model="userInfo.assnBasicList[0].job" clearable /></Col>
+      </Row>
+      <Row>
+        <Col span="8">身份权限：
+          <Select v-model="userInfo.identityName" style="width:200px">
             <Option v-for="item in identityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          </Col>
-        </Row>
-      </div>
-      <div class="add-btn">
-        <Poptip
-          confirm
-          title="确认取消添加用户？"
-          @on-ok="ok"
-          @on-cancel="cancel">
-          <Button>取消</Button>
-        </Poptip>
-        <Button type="primary" style="margin: 0 20px">确认</Button>
-      </div>
+        </Col>
+      </Row>
     </div>
+
+    <div class="add-btn">
+      <Poptip
+        confirm
+        title="确认取消添加用户？"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <Button>取消</Button>
+      </Poptip>
+      <Button type="primary" style="margin: 0 20px" @click="creatUser">确认</Button>
+    </div>
+  </div>
 </template>
 
 <script>
   export default {
     data() {
       return {
-        valueNum: '',
-        sex: '',
+        userInfo: {
+          // id: 1,
+          age: null,
+          assnBasicList: [{
+            associationId: 1,
+            associationName: "",
+            departmentBasicList: [
+              {
+                departmentId: 1,
+                departmentName: "",
+              }
+            ],
+            // identityId: 1,
+            // identityName: "社团管理员",
+            job: "",
+          }],
+          identityId: 1,
+          identityName: "",
+          grade: null,
+          major: "",
+          name: "",
+          pwd: "",
+          sex: null,   //1-男生  2-女生
+          telNumber: null,
+          userImg: "",
+          userName: ""
+        },
         cityList: [
           {
             value: 1,
@@ -149,39 +153,54 @@
             }
           ]
         }],     //专业级联选择框
-        userInfo: {
-          id: 1,
-          age: 18,
-          enjoyAssn: [{
-            associationId: 1,
-            associationName: "计算机协会",
-            departmentId: 2,
-            departmentName: "办公室",
-            identityId: 1,
-            identityName: "社团管理员",
-            job: "会长",
-          },{
-            associationId: 1,
-            associationName: "青年志愿者协会",
-            departmentId: 2,
-            departmentName: "办公室",
-            identityId: 1,
-            identityName: "社团成员",
-            job: "",
-          }],
-          grade: 2015,
-          major: ["信息与机电工程学院","计算机科学与技术"],
-          name: "徐徐",
-          pwd: "123456",
-          sex: 2,   //1-男生  2-女生
-          telNumber: 17705032963,
-          userImg: "",
-          userName: "B2015102210"
-        }
       }
     },
     methods: {
-      ok() {},
+      //创建用户
+      creatUser() {
+        // this.addIdentity();
+        let that = this;
+        let url = that.BaseConfig + '/insertUser';
+        let data = that.userInfo;
+        that
+          .$http(url,'', data, 'post')
+          .then(res => {
+            console.log(res);
+            if(res.data.retCode === 0) {
+              that.$router.push({
+                path: '/index/userIndex',
+              })
+            } else {
+              that.$Message.error(res.data.retMsg);
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+
+      addIdentity() {
+        let that = this;
+        let url = that.BaseConfig + '/insertIdentity';
+        let data = {
+          identityName: "社团管理员",
+          level: 1
+        }
+        that
+          .$http(url,'', data, 'post')
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+
+      ok() {
+        this.$router.push({
+          path: '/index/userIndex'
+        })
+      },
       cancel() {},
     },
 

@@ -79,6 +79,9 @@
                     click: () => {
                       this.$router.push({
                         path: '/index/assnManage/userInfomation',
+                        query: {
+                          userInfo: this.userInfo,
+                        }
                       })
                     }
                   }
@@ -95,6 +98,9 @@
                     click: () => {
                       this.$router.push({
                         path: '/index/assnManage/userInfomation',
+                        query: {
+                          userInfo: this.userInfo,
+                        }
                       })
                     }
                   }
@@ -106,7 +112,7 @@
                   },
                   on: {
                     click: () => {
-//                      this.remove(params.index)
+                      this.cancelUser(userId);
                     }
                   }
                 }, '删除')
@@ -118,58 +124,58 @@
     },
 
     created() {
-
+      this.getInfo();
     },
 
     methods: {
       handleSelectAll (status) {
         this.$refs.selection.selectAll(status);
       },
+
+      //获取用户列表
       getInfo() {
         let that = this;
-        let url = that.BaseConfig + '/insertUser';
-        let user = {
-          id: 1,
-          age: 18,
-          associationId: 1,
-          associationName: "计算机协会",
-          departmentId: 2,
-          departmentName: "外联部",
-          grade: 2015,
-          identityId: 1,
-          identityName: "徐徐",
-          job: "会长",
-          major: "阿",
-          name: "B2015102210",
-          pwd: "123456",
-          sex: 1,
-          telNumber: 17705032963,
-          userImg: "",
-          userName: "B2015102210"
-        }
+        let url = that.BaseConfig + '/selectUsersAll';
+        let params = {
+
+        };
+        let data = null;
         that
-          .$http(url,'',user, 'post')
+          .$http(url, params, data, 'get')
           .then(res => {
             console.log(res)
+            // data = res.data;
+            // if(data.retCode === 0) {
+            //   that.userInfo = data.data
+            // }
           })
           .catch(err => {
             console.log(err)
           })
       },
 
-      getU() {
+      //删除用户
+      cancelUser(userId) {
         let that = this;
-        let url = that.BaseConfig + '/selectIdentityList';
+        let url = that.BaseConfig + '/deleteUser';
+        let params = {
+          UserId: userId,
+        };
+        let data = null;
         that
-          .$http(url,'','', 'get')
+          .$http(url, params, data, 'get')
           .then(res => {
             console.log(res)
+            // data = res.data;
+            // if(data.retCode === 0) {
+            //    that.$Message.success('删除成功');
+            //    that.getInfo();
+            // }
           })
           .catch(err => {
-            console.log(err)
+            that.$Message.error('请求错误');
           })
       },
-
     },
   }
 </script>
