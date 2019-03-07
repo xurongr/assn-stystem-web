@@ -13,13 +13,17 @@ import announcementManage from "@/views/system/assnManage/announcementManage";
 
 import memberManage from "@/views/system/memberManage/index";
 
+// 前端
+import webIndex from "@/views/web/index";
+
+
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
       path: '/',
-      redirect: 'index',
+      redirect: 'index/web',
     },
     {
       path: '/index',
@@ -91,5 +95,10 @@ export default new Router({
         }
       ]
     },
+    {
+      path:'/index/web',
+      name: 'webIndex',
+      component: webIndex,
+    }
   ]
 })

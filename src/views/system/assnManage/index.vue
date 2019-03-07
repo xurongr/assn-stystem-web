@@ -1,10 +1,11 @@
 <template>
   <div>
     <!--系统管理员创建社团-->
-    <div style="margin-bottom: 10px">
+    <div class="assn-manage">
       <Router-link to="/index/assnManage/addAssn">
         <Button type="primary">创建社团</Button>
       </Router-link>
+      <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
     </div>
 
     <Table border ref="selection" :columns="columns4" :data="userInfo.slice(0,8)"></Table>
@@ -26,7 +27,7 @@
         columns4: [
           {
             type: 'selection',
-            width: 30,
+            width: 60,
             align: 'center'
           },
           {
@@ -36,33 +37,23 @@
           },
           {
             title: '社团名称',
-            key: 'author_name',
-            filters: [
-              {
-                label: '贺平',
-                value: 1
-              },
-              {
-                label: '江洋',
-                value: 2
-              }
-            ],
-            filterMultiple: false,
-            filterMethod (value, row) {
-              if (value === 1) {
-                return row.name === '贺平';
-              } else if (value === 2) {
-                return row.name === '江洋';
-              }
-            }
+            key: 'associationName',
           },
           {
-            title: 'date',
-            key: 'date'
+            title: '会长',
+            key: 'userName'
           },
           {
-            title: 'title',
-            key: 'title'
+            title: '简介',
+            key: 'content'
+          },
+          {
+            title: '招募状态',
+            key: 'status'
+          },
+          {
+            title: '地址',
+            key: 'address'
           },
           {
             title: '操作',
@@ -128,5 +119,9 @@
 </script>
 
 <style lang="less" scoped>
-
+.assn-manage {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
 </style>

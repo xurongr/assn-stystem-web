@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div style="margin-bottom: 10px">
+    <div class="user-manage">
       <Router-link to="/index/userIndex/addUser">
         <Button type="primary">添加用户</Button>
       </Router-link>
+      <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
     </div>
     <Table border ref="selection" :columns="columns4" :data="userInfo.slice(0,10)"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: space-between">
@@ -24,7 +25,7 @@
         columns4: [
           {
             type: 'selection',
-            width: 30,
+            width: 60,
             align: 'center'
           },
           {
@@ -181,5 +182,7 @@
 </script>
 
 <style lang="less" scoped>
-
+.user-manage {
+  margin-bottom: 20px;display: flex;justify-content: space-between
+}
 </style>
