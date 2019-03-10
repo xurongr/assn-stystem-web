@@ -11,10 +11,13 @@ export default {
 </script>
 
 <style>
-  html, body, p, input {
+  html, body, p, input,ul,li {
     margin: 0;
     padding: 0;
     font-size: 14px;
+  }
+  ul,li {
+    list-style: none;
   }
   a {
     color: rgba(255,255,255,.7);;

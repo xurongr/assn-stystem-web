@@ -1,39 +1,33 @@
 <template>
     <div class="addAssn">
-      <Form :model="formItem" :label-width="80">
-        <FormItem label="Input">
-          <Input v-model="formItem.input" placeholder="Enter something..."></Input>
+      <Form :model="formItem" :label-width="100">
+        <FormItem label="社团名称：">
+          <Input v-model="formItem.associationName"></Input>
         </FormItem>
-        <FormItem label="Select">
-          <Select v-model="formItem.select">
-            <Option value="beijing">New York</Option>
-            <Option value="shanghai">London</Option>
-            <Option value="shenzhen">Sydney</Option>
-          </Select>
+        <FormItem label="社团负责人：">
+          <Input v-model="formItem.name"></Input>
         </FormItem>
-        <FormItem label="创建时间">
-          <Row>
-            <Col span="11">
-            <DatePicker type="date" placeholder="Select date" v-model="formItem.date"></DatePicker>
-            </Col>
-            <Col span="2" style="text-align: center"></Col>
-          </Row>
+        <FormItem label="社团地址：">
+          <Input v-model="formItem.address" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="社团地址..."></Input>
         </FormItem>
-        <FormItem label="招募状态">
-          <RadioGroup v-model="formItem.radio">
-            <Radio label="male">开启</Radio>
-            <Radio label="female">关闭</Radio>
+        <FormItem label="招募状态：">
+          <RadioGroup v-model="formItem.recruitState">
+            <Radio label="0">开启</Radio>
+            <Radio label="1">关闭</Radio>
           </RadioGroup>
         </FormItem>
-        <FormItem label="Slider">
-          <Slider v-model="formItem.slider" range></Slider>
-        </FormItem>
-        <FormItem label="社团简介">
-          <Input v-model="formItem.textarea" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="社团简介..."></Input>
+        <FormItem label="社团简介：">
+          <Input v-model="formItem.content" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="社团简介..."></Input>
         </FormItem>
         <FormItem>
-          <Button type="primary">创建</Button>
-          <Button style="margin-left: 8px">取消</Button>
+          <Button type="primary" @click="addAssn">创建</Button>
+          <Poptip
+            confirm
+            title="确认取消添加用户？"
+            @on-ok="ok"
+            @on-cancel="cancel">
+            <Button style="margin-left: 8px">取消</Button>
+          </Poptip>
         </FormItem>
       </Form>
     </div>
@@ -44,15 +38,11 @@
         data() {
             return {
               formItem: {
-                input: '',
-                select: '',
-                radio: 'male',
-                checkbox: [],
-                switch: true,
-                date: '',
-                time: '',
-                slider: [20, 50],
-                textarea: ''
+                associationName: '',
+                address: '',
+                name: '',
+                content: "",
+                recruitState: 0,   //招募状态  0-招募中  1-未招募
               }
             }
         },
@@ -61,10 +51,54 @@
 
         },
 
-        methods: {},
+        methods: {
+          //创建社团
+          addAssn() {
+            let that = this;
+            let url = that.BaseConfig + '/insertAssociation';
+            let data = that.formItem;
+            that
+              .$http(url, '' , data, 'post')
+              .then(res =>{
+                if(res.data.retCode === 0) {
+                  that.$router.push({
+                    path: '/index/assnManage'
+                  })
+                } else {
+                  that.$Message.error(res.data.retMsg);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          ok() {
+            this.$router.push({
+              path: '/index/assnManage'
+            })
+          },
+          cancel() {},
+
+        },
     }
 </script>
 
 <style lang="less" scoped>
-
+.addAssn {
+  /deep/.ivu-input {
+    &:nth-child(1) {
+      width: 50%;
+    }
+    &:nth-child(2) {
+      width: 30%;
+    }
+  }
+  /deep/.ivu-date-picker-rel {
+    width: 400px;
+  }
+  /deep/.ivu-input-icon {
+    left: 125px;
+  }
+}
 </style>

@@ -101,17 +101,8 @@
     },
 
     methods: {
-      handleSelectAll (status) {
-        this.$refs.selection.selectAll(status);
-      },
       getInfo() {
         let that = this;
-        let url =
-          that
-            .$axios.JH_news('/news/index', 'type=top&key=123456')
-            .then(res => {
-              that.userInfo = res.articles;
-            })
       },
 
     },

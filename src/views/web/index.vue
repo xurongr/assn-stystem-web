@@ -1,40 +1,57 @@
 <template>
   <!--首页-->
-  <div style="width: 100%;text-align: center;font-size: 20px">
-    <div class="banner">banner，放系统名字，，左侧LOGO，，右侧后台管理入口,搜索框</div>
-    <div class="nav">导航栏</div>
-    <div class="webIndex">
-      <div class="left">
-        <div class="login">账户登录处(换成站内搜索)</div>
-        <div class="announce">系统公告栏</div>
+  <div style="width: 100%;text-align: center; min-width: 860px;">
+    <div class="banner">
+      <!--banner，放系统名字，，左侧LOGO，，右侧后台管理入口,搜索框-->
+      <div class="banner-icon">
+        <img src="./img/icon.png">
+        <img src="./img/icon-name.png">
+        <span @click="goSystem">后台管理入口</span>
       </div>
-      <div class="content">
-        <div class="cont-top">
-          <div class="imgUrl">图片轮播swiper</div>
-          <div class="news">站内热点（）</div>
-        </div>
-        <div class="cont-center">
-          <div class="c-center">
-            <div class="cont-c1">内容1</div>
-            <div class="cont-c1">内容2</div>
-            <div class="cont-c1">内容3</div>
-          </div>
-
-        </div>
+      <div class="banner-right">
+        <img src="" alt="">
+        <p>用户名</p>
+        <p style="padding-left: 10px">退出</p>
       </div>
     </div>
+    <!--导航栏-->
+    <div class="nav">
+      <div class="nav-cont">
+        <ul>
+          <li>首页</li>
+          <li>社团风采</li>
+          <li>社团招新</li>
+          <li>创社申请</li>
+          <li>关于我们</li>
+        </ul>
+      </div>
+    </div>
+    <!--内容-->
+    <div>
+      <router-view/>
+    </div>
+    <!--底部-->
     <div class="footer">底部</div>
   </div>
-
 </template>
 
 <script>
     export default {
         data() {
-            return {}
+            return {
+
+            }
         },
 
-        methods: {}
+        methods: {
+          //进入后台管理
+          goSystem() {
+            this.$router.push({
+              path: '/index',
+            })
+          },
+
+        }
     }
 </script>
 
@@ -44,67 +61,59 @@
     height: @height;
   }
   .banner {
-    .box(75%, 150px);
-    min-width: 860px;
+    .box(100%, 140px);
+    padding: 10px 20px 10px 150px;
     margin: 0 auto;
-    border: 1px solid #000;
-  }
-  .nav {
-    .box(100%, 50px);
-    border: 1px solid red;
-  }
-  .webIndex {
-    width: 75%;
-    min-width: 860px;
-    margin: 10px auto;
-    height: 800px;
-    border: 1px solid #000;
     display: flex;
-    .left {
-      .box(20%, 800px);
-      border: 1px solid #000;
-      .login {
-        .box(100%, 300px);
-        margin-bottom: 20px;
-        border: 1px solid #000;
+    justify-content: space-between;
+    .banner-icon {
+      padding-top: 20px;
+      padding-left: 10px;
+      img:nth-child(1) {
+        width: 80px;
+        height: 80px;
       }
-      .announce {
-        .box(100%, 400px);
-        border: 1px solid #000;
+      img:nth-child(2) {
+        margin-left: 20px;
+        width: 500px;
+        height: 80px;
+      }
+      span {
+        padding-left: 20px;
       }
     }
-    .content {
-      width: 80%;
-      margin: 0 auto;
-      .cont-top {
-        display: flex;
-        justify-content: space-between; height: 400px;
+    .banner-right {
+      line-height: 40px;
+      display: flex;
+      img {
+        .box(40px, 40px);
+        border-radius: 50%;
         border: 1px solid #000;
-        padding: 12px;
-        .imgUrl {
-          .box(60%, 370px);
-          border: 1px solid red;
-        }
-        .news {
-          .box(35%, 370px);
-          border: 1px solid cadetblue;
-        }
+        margin-right: 10px;
       }
-      .cont-center {
+    }
+  }
+
+  .nav {
+    .box(100%, 40px);
+    background-color: #3765FF;
+    .nav-cont {
+      .box(75%, 40px);
+      margin: 0 auto;
+      ul {
         display: flex;
-        padding: 12px;
-        .c-center {
-          width: 70%;
-          display: flex;
-          justify-content: space-around;
-          border: 1px solid #000;
-          .cont-c1 {
-            width: 230px;
-            height: 260px;
-            border: 1px solid #000;
+        li {
+          height: 40px;
+          line-height: 40px;
+          padding: 0 40px;
+          font-size: 15px;
+          font-weight: 600;
+          color: #fff;
+          letter-spacing: 1px;
+          &:hover{
+            background-color: blue;
           }
         }
-
       }
     }
   }

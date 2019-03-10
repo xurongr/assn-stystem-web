@@ -1,20 +1,24 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import index from "@/views/system";
-import userIndex from "@/views/system/userManage/index";
-import addUser from "@/views/system/userManage/addUser";
-import userInfomation from "@/views/system/userManage/userInfomation";
+import login from "@/views/login";  //登录页
 
-import assnManage from "@/views/system/assnManage";
-import addAssn from "@/views/system/assnManage/addAssn";
-import infoManage from "@/views/system/assnManage/infoManage";
-import announcementManage from "@/views/system/assnManage/announcementManage";
+import index from "@/views/system";  //后台管理首页
+import userIndex from "@/views/system/userManage/index";  //用户管理
+import addUser from "@/views/system/userManage/addUser";  //添加用户
+import userInfomation from "@/views/system/userManage/userInfomation";   //查看、编辑用户信息
 
-import memberManage from "@/views/system/memberManage/index";
+import assnManage from "@/views/system/assnManage";    //我的社团
+import addAssn from "@/views/system/assnManage/addAssn";   //创建社团
+import infoManage from "@/views/system/assnManage/infoManage";    //查看、编辑社团
+import announcementManage from "@/views/system/assnManage/announcementManage";   //公告
+import addAnnoucement from "@/views/system/assnManage/addAnnoucement";   //发布公告
+
+import memberManage from "@/views/system/memberManage/index";   //社团成员列表页
 
 // 前端
 import webIndex from "@/views/web/index";
+import homePage from "@/views/web/homePage";   //首页
 
 
 Vue.use(Router)
@@ -23,7 +27,15 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: 'index/web',
+      redirect: 'login',
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: login,
+      meta: {
+        title: '登录页',
+      }
     },
     {
       path: '/index',
@@ -82,7 +94,15 @@ export default new Router({
           name: 'announcementManage',
           component: announcementManage,
           meta: {
-            title: '社团公告列表',
+            title: '公告列表',
+          }
+        },
+        {
+          path: '/index/announcementManage/addAnnoucement',
+          name: 'addAnnoucement',
+          component: addAnnoucement,
+          meta: {
+            title: '发布公告',
           }
         },
         {
@@ -99,6 +119,21 @@ export default new Router({
       path:'/index/web',
       name: 'webIndex',
       component: webIndex,
-    }
+      children: [
+        {
+          path: '/index/web',
+          name: 'homePage',
+          component: homePage,
+        },
+        {
+          path: '/index/web/homePage',
+          name: 'homePage',
+          component: homePage,
+          meta: {
+            title: '首页',
+          }
+        }
+      ]
+    },
   ]
 })

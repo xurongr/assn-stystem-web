@@ -167,6 +167,7 @@
           .then(res => {
             console.log(res);
             if(res.data.retCode === 0) {
+              that.$Message.success('创建成功');
               that.$router.push({
                 path: '/index/userIndex',
               })
@@ -175,7 +176,7 @@
             }
           })
           .catch(err => {
-            console.log(err)
+            that.$Message.error('请求错误');
           })
       },
 
