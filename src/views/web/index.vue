@@ -62,7 +62,7 @@
   }
   .banner {
     .box(100%, 140px);
-    padding: 10px 20px 10px 150px;
+    padding: 10px 20px 10px 12%;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;

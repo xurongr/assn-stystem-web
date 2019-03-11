@@ -7,6 +7,7 @@ import 'iview/dist/styles/iview.css';
 import Axios from 'axios';
 import { http } from './api/HttpUtils';
 import promise from 'es6-promise';
+import './style/common.less';
 
 require('./mock.js');
 Vue.prototype.$axios = Axios;
