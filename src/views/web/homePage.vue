@@ -53,6 +53,8 @@
                   <li>2</li>
                   <li>3</li>
                   <li>4</li>
+                  <li>5</li>
+                  <li>6</li>
                 </ul>
               </div>
             </div>
@@ -142,7 +144,7 @@
         display: flex;
         padding: 12px 0;
         .c-center {
-          width: 77%;
+          width: 100%;
           display: flex;
           justify-content: space-between;
           .cont-announce {
@@ -201,13 +203,13 @@
             }
           }
           .cont-view {
-            width: 69%;
+            width: 68%;
             .views {
               display: flex;
               justify-content: space-around;
               flex-wrap: wrap;
               .views-detail {
-                width: 30%;
+                width: 29%;
                 margin: 10px;
                 text-align: center;
                 img {

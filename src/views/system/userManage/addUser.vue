@@ -31,8 +31,8 @@
     <div class="add-selfinfo">
       <Row>
         <Col span="8">社团名称：
-          <Select v-model="userInfo.assnBasicList[0].associationName" style="width:200px">
-            <Option v-for="item in assoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Select v-model="userInfo.assnBasicList[0].associationName"  style="width:200px" >
+            <Option v-for="item in assoList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
           </Select>
         </Col>
         <Col span="8">部门名称：
@@ -40,14 +40,7 @@
             <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </Col>
-        <Col span="8">职务：<Input v-model="userInfo.assnBasicList[0].job" clearable /></Col>
-      </Row>
-      <Row>
-        <Col span="8">身份权限：
-          <Select v-model="userInfo.identityName" style="width:200px">
-            <Option v-for="item in identityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
+        <Col span="8">职务：<Input v-model="userInfo.assnBasicList[0].job" readonly /></Col>
       </Row>
     </div>
 
@@ -80,12 +73,10 @@
                 departmentName: "",
               }
             ],
-            // identityId: 1,
-            // identityName: "社团管理员",
-            job: "",
+            job: "社团成员",
           }],
-          identityId: 1,
-          identityName: "",
+          identityId: 3,
+          identityName: "普通用户",
           grade: null,
           major: "",
           name: "",
@@ -125,20 +116,6 @@
             label: '办公室'
           }
         ],         //部门选择
-        identityList: [
-          {
-            value: '系统管理员',
-            label: '系统管理员'
-          },
-          {
-            value: '社团管理员',
-            label: '社团管理员'
-          },
-          {
-            value: '社团成员',
-            label: '社团成员'
-          }
-        ],       //身份选择
         majorData: [{
           value: '信息与机电工程学院',
           label: '信息与机电工程学院',
@@ -158,7 +135,6 @@
     methods: {
       //创建用户
       creatUser() {
-        // this.addIdentity();
         let that = this;
         let url = that.BaseConfig + '/insertUser';
         let data = that.userInfo;
@@ -177,23 +153,6 @@
           })
           .catch(err => {
             that.$Message.error('请求错误');
-          })
-      },
-
-      addIdentity() {
-        let that = this;
-        let url = that.BaseConfig + '/insertIdentity';
-        let data = {
-          identityName: "社团管理员",
-          level: 1
-        }
-        that
-          .$http(url,'', data, 'post')
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
           })
       },
 

@@ -5,7 +5,7 @@
       <!--banner，放系统名字，，左侧LOGO，，右侧后台管理入口,搜索框-->
       <div class="banner-icon">
         <img src="./img/icon.png">
-        <img src="./img/icon-name.png">
+        <img src="./img/banner_name.png">
         <span @click="goSystem">后台管理入口</span>
       </div>
       <div class="banner-right">
@@ -19,7 +19,7 @@
       <div class="nav-cont">
         <ul>
           <li>首页</li>
-          <li>社团风采</li>
+          <li><Router-link to="/index/web/assnView">社团风采</Router-link></li>
           <li>社团招新</li>
           <li>创社申请</li>
           <li>关于我们</li>
@@ -74,9 +74,8 @@
         height: 80px;
       }
       img:nth-child(2) {
-        margin-left: 20px;
-        width: 500px;
-        height: 80px;
+        width: 517px;
+        height: 91px;
       }
       span {
         padding-left: 20px;

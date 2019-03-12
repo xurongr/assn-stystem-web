@@ -5,7 +5,7 @@
       <Row>
         <Col span="8">用户名：<Input v-model="userInfo.userName" readonly /></Col>
         <Col span="8">密码：<Input v-model="userInfo.pwd" readonly/></Col>
-        <Col span="8">确认密码：<Input v-model="userInfo.password" readonly/></Col>
+        <Col span="8">确认密码：<Input v-model="userInfo.pwd" readonly/></Col>
       </Row>
       <Row>
         <Col span="8">姓&nbsp;&nbsp;&nbsp;&nbsp;名：<Input v-model="userInfo.name" clearable /></Col>
@@ -27,29 +27,32 @@
         <Col span="8">联系方式：<Input v-model="userInfo.telNumber" clearable /></Col>
       </Row>
     </div>
-    <p>加入社团1</p>
-    <div class="add-selfinfo">
-      <Row>
-        <Col span="8">社团名称：
-          <Select v-model="userInfo.assnBasicList[0].associationName" style="width:200px">
-            <Option v-for="item in assoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
-        <Col span="8">部门名称：
-          <Select v-model="userInfo.assnBasicList[0].departmentBasicList[0].departmentName" style="width:200px">
-            <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
-        <Col span="8">职务：<Input v-model="userInfo.assnBasicList[0].job" readonly /></Col>
-      </Row>
-      <Row>
-        <Col span="8">身份权限：
-          <Select v-model="userInfo.identityName" disabled style="width:200px">
-            <Option v-for="item in identityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
-      </Row>
+    <div v-if="userInfo.assnBasicList.length !== 0">
+      <div v-for="(item,index) in userInfo.assnBasicList" :key="index">
+        <p>加入社团{{index}}</p>
+        <div class="add-selfinfo" >
+          <Row>
+            <Col span="8">社团名称：
+              <Select v-model="item.associationName" style="width:200px">
+                <Option v-for="item in assoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </Col>
+            <Col span="8">部门名称：
+              <Select v-model="item.departmentBasicList[0].departmentName" style="width:200px">
+                <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </Col>
+            <Col span="8">职务：<Input v-model="item.job" readonly /></Col>
+          </Row>
+          <Row>
+            <Col span="8">身份权限：
+              <Input v-model="item.identityName" readonly />
+            </Col>
+          </Row>
+        </div>
+      </div>
     </div>
+
 
     <div class="add-btn">
       <Poptip
@@ -126,38 +129,13 @@
             }
           ]
         }],     //专业级联选择框
-        userInfo: {
-          age: null,
-          assnBasicList: [{
-            associationId: 1,
-            associationName: "",
-            departmentBasicList: [
-              {
-                departmentId: 1,
-                departmentName: "",
-              }
-            ],
-            // identityId: 1,
-            // identityName: "社团管理员",
-            job: "",
-          }],
-          identityId: 1,
-          identityName: "",
-          grade: null,
-          major: "",
-          name: "",
-          pwd: "",
-          sex: null,   //1-男生  2-女生
-          telNumber: null,
-          userImg: "",
-          userName: "",
-        },
+        userInfo: '',
+        userId: '',
       }
     },
     created() {
-      // if(this.$route.query.userInfo !== 'undefined') {
-      //   this.userInfo = this.$route.query.userInfo;
-      // }
+      this.userInfo = this.$route.query.userInfo;
+      console.log(this.userInfo,this.userInfo.assnBasicList.length)
     },
 
     methods: {

@@ -19,6 +19,7 @@ import memberManage from "@/views/system/memberManage/index";   //社团成员�
 // 前端
 import webIndex from "@/views/web/index";
 import homePage from "@/views/web/homePage";   //首页
+import assnView from "@/views/web/assnView";   //社团风采
 
 
 Vue.use(Router)
@@ -131,6 +132,14 @@ export default new Router({
           component: homePage,
           meta: {
             title: '首页',
+          }
+        },
+        {
+          path: '/index/web/assnView',
+          name: 'assnView',
+          component: assnView,
+          meta: {
+            title: '社团风采',
           }
         }
       ]

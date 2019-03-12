@@ -6,13 +6,13 @@
       </Router-link>
       <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
     </div>
-    <Table border ref="selection" :columns="columns4" :data="userInfo.slice(0,10)"></Table>
+    <Table border ref="selection" :columns="columns4" :data="userInfo"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: space-between">
       <div>
         <Button @click="handleSelectAll(true)" type="primary">全选</Button>
         <Button @click="handleSelectAll(false)">取消全选</Button>
       </div>
-      <Page :total="userInfo.length" :key="userInfo.length" show-elevator />
+      <Page :total="userInfo.length" :key="userInfo.length" :page-size="10" show-elevator />
     </div>
   </div>
 </template>
@@ -27,11 +27,6 @@
             type: 'selection',
             width: 60,
             align: 'center'
-          },
-          {
-            title: 'id',
-            key: 'id',
-            width: 60,
           },
           {
             title: '用户名',
@@ -78,10 +73,11 @@
                   },
                   on: {
                     click: () => {
+                      // console.log(params.row)
                       this.$router.push({
                         path: '/index/assnManage/userInfomation',
                         query: {
-                          userInfo: this.userInfo,
+                          userInfo: params.row,
                         }
                       })
                     }
@@ -121,6 +117,7 @@
             }
           }
         ],
+        pageNo: 0,
       }
     },
 
@@ -138,20 +135,21 @@
         let that = this;
         let url = that.BaseConfig + '/selectUsersAll';
         let params = {
-
+          pageNo: 0,
+          pageSize: 99,
         };
         let data = null;
         that
           .$http(url, params, data, 'get')
           .then(res => {
-            console.log(res)
-            // data = res.data;
-            // if(data.retCode === 0) {
-            //   that.userInfo = data.data
-            // }
+            data = res.data;
+            if(data.retCode === 0) {
+              console.log(data.data);
+              that.userInfo = data.data.data;
+            }
           })
           .catch(err => {
-            console.log(err)
+            console.log(err);
           })
       },
 

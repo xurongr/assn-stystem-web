@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="login-box">
       <div class="login">
         <p>登录</p>
         <p>用户名：<Input v-model="userName" placeholder="请输入账号" style="width: 172px" /></p>
@@ -23,6 +23,7 @@
           login() {
             let that = this;
             let url = that.BaseConfig + '/login';
+
             let data = {
               userName: that.userName,
               pwd: that.pwd,
@@ -30,7 +31,7 @@
             that
               .$http(url, '', data, 'post')
               .then(res => {
-                console.log(res)
+                console.log(res);
                 if(res.data.retCode === 0) {
                   //把登录信息缓存起来localStorage
                   that.$router.push({
@@ -47,10 +48,20 @@
 </script>
 
 <style lang="less" scoped>
+  .login-box {
+    width: 100%;
+    height: 100vh;
+    background: url("./web/img/login_bg.jpg");
+    background-size: 100% 100%;
+    position: relative;
+  }
   .login {
-    margin: 100px auto;
-    width: 230px;
-    border: 1px solid #000;
+    position: absolute;
+    left: 38%;
+    top: 20%;
+    padding: 40px;
+    border: 1px solid #fff;
+    border-radius: 10px;
     /deep/ .ivu-input {
       border-color: #2d78f4;
     }

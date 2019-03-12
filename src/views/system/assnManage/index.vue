@@ -103,6 +103,20 @@
     methods: {
       getInfo() {
         let that = this;
+        let url = that.BaseConfig + '/selectAssociationAll';
+        let params = {
+          pageNo: 0,
+          pageSize: 10,
+        };
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
       },
 
     },
