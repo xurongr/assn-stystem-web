@@ -11,13 +11,6 @@
             <Option value="shenzhen">Sydney</Option>
           </Select>
         </FormItem>
-        <!--//公告类型，只有系统管理员可选，判断userId的身份-->
-        <FormItem label="公告类型：">
-          <RadioGroup v-model="formItem.type">
-            <Radio label="0">社团公告</Radio>
-            <Radio label="1">系统公告</Radio>
-          </RadioGroup>
-        </FormItem>
         <FormItem label="公告内容：">
           <Input v-model="formItem.content" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="输入公告内容..."></Input>
         </FormItem>
@@ -39,11 +32,12 @@
         data() {
             return {
               formItem: {
-                name: '',
-                type: '0',
-                content: '',
-                userId: 1,
-                // associationName: '',
+                associationId: 0,
+                associationName: "",
+                content: "",
+                name: "",
+                type: 0,   //0-社团公告，1-系统公告
+                userId: 0
               }
             }
         },

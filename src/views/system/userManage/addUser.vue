@@ -19,9 +19,6 @@
       <Row>
         <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;级：<Input v-model="userInfo.grade" clearable /></Col>
         <Col span="8">
-          <!--<div style="display: flex; line-height: 32px;">-->
-            <!--专业：<Cascader :data="majorData" v-model="userInfo.major" style="width:200px;padding-left: 4px;"></Cascader>-->
-          <!--</div>-->
           专业：<Input v-model="userInfo.major" clearable />
         </Col>
         <Col span="8">联系方式：<Input v-model="userInfo.telNumber" clearable /></Col>
@@ -62,7 +59,6 @@
     data() {
       return {
         userInfo: {
-          // id: 1,
           age: null,
           assnBasicList: [{
             associationId: 1,

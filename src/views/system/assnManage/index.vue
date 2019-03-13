@@ -8,13 +8,13 @@
       <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
     </div>
 
-    <Table border ref="selection" :columns="columns4" :data="userInfo.slice(0,8)"></Table>
+    <Table border ref="selection" :columns="columns4" :data="assnInfo"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: space-between">
       <div>
         <Button @click="handleSelectAll(true)" type="primary">全选</Button>
         <Button @click="handleSelectAll(false)">取消全选</Button>
       </div>
-      <Page :total="userInfo.length" :key="userInfo.length" show-elevator />
+      <Page :total="assnInfo.length" :key="assnInfo.length" show-elevator />
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@
   export default {
     data() {
       return {
-        userInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
+        assnInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
         columns4: [
           {
             type: 'selection',
@@ -31,17 +31,12 @@
             align: 'center'
           },
           {
-            title: 'id',
-            key: 'id',
-            width: 60,
-          },
-          {
             title: '社团名称',
             key: 'associationName',
           },
           {
             title: '会长',
-            key: 'userName'
+            key: 'name'
           },
           {
             title: '简介',
@@ -49,7 +44,25 @@
           },
           {
             title: '招募状态',
-            key: 'status'
+            key: 'recruitState',
+            filters: [
+              {
+                label: '开启',
+                value: 0
+              },
+              {
+                label: '关闭',
+                value: 1
+              }
+            ],
+            filterMultiple: false,
+            filterMethod (value, row) {
+              if (value === 0) {
+                return row.recruitState === '开启';
+              } else if (value === 1) {
+                return row.recruitState === '关闭';
+              }
+            }
           },
           {
             title: '地址',
@@ -74,6 +87,9 @@
                     click: () => {
                       this.$router.push({
                         path: '/index/assnManage/infoManage',
+                        query: {
+                          assnInfo: params.row,
+                        }
                       })
                     }
                   }
@@ -112,7 +128,18 @@
         that
           .$http(url, params, data, 'get')
           .then(res => {
-            console.log(res);
+            data = res.data;
+            if(data.retCode ===0) {
+              that.assnInfo = data.data.data;
+              console.log(that.assnInfo)
+              that.assnInfo.map(item =>{
+                if(item.recruitState === 0) {
+                  item.recruitState = '开启'
+                } else {
+                  item.recruitState = '关闭'
+                }
+              })
+            }
           })
           .catch(err => {
             that.$Message.error('请求错误');

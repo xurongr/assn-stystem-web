@@ -17,15 +17,10 @@
             return {
               announceInfo: [],
               columns4: [
-                // {
-                //   type: 'selection',
-                //   width: 60,
-                //   align: 'center'
-                // },
                 {
-                  title: 'id',
-                  key: 'id',
+                  type: 'selection',
                   width: 60,
+                  align: 'center'
                 },
                 {
                   title: '公告标题',
@@ -112,20 +107,21 @@
           getAnnouceInfo() {
             let that = this;
             let url = that.BaseConfig + '/selectNoticeAll';
-            let data = {
-              userId: 1,
+            let params = {
               type: 0,    //type：0 社团公告，，要根据userId判断type
               pageNo: 0,
               pageSize: 10,
             };
+            let data = null;
             that
-              .$http(url, '' , data, 'post')
+              .$http(url, params , data, 'GET')
               .then(res =>{
-                if(res.data.retCode === 0) {
-                  console.log(res.data)
-                } else {
-                  that.$Message.error(res.data.retMsg);
-                }
+                console.log(res)
+                // if(res.data.retCode === 0) {
+                //   console.log(res.data)
+                // } else {
+                //   that.$Message.error(res.data.retMsg);
+                // }
               })
               .catch(err => {
                 that.$Message.error('请求错误');
