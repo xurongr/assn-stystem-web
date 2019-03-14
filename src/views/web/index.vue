@@ -19,6 +19,21 @@
       <div class="nav-cont">
         <ul>
           <li><Router-link to="/index/web">首页</Router-link></li>
+          <li class="views-nav">
+            <Dropdown>
+              <a href="javascript:void(0)">
+                hover 触发
+                <Icon type="ios-arrow-down"></Icon>
+              </a>
+              <DropdownMenu slot="list">
+                <DropdownItem>循环社团列表</DropdownItem>
+                <DropdownItem>炸酱面</DropdownItem>
+                <DropdownItem>豆汁儿</DropdownItem>
+                <DropdownItem>冰糖葫芦</DropdownItem>
+                <DropdownItem>北京烤鸭</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </li>
           <li><Router-link to="/index/web/assnView">社团风采</Router-link></li>
           <li>社团招新</li>
           <li>创社申请</li>
@@ -111,6 +126,15 @@
           letter-spacing: 1px;
           &:hover{
             background-color: blue;
+          }
+          /deep/ .ivu-dropdown-menu {
+            display: block;
+          }
+          /deep/ .ivu-dropdown-item {
+            color: #3765FF;
+            &:hover {
+              color: #fff;
+            }
           }
         }
       }

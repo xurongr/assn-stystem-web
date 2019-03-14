@@ -14,10 +14,12 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "echarts": "^4.1.0",
     "es6-promise": "^4.2.6",
     "iview": "^3.2.2",
     "mockjs": "^1.0.1-beta3",
     "vue": "^2.5.2",
+    "vue-echarts": "^4.0.1",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

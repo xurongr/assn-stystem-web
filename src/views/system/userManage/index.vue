@@ -12,7 +12,7 @@
         <Button @click="handleSelectAll(true)" type="primary">全选</Button>
         <Button @click="handleSelectAll(false)">取消全选</Button>
       </div>
-      <Page :total="total" :key="total" :on-change="pageChange" show-elevator />
+      <Page :total="total" :current.sync="current" :on-change="pageChange" />
     </div>
   </div>
 </template>
@@ -21,6 +21,7 @@
   export default {
     data() {
       return {
+        loginInfo:'',
         userInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
         columns4: [
           {
@@ -101,7 +102,7 @@
                       })
                     }
                   }
-                }, '编辑'),
+                }, '编辑/职务修改'),
                 h('Button', {
                   props: {
                     type: 'error',
@@ -112,7 +113,7 @@
                       this.cancelUser(userId);
                     }
                   }
-                }, '删除')
+                }, '权限分配')
               ]);
             }
           }
@@ -123,6 +124,8 @@
     },
 
     created() {
+      //获取用户个人信息
+      this.loginInfo = JSON.parse(window.localStorage.getItem("loginInfo"));
       this.getInfo();
     },
 
@@ -133,8 +136,8 @@
       },
 
       //改变页数
-      pageChange() {
-
+      pageChange(val) {
+        console.log(val)
       },
 
       //获取用户列表
@@ -190,6 +193,6 @@
 
 <style lang="less" scoped>
 .user-manage {
-  margin-bottom: 20px;display: flex;justify-content: space-between
+  margin-bottom: 20px;display: flex;justify-content: space-between;
 }
 </style>

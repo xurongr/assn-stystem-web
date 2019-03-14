@@ -15,6 +15,7 @@ import announcementManage from "@/views/system/assnManage/announcementManage";  
 import addAnnoucement from "@/views/system/assnManage/addAnnoucement";   //发布公告
 
 import memberManage from "@/views/system/memberManage/index";   //社团成员列表页
+import addMenber from "@/views/system/memberManage/addMenber";   //添加社团成员
 
 // 前端
 import webIndex from "@/views/web/index";
@@ -113,7 +114,15 @@ export default new Router({
           meta: {
             title: '社团成员管理',
           }
-        }
+        },
+        {
+          path: '/index/memberManage/addMenber',
+          name: 'addMenber',
+          component: addMenber,
+          meta: {
+            title: '添加社团成员',
+          }
+        },
       ]
     },
     {

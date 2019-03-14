@@ -37,7 +37,7 @@
             <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </Col>
-        <Col span="8">职务：<Input v-model="userInfo.assnBasicList[0].job" readonly /></Col>
+        <!--<Col span="8">职务：<Input v-model="userInfo.assnBasicList[0].job" readonly /></Col>-->
       </Row>
     </div>
 

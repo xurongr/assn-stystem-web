@@ -91,6 +91,7 @@ export default {
     }
   },
   methods: {
+
     collapsedSider () {
       this.$refs.side1.toggleCollapse();
     }
