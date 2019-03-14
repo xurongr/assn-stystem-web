@@ -18,7 +18,7 @@
     <div class="nav">
       <div class="nav-cont">
         <ul>
-          <li>首页</li>
+          <li><Router-link to="/index/web">首页</Router-link></li>
           <li><Router-link to="/index/web/assnView">社团风采</Router-link></li>
           <li>社团招新</li>
           <li>创社申请</li>
@@ -74,7 +74,7 @@
         height: 80px;
       }
       img:nth-child(2) {
-        width: 517px;
+        width: 73%;
         height: 91px;
       }
       span {
