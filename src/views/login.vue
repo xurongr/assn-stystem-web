@@ -34,6 +34,7 @@
                 console.log(res);
                 if(res.data.retCode === 0) {
                   //把登录信息缓存起来localStorage
+
                   that.$router.push({
                     path: '/index/web',
                   })

@@ -12,7 +12,7 @@
         <Button @click="handleSelectAll(true)" type="primary">全选</Button>
         <Button @click="handleSelectAll(false)">取消全选</Button>
       </div>
-      <Page :total="userInfo.length" :key="userInfo.length" :page-size="10" show-elevator />
+      <Page :total="total" :key="total" :on-change="pageChange" show-elevator />
     </div>
   </div>
 </template>
@@ -118,6 +118,7 @@
           }
         ],
         pageNo: 0,
+        total:'',
       }
     },
 
@@ -126,8 +127,14 @@
     },
 
     methods: {
+      //全选
       handleSelectAll (status) {
         this.$refs.selection.selectAll(status);
+      },
+
+      //改变页数
+      pageChange() {
+
       },
 
       //获取用户列表
@@ -136,7 +143,7 @@
         let url = that.BaseConfig + '/selectUsersAll';
         let params = {
           pageNo: 0,
-          pageSize: 99,
+          pageSize: 10,
         };
         let data = null;
         that
@@ -146,6 +153,8 @@
             if(data.retCode === 0) {
               console.log(data.data);
               that.userInfo = data.data.data;
+              that.total = data.data.total;
+              console.log(that.total)
             }
           })
           .catch(err => {
