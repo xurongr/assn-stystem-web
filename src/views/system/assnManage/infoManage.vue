@@ -5,7 +5,16 @@
         <Input v-model="formItem.associationName"></Input>
       </FormItem>
       <FormItem label="社团负责人：">
-        <Input v-model="formItem.name"></Input>
+        <Input v-model="name" @on-blur="searchUser"></Input>
+        <Modal
+          v-model="modal2"
+          title="选择社团负责人"
+          :footer-hide="true"
+        >
+          <p>
+          <Table border ref="selection" :columns="columns4" :data="searchInfo"></Table>
+          </p>
+        </Modal>
       </FormItem>
       <FormItem label="社团地址：">
         <Input v-model="formItem.address" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="社团地址..."></Input>
@@ -42,13 +51,55 @@
           address: '',
           name: '',
           content: "",
-          recruitState: 0,   //招募状态  0-招募中  1-未招募
+          recruitState: null,   //招募状态  0-招募中  1-未招募
+          userId:null
         },
+        name: '',
+        searchInfo: [],   //查找负责人列表   有可能重名
+        modal2: false,
+        columns4: [
+          {
+            title: '学号',
+            key: 'userName'
+          },
+          {
+            title: '姓名',
+            key: 'name'
+          },
+          {
+            title: '联系方式',
+            key: 'telNumber'
+          },
+          {
+            title: '操作',
+            key: 'action',
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.addName(params.row.id)
+                    }
+                  }
+                }, '确定'),
+              ]);
+            }
+          }
+        ],
       }
     },
 
     created() {
       this.formItem = this.$route.query.assnInfo;
+      this.name = this.formItem.name;
       if(this.formItem.recruitState === '开启') {
         this.formItem.recruitState = "0"
       } else {
@@ -61,11 +112,12 @@
       updateAssnInfo() {
         let that = this;
         let url = that.BaseConfig + '/updateAssociation';
-        let data = that.formItem;
+        let association = that.formItem;
         that
-          .$http(url, '', data, 'post')
+          .$http(url, '', association, 'post')
           .then(res => {
             if(res.data.retCode ===0) {
+              that.$Message.error('修改成功');
               that.$router.push({
                 path: '/index/assnManage'
               })
@@ -74,6 +126,34 @@
           .catch(err => {
             that.$Message.error('请求错误');
           })
+      },
+
+      //查找是否有次用户
+      searchUser() {
+        let that = this;
+        let url = that.BaseConfig + '/selectUsersAll';
+        let params = {
+          name: that.name,
+          pageNo: 0,
+          pageSize: 10,
+        };
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            data = res.data;
+            if(data.retCode === 0) {
+              that.searchInfo = data.data.data;
+              that.modal2 = true;
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
+      },
+      addName(id) {
+        this.formItem.userId = id;
+        this.modal2 = false;
       },
 
       //取消修改

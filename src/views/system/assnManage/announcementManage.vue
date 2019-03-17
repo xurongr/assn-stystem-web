@@ -1,13 +1,25 @@
 <template>
     <div>
       <div class="annouce-manage">
+        <div style="display: flex">
+          <Select v-model="sortValue" style="width:150px">
+            <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+          <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容"/></div>
+        </div>
         <Router-link to="/index/announcementManage/addAnnoucement">
           <Button type="primary">发布公告</Button>
         </Router-link>
-        <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
       </div>
-      <Table border ref="selection" :columns="columns4" :data="announceInfo.slice(0,10)"></Table>
-      <Page :total="announceInfo.length" :key="announceInfo.length" :page-size="10" show-elevator />
+      <Table border ref="selection" :columns="columns4" :data="announceInfo"></Table>
+      <Modal
+        v-model="modal3"
+        title="公告内容"
+        :footer-hide="true"
+      >
+        <p>{{anContent}}</p>
+      </Modal>
+      <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
     </div>
 </template>
 
@@ -16,6 +28,8 @@
         data() {
             return {
               announceInfo: [],
+              modal3: false,
+              anContent:'',
               columns4: [
                 {
                   type: 'selection',
@@ -28,11 +42,12 @@
                 },
                 {
                   title: '公告内容',
-                  key: 'content'
+                  key: 'content',
+                  width: 310
                 },
                 {
                   title: '发布人',
-                  key: 'userName'
+                  key: 'name'
                 },
                 {
                   title: '所属社团',
@@ -59,9 +74,8 @@
                         },
                         on: {
                           click: () => {
-                            this.$router.push({
-                              path: '',
-                            })
+                            this.anContent = params.row.content;
+                            this.modal3 = true;
                           }
                         }
                       }, '查看'),
@@ -76,7 +90,10 @@
                         on: {
                           click: () => {
                             this.$router.push({
-                              path: '',
+                              path: '/index/announceManage/editAnnounce',
+                              query: {
+                                noticeId: params.row.id,
+                              }
                             })
                           }
                         }
@@ -96,6 +113,20 @@
                   }
                 }
               ],
+              sortList: [
+                {
+                  value: 'associationName',
+                  label: '公告'
+                },
+                {
+                  value: 'recruitState',
+                  label: '招募状态'
+                },
+              ],    //查找条件
+              sortValue:'',
+              total: 0,
+              pageNo:0,
+              current: 1,
             }
         },
 
@@ -104,24 +135,31 @@
         },
 
         methods: {
+          //改变页数
+          pageChange(val) {
+            this.pageNo = val - 1;
+            this.getInfo();
+          },
+
+          //获取公告信息
           getAnnouceInfo() {
             let that = this;
             let url = that.BaseConfig + '/selectNoticeAll';
             let params = {
               type: 0,    //type：0 社团公告，，要根据userId判断type
-              pageNo: 0,
+              pageNo: that.pageNo,
               pageSize: 10,
             };
             let data = null;
             that
               .$http(url, params , data, 'GET')
               .then(res =>{
-                console.log(res)
-                // if(res.data.retCode === 0) {
-                //   console.log(res.data)
-                // } else {
-                //   that.$Message.error(res.data.retMsg);
-                // }
+                if(res.data.retCode === 0) {
+                  that.announceInfo = res.data.data.data;
+                  console.log(that.announceInfo)
+                } else {
+                  that.$Message.error(res.data.retMsg);
+                }
               })
               .catch(err => {
                 that.$Message.error('请求错误');
@@ -136,5 +174,9 @@
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
+  }
+  /deep/ .ivu-table-cell {
+    white-space: nowrap;
+    /*-webkit-line-clamp: 3;*/
   }
 </style>

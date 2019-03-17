@@ -2,10 +2,15 @@
   <div>
     <!--系统管理员创建社团-->
     <div class="assn-manage">
+      <div style="display: flex">
+        <Select v-model="sortValue" style="width:150px">
+          <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+        <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容"/></div>
+      </div>
       <Router-link to="/index/assnManage/addAssn">
         <Button type="primary">创建社团</Button>
       </Router-link>
-      <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
     </div>
 
     <Table border ref="selection" :columns="columns4" :data="assnInfo"></Table>
@@ -14,7 +19,7 @@
         <Button @click="handleSelectAll(true)" type="primary">全选</Button>
         <Button @click="handleSelectAll(false)">取消全选</Button>
       </div>
-      <Page :total="assnInfo.length" :key="assnInfo.length" show-elevator />
+      <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
     </div>
   </div>
 </template>
@@ -40,7 +45,8 @@
           },
           {
             title: '简介',
-            key: 'content'
+            key: 'content',
+            width: 440,
           },
           {
             title: '招募状态',
@@ -109,6 +115,20 @@
             }
           }
         ],
+        sortList: [
+          {
+            value: 'associationName',
+            label: '社团名称'
+          },
+          {
+            value: 'recruitState',
+            label: '招募状态'
+          },
+        ],    //查找条件
+        sortValue:'',
+        total: 0,
+        pageNo:0,
+        current: 1,
       }
     },
 
@@ -117,11 +137,18 @@
     },
 
     methods: {
+      //改变页数
+      pageChange(val) {
+        this.pageNo = val - 1;
+        this.getInfo();
+      },
+
+      //获取社团列表
       getInfo() {
         let that = this;
         let url = that.BaseConfig + '/selectAssociationAll';
         let params = {
-          pageNo: 0,
+          pageNo: that.pageNo,
           pageSize: 10,
         };
         let data = null;
@@ -131,7 +158,7 @@
             data = res.data;
             if(data.retCode ===0) {
               that.assnInfo = data.data.data;
-              console.log(that.assnInfo)
+              that.total = data.data.total;
               that.assnInfo.map(item =>{
                 if(item.recruitState === 0) {
                   item.recruitState = '开启'

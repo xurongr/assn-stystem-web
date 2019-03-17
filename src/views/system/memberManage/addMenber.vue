@@ -1,23 +1,12 @@
 <template>
     <div>
       <div class="search-user">
-        <Steps :current="1">
-          <Step title="按条件查找用户" icon="md-search"></Step><Icon type="md-search" />
-          <Step title="点击添加成员" icon="md-add"></Step>
-          <Step title="确认添加" icon="md-checkmark"></Step>
-        </Steps>
-        <Row>
-          <Col span="3">
-            按照：
-            <Select v-model="sortValue" style="width:140px">
-              <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          <Icon type="md-arrow-forward" />
-          </Col>
-          <Col span="5">
-            <Input search enter-button="查找" placeholder="输入要查找的内容" />
-          </Col>
-        </Row>
+        <div style="display: flex;margin-bottom: 25px">
+          <Select v-model="sortValue" style="width:150px">
+            <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+          <div style="width: 340px"><Input search enter-button="查找" placeholder="输入要查找的内容" v-model="searchValue" @click="searchUser"/></div>
+        </div>
       </div>
       <div class="seach-info">
         <Table border ref="selection" :columns="columns4" :data="userInfo"></Table>
@@ -36,7 +25,7 @@
                 },
                 {
                   value: 'userName',
-                  label: '用户名（学号）'
+                  label: '学号'
                 },
               ],    //查找条件
               sortValue: '',
@@ -87,6 +76,9 @@
                   }
                 }
               ],
+              searchValue:'',
+              userInfo:[],
+              total:0,
             }
         },
 
@@ -94,7 +86,42 @@
 
         },
 
-        methods: {},
+        methods: {
+          //搜索用户(学号、姓名)
+          searchUser() {
+            let that = this;
+            let url = that.BaseConfig + '/selectUsersAll';
+            let params;
+            if(that.sortValue === 'name') {
+              params = {
+                name: that.searchValue,
+                pageNo: 0,
+                pageSize: 10,
+              };
+            } else if(that.sortValue === 'userName') {
+              params = {
+                userName: that.searchValue,
+                pageNo: 0,
+                pageSize: 10,
+              };
+            }
+            let data = null;
+            that
+              .$http(url, params , data, 'get')
+              .then(res =>{
+                console.log(res)
+                data = res.data;
+                if(data.retCode === 0) {
+                  that.userInfo = data.data.data;
+                  that.total = data.data.total;
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+        },
     }
 </script>
 

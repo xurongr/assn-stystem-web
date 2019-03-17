@@ -11,8 +11,10 @@ import userInfomation from "@/views/system/userManage/userInfomation";   //查�
 import assnManage from "@/views/system/assnManage";    //我的社团
 import addAssn from "@/views/system/assnManage/addAssn";   //创建社团
 import infoManage from "@/views/system/assnManage/infoManage";    //查看、编辑社团
+
 import announcementManage from "@/views/system/assnManage/announcementManage";   //公告
 import addAnnoucement from "@/views/system/assnManage/addAnnoucement";   //发布公告
+import editAnnounce from "@/views/system/assnManage/editAnnounce";     //查看、编辑公告信息
 
 import memberManage from "@/views/system/memberManage/index";   //社团成员列表页
 import addMenber from "@/views/system/memberManage/addMenber";   //添加社团成员
@@ -105,6 +107,14 @@ export default new Router({
           component: addAnnoucement,
           meta: {
             title: '发布公告',
+          }
+        },
+        {
+          path: '/index/announceManage/editAnnounce',
+          name: 'editAnnounce',
+          component: editAnnounce,
+          meta: {
+            title: '公告信息',
           }
         },
         {

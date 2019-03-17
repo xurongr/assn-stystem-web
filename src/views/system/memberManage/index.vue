@@ -1,11 +1,22 @@
 <template>
   <div>
     <div class="user-manage">
+      <div style="display: flex">
+        <Select v-model="sortValue" style="width:150px">
+          <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+        <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
+      </div>
       <Router-link to="/index/memberManage/addMenber">
         <Button type="primary">添加社员</Button>
       </Router-link>
-      <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
     </div>
+    <!--管理员可以选择社团查看社团成员-->
+    <!--<div>-->
+      <!--<Select v-model="sortValue" style="width:150px">-->
+        <!--<Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+      <!--</Select>-->
+    <!--</div>-->
     <Table border ref="selection" :columns="columns4" :data="userInfo"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: space-between">
       <div>
@@ -110,11 +121,25 @@
           }
         ],
         pageNo: 0,
-        total:'',
+        current: 1,
+        total:0,
+        sortList: [
+          {
+            value: 'userName',
+            label: '学号'
+          },
+          {
+            value: 'name',
+            label: '姓名'
+          },
+        ],    //查找条件
+        sortValue:'',
+        userId: '',
       }
     },
 
     created() {
+      this.userId = JSON.parse(window.localStorage.getItem("loginInfo")).id;
       this.getInfo();
     },
 
@@ -126,16 +151,17 @@
 
       //改变页数
       pageChange(val) {
-        console.log(val)
+        this.pageNo = val - 1;
+        this.getInfo();
       },
 
       //获取用户列表
       getInfo() {
         let that = this;
-        let url = that.BaseConfig + '/selectUsersAll';
+        let url = that.BaseConfig + '/selectAssociationUserAll';
         let params = {
-          associationId: 0,
-          pageNo: 0,
+          userId: that.userId,
+          pageNo: that.pageNo,
           pageSize: 10,
         };
         let data = null;
@@ -151,7 +177,7 @@
             }
           })
           .catch(err => {
-            console.log(err);
+            that.$Message.error('请求错误');
           })
       },
 

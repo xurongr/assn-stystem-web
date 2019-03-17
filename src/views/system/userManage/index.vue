@@ -1,10 +1,15 @@
 <template>
   <div>
     <div class="user-manage">
+      <div style="display: flex">
+        <Select v-model="sortValue" style="width:150px">
+          <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+        <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容" v-model="name" @on-click="searchUser"/></div>
+      </div>
       <Router-link to="/index/userIndex/addUser">
         <Button type="primary">添加用户</Button>
       </Router-link>
-      <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
     </div>
     <Table border ref="selection" :columns="columns4" :data="userInfo"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: space-between">
@@ -12,7 +17,7 @@
         <Button @click="handleSelectAll(true)" type="primary">全选</Button>
         <Button @click="handleSelectAll(false)">取消全选</Button>
       </div>
-      <Page :total="total" :current.sync="current" :on-change="pageChange" />
+      <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
     </div>
   </div>
 </template>
@@ -21,6 +26,7 @@
   export default {
     data() {
       return {
+        current: 1,
         loginInfo:'',
         userInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
         columns4: [
@@ -30,7 +36,7 @@
             align: 'center'
           },
           {
-            title: '用户名',
+            title: '学号',
             key: 'userName'
           },
           {
@@ -47,15 +53,15 @@
           },
           {
             title: '参与社团',
-            key: 'assnName'
+            key: 'associationName'
           },
           {
             title: '联系方式',
-            key: 'tel'
+            key: 'telNumber'
           },
           {
             title: '用户权限',
-            key: 'identity'
+            key: 'identityName'
           },
           {
             title: '操作',
@@ -102,24 +108,36 @@
                       })
                     }
                   }
-                }, '编辑/职务修改'),
-                h('Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  on: {
-                    click: () => {
-                      this.cancelUser(userId);
-                    }
-                  }
-                }, '权限分配')
+                }, '编辑'),
+                // h('Button', {
+                //   props: {
+                //     type: 'error',
+                //     size: 'small'
+                //   },
+                //   on: {
+                //     click: () => {
+                //       this.cancelUser(userId);
+                //     }
+                //   }
+                // }, '权限分配')
               ]);
             }
           }
         ],
         pageNo: 0,
-        total:'',
+        total:0,
+        name: '',
+        sortList: [
+          {
+            value: 'userName',
+            label: '学号'
+          },
+          {
+            value: 'name',
+            label: '姓名'
+          },
+        ],    //查找条件
+        sortValue:'',
       }
     },
 
@@ -137,7 +155,8 @@
 
       //改变页数
       pageChange(val) {
-        console.log(val)
+        this.pageNo = val - 1;
+        this.getInfo();
       },
 
       //获取用户列表
@@ -145,7 +164,7 @@
         let that = this;
         let url = that.BaseConfig + '/selectUsersAll';
         let params = {
-          pageNo: 0,
+          pageNo: that.pageNo,
           pageSize: 10,
         };
         let data = null;
@@ -154,14 +173,13 @@
           .then(res => {
             data = res.data;
             if(data.retCode === 0) {
-              console.log(data.data);
               that.userInfo = data.data.data;
               that.total = data.data.total;
-              console.log(that.total)
+              console.log(that.userInfo)
             }
           })
           .catch(err => {
-            console.log(err);
+            that.$Message.error('请求错误');
           })
       },
 
@@ -187,6 +205,35 @@
             that.$Message.error('请求错误');
           })
       },
+
+      //搜索用户(学号、姓名、身份)
+      searchUser() {
+        console.log(1)
+        let that = this;
+        let url = that.BaseConfig + '/selectUsersAll';
+        let params = {
+          name: that.name,
+          // userName: that.userName,
+          // identityName: that.identityName,
+          pageNo: 0,
+          pageSize: 10,
+        };
+        let data = null;
+        that
+          .$http(url, params , data, 'get')
+          .then(res =>{
+            console.log(res)
+            data = res.data;
+            if(data.retCode === 0) {
+              that.userInfo = data.data.data;
+              that.total = data.data.total;
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
+      },
+
     },
   }
 </script>

@@ -28,16 +28,15 @@
     <div class="add-selfinfo">
       <Row>
         <Col span="8">社团名称：
-          <Select v-model="userInfo.assnBasicList[0].associationName"  style="width:200px" >
-            <Option v-for="item in assoList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
+          <Select v-model="userInfo.assnBasicList[0].associationId"  style="width:200px" >
+            <Option v-for="item in assnList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
           </Select>
         </Col>
-        <Col span="8">部门名称：
-          <Select v-model="userInfo.assnBasicList[0].departmentBasicList[0].departmentName" style="width:200px">
-            <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </Col>
-        <!--<Col span="8">职务：<Input v-model="userInfo.assnBasicList[0].job" readonly /></Col>-->
+        <!--<Col span="8">部门名称：-->
+          <!--<Select v-model="userInfo.assnBasicList[0].departmentBasicList[0].departmentName" style="width:200px">-->
+            <!--<Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+          <!--</Select>-->
+        <!--</Col>-->
       </Row>
     </div>
 
@@ -61,11 +60,11 @@
         userInfo: {
           age: null,
           assnBasicList: [{
-            associationId: 1,
+            associationId: null,
             associationName: "",
             departmentBasicList: [
               {
-                departmentId: 1,
+                departmentId: null,
                 departmentName: "",
               }
             ],
@@ -92,16 +91,9 @@
             label: '女'
           },
         ],           //select 性别
-        assoList: [
-          {
-            value: '青年志愿者协会',
-            label: '青年志愿者协会'
-          },
-          {
-            value: '计算机协会',
-            label: '计算机协会'
-          }
-        ],           //社团选择
+        associationList: [],   //社团列表
+        assnList: [],          //社团选择框
+        pageNo: 0,
         departList: [
           {
             value: '后勤部',
@@ -128,7 +120,49 @@
         }],     //专业级联选择框
       }
     },
+
+    created() {
+      this.getAssnList();
+    },
+
     methods: {
+      //获取社团列表
+      getAssnList(done) {
+        let that = this;
+        let url = that.BaseConfig + '/selectAssociationAll';
+        let params = {
+          pageNo: that.pageNo,
+          pageSize: 10
+        };
+        let data = null;
+        that
+          .$http(url, params , data, 'GET')
+          .then(res =>{
+            data = res.data;
+            if(data.retCode === 0) {
+              that.associationList = that.associationList.concat(data.data.data);
+              that.associationList.map(item =>{
+                that.assnList.push({
+                  value: item.id,
+                  label: item.associationName
+                });
+              });
+              if(that.associationList.length < data.data.total) {
+                that.pageNo++;
+                that.getAssnList();
+              }
+              console.log(that.associationList,that.pageNo)
+            } else {
+              that.$Message.error(data.retMsg);
+            }
+            done?done():null;
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+            done?done():null;
+          })
+      },
+
       //创建用户
       creatUser() {
         let that = this;
@@ -140,9 +174,10 @@
             console.log(res);
             if(res.data.retCode === 0) {
               that.$Message.success('创建成功');
-              that.$router.push({
-                path: '/index/userIndex',
-              })
+              console.log(that.userInfo)
+              // that.$router.push({
+              //   path: '/index/userIndex',
+              // })
             } else {
               that.$Message.error(res.data.retMsg);
             }

@@ -3,8 +3,8 @@
     <Layout>
       <Sider ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
         <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
-          <div style="height: 64px;background-color:#41c8ff">
-
+          <div class="header-name">
+            <p>社团管理</p>
           </div>
           <MenuItem name="1">
             <Icon type="ios-navigate"></Icon>
@@ -53,11 +53,12 @@
         <Header :style="{padding: 0}" class="layout-header-bar" style="display: flex">
           <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="md-menu" size="24"></Icon>
           <!--<breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>-->
+          <p><Router-link to="/index/web" style="color: #999">返回前端</Router-link></p>
         </Header>
         <div class="tags">
           <Tag type="dot" closable color="primary">标签一</Tag>
         </div>
-        <Content :style="{margin: '5px 10px 30px', background: '#fff', padding: '12px'}">
+        <Content :style="{margin: '12px 15px 30px', background: '#fff', padding: '25px 12px',borderRadius: '5px', border: '1px solid #dcdee2'}">
           <router-view></router-view>
         </Content>
       </Layout>
@@ -100,7 +101,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+  .header-name {
+    p {
+      width: 72%;
+      font-size: 19px;
+      font-weight: 600;
+      background-color: #2d8cf0;
+      padding: 5px 28px;
+      color: #fff;
+      letter-spacing: 3px;
+      border-radius: 10px;
+      margin: 10px auto;
+    }
+  }
   .layout{
     border: 1px solid #d7dde4;
     background: #f5f7f9;
@@ -157,4 +171,16 @@ export default {
   .tags {
     margin: 5px 20px 0 20px;
   }
+  .ivu-layout-sider,
+  .ivu-layout-sider-zero-width-trigger,
+  .ivu-menu,
+  .ivu-menu-dark {
+    background-color: #001529;
+  }
+  .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened,
+  .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened .ivu-menu-submenu-title,
+  .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title:hover {
+    background-color: #000c17;
+  }
+
 </style>
