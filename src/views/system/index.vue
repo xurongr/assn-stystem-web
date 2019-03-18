@@ -20,7 +20,7 @@
             <MenuItem name="2-1"><Router-link to="/index/assnManage">我的社团</Router-link></MenuItem>
             <MenuItem name="2-2"><Router-link to="/index/announcementManage">社团公告管理</Router-link></MenuItem>
             <MenuItem name="2-3"><Router-link to="/index/memberManage">社团成员管理</Router-link></MenuItem>
-            <MenuItem name="2-4"><Router-link to="/index/memberManage">社团活动管理</Router-link></MenuItem>
+            <MenuItem name="2-4"><Router-link to="/index/activityManage">社团活动管理</Router-link></MenuItem>
             <MenuItem name="2-5"><Router-link to="/index/memberManage">社团部门管理</Router-link></MenuItem>
           </Submenu>
           <Submenu name="3">

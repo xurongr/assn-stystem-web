@@ -68,7 +68,7 @@
                         },
                         on: {
                           click: () => {
-                            console.log('--paramas.row--', params.row)
+                            this.addUserToAssn(params.row.id);
                           }
                         }
                       }, '添加社员')
@@ -79,11 +79,12 @@
               searchValue:'',
               userInfo:[],
               total:0,
+              loginInfo: '',    //用户登录信息
             }
         },
 
         created() {
-
+          this.loginInfo = JSON.parse(window.localStorage.getItem("loginInfo"));
         },
 
         methods: {
@@ -115,6 +116,32 @@
                   that.userInfo = data.data.data;
                   that.total = data.data.total;
                 }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //添加用户进入社团
+          addUserToAssn(id) {
+            let that = this;
+            let url = that.BaseConfig + '/insertUserToAssociation';
+            let params = {
+              userId: id,
+              associationId: that.loginInfo.assnBasicList[0].associationId,
+            };
+            let data = null;
+            that
+              .$http(url, params , data, 'get')
+              .then(res =>{
+                console.log(res);
+//                data = res.data;
+//                if(data.retCode === 0) {
+//                  that.$Message.success('添加成功');
+//                  that.$router.push({
+//                    name: 'memberManage'
+//                  })
+//                }
               })
               .catch(err => {
                 that.$Message.error('请求错误');

@@ -3,21 +3,29 @@ import Router from 'vue-router'
 
 import login from "@/views/login";  //登录页
 
-import index from "@/views/system";  //后台管理首页
-import userIndex from "@/views/system/userManage/index";  //用户管理
-import addUser from "@/views/system/userManage/addUser";  //添加用户
+import index from "@/views/system";                                      //后台管理首页
+import userIndex from "@/views/system/userManage/index";                 //用户管理
+import addUser from "@/views/system/userManage/addUser";                 //添加用户
 import userInfomation from "@/views/system/userManage/userInfomation";   //查看、编辑用户信息
 
-import assnManage from "@/views/system/assnManage";    //我的社团
-import addAssn from "@/views/system/assnManage/addAssn";   //创建社团
+import assnManage from "@/views/system/assnManage";               //我的社团
+import addAssn from "@/views/system/assnManage/addAssn";          //创建社团
 import infoManage from "@/views/system/assnManage/infoManage";    //查看、编辑社团
 
 import announcementManage from "@/views/system/assnManage/announcementManage";   //公告
-import addAnnoucement from "@/views/system/assnManage/addAnnoucement";   //发布公告
-import editAnnounce from "@/views/system/assnManage/editAnnounce";     //查看、编辑公告信息
+import addAnnoucement from "@/views/system/assnManage/addAnnoucement";           //发布公告
+import editAnnounce from "@/views/system/assnManage/editAnnounce";               //查看、编辑公告信息
 
-import memberManage from "@/views/system/memberManage/index";   //社团成员列表页
-import addMenber from "@/views/system/memberManage/addMenber";   //添加社团成员
+import memberManage from "@/views/system/memberManage/index";          //社团成员列表页
+import addMenber from "@/views/system/memberManage/addMenber";         //添加社团成员
+import editMember from "@/views/system/memberManage/editMember"        //查看、修改社团成员信息
+
+import activityManage from "@/views/system/activityManage/index";       //社团活动列表页
+import addActivity from "@/views/system/activityManage/addActivity";    //创建社团活动
+import editActivity from "@/views/system/activityManage/editActivity";  //编辑社团活动
+
+// import departManage from "@views/system/departManage/index";            // 部门管理列表
+// import addDepart from "@views/system/departManage/addDepart";           // 添加部门
 
 // 前端
 import webIndex from "@/views/web/index";
@@ -133,6 +141,38 @@ export default new Router({
             title: '添加社团成员',
           }
         },
+        {
+          path: '/index/memberManage/editMember',
+          name: 'editMember',
+          component: editMember,
+          meta: {
+            title: '社团成员信息',
+          }
+        },
+        {
+          path: '/index/activityManage',
+          name: 'activityManage',
+          component: activityManage,
+          meta: {
+            title: '社团活动列表',
+          }
+        },
+        {
+          path: '/index/activityManage/addActivity',
+          name: 'addActivity',
+          component: addActivity,
+          meta: {
+            title: '创建社团活动',
+          }
+        },
+        {
+          path: '/index/activityManage/editActivity',
+          name: 'editActivity',
+          component: editActivity,
+          meta: {
+            title: '编辑社团活动',
+          }
+        }
       ]
     },
     {

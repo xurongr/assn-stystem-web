@@ -76,7 +76,7 @@
           major: "",
           name: "",
           pwd: "",
-          sex: null,   //1-男生  2-女生
+          sex: null,   //1-男生  0-女生
           telNumber: null,
           userImg: "",
           userName: ""
@@ -87,7 +87,7 @@
             label: '男'
           },
           {
-            value: 2,
+            value: 0,
             label: '女'
           },
         ],           //select 性别

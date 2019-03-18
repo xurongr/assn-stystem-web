@@ -1,6 +1,6 @@
 <template>
   <div class="addUser">
-    <p>个人信息</p>
+    <p>成员信息</p>
     <div class="add-selfinfo">
       <Row>
         <Col span="8">用户名：<Input v-model="userInfo.userName" readonly /></Col>
@@ -10,19 +10,19 @@
       <Row>
         <Col span="8">姓&nbsp;&nbsp;&nbsp;&nbsp;名：<Input v-model="userInfo.name" clearable /></Col>
         <Col span="8">性别：
-          <Select v-model="userInfo.sex" style="width:200px">
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
+        <Select v-model="userInfo.sex" style="width:200px">
+          <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
         </Col>
         <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：<Input v-model="userInfo.age" clearable /></Col>
       </Row>
       <Row>
         <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;级：<Input v-model="userInfo.grade" clearable /></Col>
         <Col span="8">
-          <!--<div style="display: flex; line-height: 32px;">-->
-            <!--专业：<Cascader :data="majorData" v-model="userInfo.major" style="width:200px;padding-left: 4px;"></Cascader>-->
-          <!--</div>-->
-          专业：<Input v-model="userInfo.major" clearable />
+        <!--<div style="display: flex; line-height: 32px;">-->
+        <!--专业：<Cascader :data="majorData" v-model="userInfo.major" style="width:200px;padding-left: 4px;"></Cascader>-->
+        <!--</div>-->
+        专业：<Input v-model="userInfo.major" clearable />
         </Col>
         <Col span="8">联系方式：<Input v-model="userInfo.telNumber" clearable /></Col>
       </Row>
@@ -33,20 +33,20 @@
         <div class="add-selfinfo" >
           <Row>
             <Col span="8">社团名称：
-              <Select v-model="item.associationName" style="width:200px">
-                <Option v-for="item in assoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
+            <Select v-model="item.associationName" style="width:200px">
+              <Option v-for="item in assoList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
             </Col>
             <Col span="8">部门名称：
-              <Select v-model="item.departmentBasicList[0].departmentName" style="width:200px">
-                <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
+            <Select v-model="item.departmentBasicList[0].departmentName" style="width:200px">
+              <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
             </Col>
             <Col span="8">职务：<Input v-model="item.job" readonly /></Col>
           </Row>
           <Row>
             <Col span="8">身份权限：
-              <Input v-model="item.identityName" readonly />
+            <Input v-model="item.identityName" readonly />
             </Col>
           </Row>
         </div>
@@ -54,7 +54,7 @@
     </div>
 
 
-    <div class="add-btn">
+    <div class="add-btn" v-if="flag === 1">
       <Poptip
         confirm
         title="确认取消修改用户信息？"
@@ -131,10 +131,12 @@
         }],     //专业级联选择框
         userInfo: '',
         userId: '',
+        flag: null,     //1-查看，2-编辑
       }
     },
     created() {
       this.userInfo = this.$route.query.userInfo;
+      this.flag = this.$route.query.flag;
       console.log(this.userInfo,this.userInfo.assnBasicList.length)
     },
 
