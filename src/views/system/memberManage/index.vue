@@ -128,7 +128,6 @@
         current: 1,
         total:0,           //获取用户列表total
         assnInfo: [],      //社团列表
-        total1: 0,        //获取社团列表total
         sortList: [
           {
             value: 'userName',
@@ -212,7 +211,6 @@
             data = res.data;
             if(data.retCode ===0) {
               that.assnInfo = that.assnInfo.concat(data.data.data);
-              that.total1 = data.data.total1;
               that.assnInfo.map(item =>{
                 that.sortAssnList.push({
                   value: item.id,
@@ -224,7 +222,7 @@
                   item.recruitState = '关闭'
                 }
               })
-              if(that.assnInfo.length < that.total1) {
+              if(that.assnInfo.length < data.data.total) {
                 that.pageNo1++;
                 that.getAssnInfo();
               }

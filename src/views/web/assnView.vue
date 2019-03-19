@@ -59,7 +59,7 @@
         </div>
         <div class="c-depart">
           <div class="depart-left">
-            <e-charts :options="chartOption"></e-charts>
+            <div class="chart" id="homeChart" style="width: 150px;height: 300px"></div>
           </div>
           <div class="depart-right">
             <p class="depart-title">部门名称/介绍</p>
@@ -136,88 +136,13 @@
 </template>
 
 <script>
-  import ECharts from 'vue-echarts/components/ECharts';
-  require('echarts/lib/chart/bar');
+  var echarts = require('echarts');
     export default {
-      components: {ECharts},
         data() {
             return {
               value2: 0,
               openImg: true,
-              chartOption: {
-                title: {
-                  x: 'center',
-                  text: 'ECharts例子个数统计',
-                  subtext: 'Rainbow bar example',
-                  link: 'http://echarts.baidu.com/doc/example.html'
-                },
-                tooltip: {
-                  trigger: 'item'
-                },
-                toolbox: {
-                  show: true,
-                  feature: {
-                    dataView: {show: true, readOnly: false},
-                    restore: {show: true},
-                    saveAsImage: {show: true}
-                  }
-                },
-                calculable: true,
-                grid: {
-                  borderWidth: 0,
-                  y: 80,
-                  y2: 60
-                },
-                xAxis: [
-                  {
-                    type: 'category',
-                    show: false,
-                    data: ['Line', 'Bar', 'Scatter', 'K', 'Pie', 'Radar', 'Chord', 'Force', 'Map', 'Gauge', 'Funnel']   //部门名字
-                  }
-                ],
-                yAxis: [
-                  {
-                    type: 'value',
-                    show: false
-                  }
-                ],
-                series: [
-                  {
-                    name: 'ECharts例子个数统计',
-                    type: 'bar',
-                    itemStyle: {
-                      normal: {
-                        color: function(params) {
-                          // build a color map as your need.
-                          var colorList = [
-                            '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',
-                            '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',
-                            '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
-                          ];
-                          return colorList[params.dataIndex]
-                        },
-                        label: {
-                          show: true,
-                          position: 'top',
-                          formatter: '{b}\n{c}'
-                        }
-                      }
-                    },
-                    data: [12,21,10,4,12,5,6,5,25,23,7],   //人数
-                    markPoint: {
-                      tooltip: {
-                        trigger: 'item',
-                        backgroundColor: 'rgba(0,0,0,0)',
-                        formatter: function(params){
-                          return '<img src="'
-                            + params.data.symbol.replace('image://', '')
-                            + '"/>';
-                        }
-                      },
-                    }
-                  }
-                ]
-              }
+
             }
         },
 
@@ -225,6 +150,23 @@
           setTimeout(() =>{
             this.openImg = false;
           },3000)
+      },
+
+      mounted() {
+          var myChart = echarts.init(document.getElementById('homeChart'));
+          myChart.setOption({
+            title: {text: '入门'},
+            tooltip: {},
+            xAxis: {
+              data: ['实践部','办公室']
+            },
+            yAxis: {},
+            series: [{
+              name: '销量',
+              type: 'bar',
+              data:[5,10]
+            }]
+          })
       },
 
         methods: {

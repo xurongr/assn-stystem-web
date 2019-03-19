@@ -8,6 +8,7 @@ import Axios from 'axios';
 import { http } from './api/HttpUtils';
 import promise from 'es6-promise';
 import './style/common.less';
+import store from './store/store';
 
 require('./mock.js');
 Vue.prototype.$axios = Axios;
@@ -29,6 +30,7 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

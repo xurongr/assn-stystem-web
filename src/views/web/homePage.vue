@@ -212,13 +212,24 @@
                 width: 29%;
                 margin: 10px;
                 text-align: center;
+                position: relative;
                 img {
-                  .box(90%, 150px);
+                  .box(90%, 170px);
+                  border-radius: 5px;
                 }
                 p {
+                  width: 90%;
+                  height: 29px;
+                  line-height: 29px;
+                  background: rgba(0, 0, 0, 0.5);
+                  color: #fff;
+                  position: absolute;
+                  bottom: 6px;
+                  left: 14px;
                   text-align: left;
                   padding-left: 15px;
                   font-size: 14px;
+                  border-radius: 0 0 5px 5px;
                 }
               }
             }

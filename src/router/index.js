@@ -24,8 +24,8 @@ import activityManage from "@/views/system/activityManage/index";       //社团
 import addActivity from "@/views/system/activityManage/addActivity";    //创建社团活动
 import editActivity from "@/views/system/activityManage/editActivity";  //编辑社团活动
 
-// import departManage from "@views/system/departManage/index";            // 部门管理列表
-// import addDepart from "@views/system/departManage/addDepart";           // 添加部门
+import departManage from "@/views/system/departManage/index";            // 部门管理列表
+import addDepart from "@/views/system/departManage/addDepart";           // 添加部门
 
 // 前端
 import webIndex from "@/views/web/index";
@@ -172,7 +172,23 @@ export default new Router({
           meta: {
             title: '编辑社团活动',
           }
-        }
+        },
+        {
+          path: '/index/departManage',
+          name: 'departManage',
+          component: departManage,
+          meta: {
+            title: '部门管理列表',
+          }
+        },
+        {
+          path: '/index/departManage/addDepart',
+          name: 'addDepart',
+          component: addDepart,
+          meta: {
+            title: '添加部门',
+          }
+        },
       ]
     },
     {

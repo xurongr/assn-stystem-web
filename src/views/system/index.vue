@@ -21,28 +21,19 @@
             <MenuItem name="2-2"><Router-link to="/index/announcementManage">社团公告管理</Router-link></MenuItem>
             <MenuItem name="2-3"><Router-link to="/index/memberManage">社团成员管理</Router-link></MenuItem>
             <MenuItem name="2-4"><Router-link to="/index/activityManage">社团活动管理</Router-link></MenuItem>
-            <MenuItem name="2-5"><Router-link to="/index/memberManage">社团部门管理</Router-link></MenuItem>
+            <MenuItem name="2-5"><Router-link to="/index/departManage">社团部门管理</Router-link></MenuItem>
           </Submenu>
           <Submenu name="3">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
               权限管理
             </template>
-            <MenuItem name="3-1">Option 1</MenuItem>
-            <MenuItem name="3-2">Option 2</MenuItem>
+            <MenuItem name="3-1">身份与权限</MenuItem>
           </Submenu>
           <Submenu name="4">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
               审核管理
-            </template>
-            <MenuItem name="3-1">Option 1</MenuItem>
-            <MenuItem name="3-2">Option 2</MenuItem>
-          </Submenu>
-          <Submenu name="5">
-            <template slot="title">
-              <Icon type="ios-analytics"></Icon>
-
             </template>
             <MenuItem name="3-1">Option 1</MenuItem>
             <MenuItem name="3-2">Option 2</MenuItem>
@@ -67,14 +58,12 @@
 </template>
 
 <script>
-  import breadcrumbNav from "@/views/components/breadcrumb-nav";
 export default {
   components: {
-    breadcrumbNav
   },
   data () {
     return {
-      isCollapsed: false
+      isCollapsed: false,
     }
   },
   computed: {
@@ -91,6 +80,10 @@ export default {
       ]
     }
   },
+  created() {
+
+  },
+
   methods: {
 
     collapsedSider () {

@@ -24,21 +24,6 @@
         <Col span="8">联系方式：<Input v-model="userInfo.telNumber" clearable /></Col>
       </Row>
     </div>
-    <p>加入社团1</p>
-    <div class="add-selfinfo">
-      <Row>
-        <Col span="8">社团名称：
-          <Select v-model="userInfo.assnBasicList[0].associationId"  style="width:200px" >
-            <Option v-for="item in assnList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
-          </Select>
-        </Col>
-        <!--<Col span="8">部门名称：-->
-          <!--<Select v-model="userInfo.assnBasicList[0].departmentBasicList[0].departmentName" style="width:200px">-->
-            <!--<Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-          <!--</Select>-->
-        <!--</Col>-->
-      </Row>
-    </div>
 
     <div class="add-btn">
       <Poptip
@@ -59,17 +44,6 @@
       return {
         userInfo: {
           age: null,
-          assnBasicList: [{
-            associationId: null,
-            associationName: "",
-            departmentBasicList: [
-              {
-                departmentId: null,
-                departmentName: "",
-              }
-            ],
-            job: "社团成员",
-          }],
           identityId: 3,
           identityName: "普通用户",
           grade: null,
@@ -91,19 +65,7 @@
             label: '女'
           },
         ],           //select 性别
-        associationList: [],   //社团列表
-        assnList: [],          //社团选择框
         pageNo: 0,
-        departList: [
-          {
-            value: '后勤部',
-            label: '后勤部'
-          },
-          {
-            value: '办公室',
-            label: '办公室'
-          }
-        ],         //部门选择
         majorData: [{
           value: '信息与机电工程学院',
           label: '信息与机电工程学院',
