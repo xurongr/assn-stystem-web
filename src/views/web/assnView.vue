@@ -274,8 +274,8 @@
           background-size: 100% 100%;
           img {
             position: absolute;
-            top: 137px;
-            left: 59px;
+            top: 34%;
+            left: 8%;
             width: 70%;
             height: 58%;
             -webkit-transform: rotate(8deg);
@@ -440,16 +440,16 @@
           display: flex;
           justify-content: space-between;
           .det-img {
-            width: 15%;
+            width: 140px;
             text-align: center;
             img {
-              .box(90%, 90%);
+              .box(140px, 90%);
               margin-top: 5px;
               border-radius: 5px;
             }
           }
           .det-cont {
-            width: 84%;
+            padding-left: 10px;
             p {
               line-height: 20px;
               letter-spacing: 1px;

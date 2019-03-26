@@ -35,7 +35,6 @@
                 if(res.data.retCode === 0) {
                   //把登录信息缓存起来localStorage
                   localStorage.setItem('loginInfo', JSON.stringify(res.data.data));
-                  that.$store.commit('getLoginInfo', res.data.data);
                   that.$router.push({
                     path: '/index/web',
                   })

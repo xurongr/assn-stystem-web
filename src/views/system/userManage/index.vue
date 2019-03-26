@@ -5,7 +5,7 @@
         <Select v-model="sortValue" style="width:150px">
           <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容" v-model="name" @on-click="searchUser"/></div>
+        <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容" v-model="name" @on-enter="searchUser" @on-search="searchUser"/></div>
       </div>
       <Router-link to="/index/userIndex/addUser">
         <Button type="primary">添加用户</Button>
@@ -80,7 +80,6 @@
                   },
                   on: {
                     click: () => {
-                      // console.log(params.row)
                       this.$router.push({
                         path: '/index/assnManage/userInfomation',
                         query: {
@@ -124,7 +123,7 @@
             }
           }
         ],
-        pageNo: 0,
+        pageNo: 1,
         total:0,
         name: '',
         sortList: [
@@ -143,7 +142,7 @@
 
     created() {
       //获取用户个人信息
-      this.loginInfo = JSON.parse(window.localStorage.getItem("loginInfo"));
+      this.loginInfo = this.$store.state.loginInfo;
       this.getInfo();
     },
 
@@ -155,7 +154,7 @@
 
       //改变页数
       pageChange(val) {
-        this.pageNo = val - 1;
+        this.pageNo = val;
         this.getInfo();
       },
 
@@ -176,6 +175,8 @@
               that.userInfo = data.data.data;
               that.total = data.data.total;
               console.log(that.userInfo)
+            } else {
+              that.$Message.error(data.retMsg);
             }
           })
           .catch(err => {
@@ -208,16 +209,24 @@
 
       //搜索用户(学号、姓名、身份)
       searchUser() {
-        console.log(1)
         let that = this;
         let url = that.BaseConfig + '/selectUsersAll';
-        let params = {
-          name: that.name,
-          // userName: that.userName,
-          // identityName: that.identityName,
-          pageNo: 0,
-          pageSize: 10,
-        };
+        let params;
+        if(that.sortValue == '姓名') {
+          params = {
+            name: that.name,
+            // identityName: that.identityName,
+            pageNo: 1,
+            pageSize: 10,
+          };
+        } else if(that.sortValue == '学号'){
+          params = {
+            userName: that.name,
+            // identityName: that.identityName,
+            pageNo: 1,
+            pageSize: 10,
+          };
+        }
         let data = null;
         that
           .$http(url, params , data, 'get')

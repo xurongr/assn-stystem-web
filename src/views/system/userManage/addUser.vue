@@ -65,7 +65,7 @@
             label: '女'
           },
         ],           //select 性别
-        pageNo: 0,
+        pageNo: 1,
         majorData: [{
           value: '信息与机电工程学院',
           label: '信息与机电工程学院',
@@ -84,47 +84,10 @@
     },
 
     created() {
-      this.getAssnList();
+
     },
 
     methods: {
-      //获取社团列表
-      getAssnList(done) {
-        let that = this;
-        let url = that.BaseConfig + '/selectAssociationAll';
-        let params = {
-          pageNo: that.pageNo,
-          pageSize: 10
-        };
-        let data = null;
-        that
-          .$http(url, params , data, 'GET')
-          .then(res =>{
-            data = res.data;
-            if(data.retCode === 0) {
-              that.associationList = that.associationList.concat(data.data.data);
-              that.associationList.map(item =>{
-                that.assnList.push({
-                  value: item.id,
-                  label: item.associationName
-                });
-              });
-              if(that.associationList.length < data.data.total) {
-                that.pageNo++;
-                that.getAssnList();
-              }
-              console.log(that.associationList,that.pageNo)
-            } else {
-              that.$Message.error(data.retMsg);
-            }
-            done?done():null;
-          })
-          .catch(err => {
-            that.$Message.error('请求错误');
-            done?done():null;
-          })
-      },
-
       //创建用户
       creatUser() {
         let that = this;
@@ -136,10 +99,9 @@
             console.log(res);
             if(res.data.retCode === 0) {
               that.$Message.success('创建成功');
-              console.log(that.userInfo)
-              // that.$router.push({
-              //   path: '/index/userIndex',
-              // })
+              that.$router.push({
+                path: '/index/userIndex',
+              })
             } else {
               that.$Message.error(res.data.retMsg);
             }

@@ -8,7 +8,7 @@
           <Input v-model="name" @on-blur="searchUser"></Input>
           <Modal
             v-model="modal2"
-            title="选择社团负责人"
+            title="选择部门负责人"
             :footer-hide="true"
             :mask-closable="closeM"
           >
@@ -24,7 +24,7 @@
           <Button type="primary" @click="addDepart">添加</Button>
           <Poptip
             confirm
-            title="确认添加此部门？"
+            title="确认取消添加此部门？"
             @on-ok="ok"
            >
             <Button style="margin-left: 8px">取消</Button>
@@ -41,7 +41,6 @@
               formItem: {
                 associationId: null,
                 departmentName: '',
-                select: '',
                 content: '',
                 ministerUserId: null,
               },
@@ -91,6 +90,7 @@
 
         created() {
           this.formItem.associationId = this.$route.query.associationId;
+          console.log(this.formItem.associationId)
         },
 
         methods: {
@@ -101,7 +101,7 @@
             let params = {
               associationId: that.formItem.associationId,
               name: that.name,
-              pageNo: 0,
+              pageNo: 1,
               pageSize: 10,
             };
             let data = null;
@@ -134,6 +134,7 @@
             let that = this;
             let url = that.BaseConfig + '/insertDepartment';
             let data = that.formItem;
+            console.log(data)
             that
               .$http(url, '', data, 'post')
               .then(res => {
