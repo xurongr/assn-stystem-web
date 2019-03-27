@@ -94,8 +94,8 @@
       return {
         associationActivityId: '',    //活动id
         formItem: '',                 //活动详情
-        pageNo: 0,
-        pageNo1: 0,
+        pageNo: 1,
+        pageNo1: 1,
         associationList: [],   // 社团列表
         searchAssnList: '',
         userInfo: [],       //社团下的用户列表

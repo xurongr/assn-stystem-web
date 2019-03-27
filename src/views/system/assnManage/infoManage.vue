@@ -2,7 +2,7 @@
   <div class="info-manage">
     <Form :model="formItem" :label-width="100">
       <FormItem label="社团名称：">
-        <Input v-model="formItem.associationName"></Input>
+        <Input v-model="formItem.associationName" readonly></Input>
       </FormItem>
       <FormItem label="社团负责人：">
         <Input v-model="name" @on-blur="searchUser"></Input>
@@ -134,7 +134,7 @@
         let url = that.BaseConfig + '/selectUsersAll';
         let params = {
           name: that.name,
-          pageNo: 0,
+          pageNo: 1,
           pageSize: 10,
         };
         let data = null;

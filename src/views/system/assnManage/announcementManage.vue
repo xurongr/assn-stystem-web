@@ -125,7 +125,7 @@
               ],    //查找条件
               sortValue:'',
               total: 0,
-              pageNo:0,
+              pageNo:1,
               current: 1,
             }
         },
@@ -137,7 +137,7 @@
         methods: {
           //改变页数
           pageChange(val) {
-            this.pageNo = val - 1;
+            this.pageNo = val;
             this.getInfo();
           },
 

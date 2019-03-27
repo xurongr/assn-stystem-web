@@ -10,8 +10,8 @@
       </div>
       <div class="banner-right">
         <img src="" alt="">
-        <p>用户名</p>
-        <p style="padding-left: 10px">退出</p>
+        <p>{{loginInfo.name}}</p>
+        <p style="padding-left: 10px" @click="exitLogin">退出</p>
       </div>
     </div>
     <!--导航栏-->
@@ -54,9 +54,14 @@
     export default {
         data() {
             return {
-
+              loginInfo: '',
             }
         },
+
+      created() {
+          this.loginInfo = this.$store.state.loginInfo;
+          console.log(1,this.loginInfo)
+      },
 
         methods: {
           //进入后台管理

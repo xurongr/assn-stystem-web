@@ -14,17 +14,16 @@
     </div>
     <div v-if="identityId === 0">
       选择社团：
-      <Select v-model="associationId" style="width:150px;margin-bottom: 10px">
+      <Select v-model="associationId" style="width:150px;margin-bottom: 10px" @on-change="getDepartList">
         <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
-      <br>
       <!--选择部门：-->
       <!--<Select v-model="sortValue" style="width:150px;margin-bottom: 10px">-->
         <!--<Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
       <!--</Select>-->
     </div>
 
-    <Table border ref="selection" :columns="columns4" :data="assnInfo"></Table>
+    <Table border ref="selection" :columns="columns4" :data="departList"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: space-between">
       <div>
         <Button @click="handleSelectAll(true)" type="primary">全选</Button>
@@ -44,7 +43,7 @@
         pageNo:1,
         total: 0,
         current: 1,
-        getDepartList: [],   //部门列表
+        departList: [],   //部门列表
         columns4: [
           {
             title: '部门名称',
@@ -62,7 +61,6 @@
           {
             title: '操作',
             key: 'action',
-            width: 150,
             align: 'center',
             render: (h, params) => {
               return h('div', [
@@ -132,14 +130,24 @@
         sortValue:'',
         identityId: null,
         sortAssnList: [],    //查找社团-管理员
-        associationId: null,  //社团id
+        associationId: '',  //社团id
       }
     },
 
     created() {
-      this.identityId = JSON.parse(this.$store.state.loginInfo).identityId;
-      this.associationId =  JSON.parse(this.$store.state.loginInfo).associationId;
-      this.getDepartList();
+      this.identityId = this.$store.state.loginInfo.identityId;
+      if(this.identityId === 0) {
+        this.associationId = null;
+      } else {
+        let assnBasicList = this.$store.state.loginInfo.assnBasicList;
+        assnBasicList.map(item => {
+          if(item.job === '会长' || item.job === '部长') {
+            this.associationId =  item.associationId;
+            this.getDepartList();
+          }
+        });
+      }
+      this.getAssnInfo();
     },
 
     methods: {
@@ -169,11 +177,6 @@
                   value: item.id,
                   label: item.associationName,
                 });
-                if(item.recruitState === 0) {
-                  item.recruitState = '开启'
-                } else {
-                  item.recruitState = '关闭'
-                }
               })
               if(that.assnInfo.length < data.data.total) {
                 that.pageNo1++;
@@ -191,9 +194,11 @@
         let that = this;
         let url = that.BaseConfig + '/selectDepartmentAll';
         let params = {
+          associationId: that.associationId,
           pageNo: that.pageNo,
           pageSize: 10,
         };
+        console.log(params)
         let data = null;
         that
           .$http(url, params, data, 'get')
@@ -201,7 +206,7 @@
             data = res.data;
             console.log('--获取部门列表--', data);
             if(data.retCode ===0) {
-              that.getDepartList = data.data.data;
+              that.departList = data.data.data;
               that.total = data.data.total;
             }
           })
@@ -212,7 +217,7 @@
 
       //进入-添加部门
       addDepart() {
-        if(associationId === null) {
+        if(this.associationId === null ||this.associationId === 'undefined') {
           this.$Message.warning('请先选择社团');
         } else {
           this.$router.push({

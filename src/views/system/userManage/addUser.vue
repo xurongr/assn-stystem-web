@@ -8,6 +8,7 @@
         <Col span="8">确认密码：<Input v-model="userInfo.password" clearable/></Col>
       </Row>
       <Row>
+    
         <Col span="8">姓名：<Input v-model="userInfo.name" clearable /></Col>
         <Col span="8">性别：
           <Select v-model="userInfo.sex" style="width:200px">
@@ -17,6 +18,7 @@
         <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：<Input v-model="userInfo.age" clearable /></Col>
       </Row>
       <Row>
+      
         <Col span="8">年级：<Input v-model="userInfo.grade" clearable /></Col>
         <Col span="8">
           专业：<Input v-model="userInfo.major" clearable />
@@ -65,6 +67,7 @@
             label: '女'
           },
         ],           //select 性别
+        pageNo: 1,
         majorData: [{
           value: '信息与机电工程学院',
           label: '信息与机电工程学院',
@@ -83,7 +86,7 @@
     },
 
     created() {
-      this.getAssnList();
+
     },
 
     methods: {

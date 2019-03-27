@@ -148,11 +148,11 @@
         ],    //查找条件
         sortValue:'',       //查找值
         total: 0,           //活动总条数
-        pageNo:0,
+        pageNo:1,
         current: 1,
         searchValue: '',     //查找内容
         searchInfo: [],      //选择内容
-        pageNo1: 0,          //获取社团列表pageNo1
+        pageNo1: 1,          //获取社团列表pageNo1
         associationList: [],  //社团列表
         searchAssnValue: '',
         searchAssnList: [],
@@ -162,7 +162,7 @@
     created() {
       this.loginInfo = JSON.parse(window.localStorage.getItem("loginInfo"));
       this.getActivityList();
-      this.getAssnList();
+      // this.getAssnList();
     },
 
     methods: {

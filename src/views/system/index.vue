@@ -28,15 +28,17 @@
               <Icon type="ios-analytics"></Icon>
               权限管理
             </template>
-            <MenuItem name="3-1">身份与权限</MenuItem>
+            <Router-link to="/index/identityChange">
+              <MenuItem name="3-1">身份变更</MenuItem>
+            </Router-link>
           </Submenu>
           <Submenu name="4">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
               审核管理
             </template>
-            <MenuItem name="3-1">Option 1</MenuItem>
-            <MenuItem name="3-2">Option 2</MenuItem>
+            <MenuItem name="3-1">入团申请</MenuItem>
+            <MenuItem name="3-2">身份变更申请</MenuItem>
           </Submenu>
         </Menu>
       </Sider>

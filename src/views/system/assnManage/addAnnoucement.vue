@@ -39,7 +39,7 @@
               },
               associationList: [],   //社团列表
               assnList: [],          //社团选择框
-              pageNo: 0,
+              pageNo: 1,
             }
         },
 

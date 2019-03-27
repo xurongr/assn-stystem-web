@@ -7,14 +7,12 @@
         </Select>
         <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
       </div>
-      <Router-link to="/index/memberManage/addMenber">
-        <Button type="primary">添加社员</Button>
-      </Router-link>
+      <Button type="primary" @click="addAssnUser">添加社员</Button>
     </div>
     <!--管理员可以选择社团查看社团成员-->
     <div style="margin-top:10px; margin-bottom: 10px" v-if="identityId === 0">
       选择社团：
-      <Select v-model="sortAssnValue" style="width:150px">
+      <Select v-model="associationId" @on-change="getInfo" style="width:150px">
         <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
     </div>
@@ -123,8 +121,8 @@
             }
           }
         ],
-        pageNo: 0,
-        pageNo1: 0,
+        pageNo: 1,
+        pageNo1: 1,
         current: 1,
         total:0,           //获取用户列表total
         assnInfo: [],      //社团列表
@@ -139,7 +137,6 @@
           },
         ],    //查找条件
         sortValue:'',
-        sortAssnValue:'',
         sortAssnList: [],    //查找社团-管理员
         userId: null,
         associationId: null,
@@ -148,10 +145,20 @@
     },
 
     created() {
-      this.userId = JSON.parse(window.localStorage.getItem("loginInfo")).id;
-      this.identityId = JSON.parse(window.localStorage.getItem("loginInfo")).identityId;
-      this.associationId = JSON.parse(window.localStorage.getItem("loginInfo")).assnBasicList[0].associationId;
-      this.getInfo();
+      this.userId = this.$store.state.loginInfo.id;
+      this.identityId = this.$store.state.loginInfo.identityId;
+      if(this.identityId === 0) {
+        this.associationId = null;
+        this.$Message.warning('请先选择社团');
+      } else {
+        let assnBasicList = this.$store.state.loginInfo.assnBasicList;
+        assnBasicList.map(item => {
+          if(item.job === '会长' || item.job === '部长') {
+            this.associationId =  item.associationId;
+            this.getInfo();
+          }
+        });
+      }
       this.getAssnInfo();
     },
 
@@ -167,13 +174,24 @@
         this.getInfo();
       },
 
+      //进入添加成员页面
+      addAssnUser() {
+        if(this.associationId === null ||this.associationId === 'undefined') {
+          this.$Message.warning('请先选择社团');
+        } else {
+          this.$router.push({
+            path: '/index/memberManage/addMenber',
+            query: {
+              associationId: this.associationId,
+            }
+          })
+        }
+      },
+
       //获取社团成员列表
       getInfo() {
         let that = this;
         let url = that.BaseConfig + '/selectAssociationUserAll';
-        if(that.sortAssnValue !== '') {
-          that.associationId = that.sortAssnValue;
-        }
         let params = {
           associationId: that.associationId,
           pageNo: that.pageNo,
@@ -185,10 +203,11 @@
           .then(res => {
             data = res.data;
             if(data.retCode === 0) {
-              console.log(data.data);
+              console.log('--部门成员--',data.data);
               that.userInfo = data.data.data;
               that.total = data.data.total;
-              console.log(that.total)
+            } else {
+              that.$Message.error(data.retMsg);
             }
           })
           .catch(err => {
@@ -216,11 +235,6 @@
                   value: item.id,
                   label: item.associationName,
                 });
-                if(item.recruitState === 0) {
-                  item.recruitState = '开启'
-                } else {
-                  item.recruitState = '关闭'
-                }
               })
               if(that.assnInfo.length < data.data.total) {
                 that.pageNo1++;

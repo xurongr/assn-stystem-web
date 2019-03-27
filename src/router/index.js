@@ -27,6 +27,8 @@ import editActivity from "@/views/system/activityManage/editActivity";  //编辑
 import departManage from "@/views/system/departManage/index";            // 部门管理列表
 import addDepart from "@/views/system/departManage/addDepart";           // 添加部门
 
+import identityChange from "@/views/system/identityChange";              // 更改身份
+
 // 前端
 import webIndex from "@/views/web/index";
 import homePage from "@/views/web/homePage";       //首页
@@ -190,6 +192,14 @@ export default new Router({
           component: addDepart,
           meta: {
             title: '添加部门',
+          }
+        },
+        {
+          path: '/index/identityChange',
+          name: 'identityChange',
+          component: identityChange,
+          meta: {
+            title: '身份变更',
           }
         },
       ]
