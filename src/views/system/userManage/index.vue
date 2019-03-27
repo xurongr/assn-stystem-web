@@ -12,11 +12,7 @@
       </Router-link>
     </div>
     <Table border ref="selection" :columns="columns4" :data="userInfo"></Table>
-    <div style="margin-top: 20px; display: flex;justify-content: space-between">
-      <div>
-        <Button @click="handleSelectAll(true)" type="primary">全选</Button>
-        <Button @click="handleSelectAll(false)">取消全选</Button>
-      </div>
+    <div style="margin-top: 20px; display: flex;justify-content: flex-end">
       <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
     </div>
   </div>
@@ -30,11 +26,6 @@
         loginInfo:'',
         userInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
         columns4: [
-          {
-            type: 'selection',
-            width: 60,
-            align: 'center'
-          },
           {
             title: '学号',
             key: 'userName'
@@ -80,7 +71,6 @@
                   },
                   on: {
                     click: () => {
-                      // console.log(params.row)
                       this.$router.push({
                         path: '/index/assnManage/userInfomation',
                         query: {
@@ -109,22 +99,11 @@
                     }
                   }
                 }, '编辑'),
-                // h('Button', {
-                //   props: {
-                //     type: 'error',
-                //     size: 'small'
-                //   },
-                //   on: {
-                //     click: () => {
-                //       this.cancelUser(userId);
-                //     }
-                //   }
-                // }, '权限分配')
               ]);
             }
           }
         ],
-        pageNo: 0,
+        pageNo: 1,
         total:0,
         name: '',
         sortList: [
@@ -155,7 +134,7 @@
 
       //改变页数
       pageChange(val) {
-        this.pageNo = val - 1;
+        this.pageNo = val;
         this.getInfo();
       },
 

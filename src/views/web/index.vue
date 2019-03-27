@@ -35,7 +35,7 @@
             </Dropdown>
           </li>
           <li><Router-link to="/index/web/assnView">社团风采</Router-link></li>
-          <li>社团招新</li>
+          <li><Router-link to="/index/web/recruitNew">社团招新</Router-link></li>
           <li>创社申请</li>
           <li>关于我们</li>
         </ul>

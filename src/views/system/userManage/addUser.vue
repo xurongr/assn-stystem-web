@@ -3,12 +3,12 @@
     <p>个人信息</p>
     <div class="add-selfinfo">
       <Row>
-        <Col span="8">用户名：<Input v-model="userInfo.userName" clearable /></Col>
+        <Col span="8">学号：<Input v-model="userInfo.userName" clearable /></Col>
         <Col span="8">密码：<Input v-model="userInfo.pwd" clearable/></Col>
         <Col span="8">确认密码：<Input v-model="userInfo.password" clearable/></Col>
       </Row>
       <Row>
-        <Col span="8">姓&nbsp;&nbsp;&nbsp;&nbsp;名：<Input v-model="userInfo.name" clearable /></Col>
+        <Col span="8">姓名：<Input v-model="userInfo.name" clearable /></Col>
         <Col span="8">性别：
           <Select v-model="userInfo.sex" style="width:200px">
             <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -17,7 +17,7 @@
         <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：<Input v-model="userInfo.age" clearable /></Col>
       </Row>
       <Row>
-        <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;级：<Input v-model="userInfo.grade" clearable /></Col>
+        <Col span="8">年级：<Input v-model="userInfo.grade" clearable /></Col>
         <Col span="8">
           专业：<Input v-model="userInfo.major" clearable />
         </Col>
@@ -65,7 +65,6 @@
             label: '女'
           },
         ],           //select 性别
-        pageNo: 0,
         majorData: [{
           value: '信息与机电工程学院',
           label: '信息与机电工程学院',
@@ -88,65 +87,35 @@
     },
 
     methods: {
-      //获取社团列表
-      getAssnList(done) {
-        let that = this;
-        let url = that.BaseConfig + '/selectAssociationAll';
-        let params = {
-          pageNo: that.pageNo,
-          pageSize: 10
-        };
-        let data = null;
-        that
-          .$http(url, params , data, 'GET')
-          .then(res =>{
-            data = res.data;
-            if(data.retCode === 0) {
-              that.associationList = that.associationList.concat(data.data.data);
-              that.associationList.map(item =>{
-                that.assnList.push({
-                  value: item.id,
-                  label: item.associationName
-                });
-              });
-              if(that.associationList.length < data.data.total) {
-                that.pageNo++;
-                that.getAssnList();
-              }
-              console.log(that.associationList,that.pageNo)
-            } else {
-              that.$Message.error(data.retMsg);
-            }
-            done?done():null;
-          })
-          .catch(err => {
-            that.$Message.error('请求错误');
-            done?done():null;
-          })
-      },
-
       //创建用户
       creatUser() {
         let that = this;
-        let url = that.BaseConfig + '/insertUser';
-        let data = that.userInfo;
-        that
-          .$http(url,'', data, 'post')
-          .then(res => {
-            console.log(res);
-            if(res.data.retCode === 0) {
-              that.$Message.success('创建成功');
-              console.log(that.userInfo)
-              // that.$router.push({
-              //   path: '/index/userIndex',
-              // })
-            } else {
-              that.$Message.error(res.data.retMsg);
-            }
-          })
-          .catch(err => {
-            that.$Message.error('请求错误');
-          })
+        if(that.userInfo.userName === '') {
+          this.$Message.warning('学号不能为空');
+        } else if(that.userInfo.name === '') {
+          this.$Message.warning('姓名不能为空');
+        } else if(that.userInfo.pwd === '') {
+          this.$Message.warning('密码不能为空');
+        } else {
+          let url = that.BaseConfig + '/insertUser';
+          let data = that.userInfo;
+          that
+            .$http(url,'', data, 'post')
+            .then(res => {
+              console.log(res);
+              if(res.data.retCode === 0) {
+                that.$Message.success('创建成功');
+                that.$router.push({
+                  path: '/index/userIndex',
+                })
+              } else {
+                that.$Message.error(res.data.retMsg);
+              }
+            })
+            .catch(err => {
+              that.$Message.error('请求错误');
+            })
+        }
       },
 
       ok() {
