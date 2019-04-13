@@ -61,7 +61,7 @@
             <div class="cont-view">
               <div class="news-title">
                 <p>社团风采</p>
-                <p><a href="">更多>></a></p>
+                <p><Router-link to="/index/web/morePage">更多>></Router-link></p>
               </div>
               <div class="views">
                 <div class="views-detail">

@@ -31,8 +31,11 @@ import identityChange from "@/views/system/identityChange";              // 更�
 
 // 前端
 import webIndex from "@/views/web/index";
-import homePage from "@/views/web/homePage";   //首页
-import assnView from "@/views/web/assnView";   //社团风采
+import homePage from "@/views/web/homePage";       //首页
+import assnView from "@/views/web/assnView";       //社团风采
+import recruitNew from "@/views/web/recruitNew";   //社团招新
+import applyTable from "@/views/web/applyTable";   //申请表格
+import morePage from "@/views/web/morePage";       //更多
 
 
 Vue.use(Router)
@@ -226,7 +229,28 @@ export default new Router({
           meta: {
             title: '社团风采',
           }
-        }
+        },
+        {
+          path: '/index/web/recruitNew',
+          name: 'recruitNew',
+          component: recruitNew,
+          meta: {
+            title: '社团招新'
+          }
+        },
+        {
+          path: '/index/web/applyTable',
+          name: 'applyTable',
+          component: applyTable,
+          meta: {
+            title: '申请表格'
+          }
+        },
+        {
+          path: '/index/web/morePage',
+          name: 'morePage',
+          component: morePage,
+        },
       ]
     },
   ]

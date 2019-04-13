@@ -3,12 +3,13 @@
     <p>个人信息</p>
     <div class="add-selfinfo">
       <Row>
-        <Col span="8">用户名：<Input v-model="userInfo.userName" clearable /></Col>
+        <Col span="8">学号：<Input v-model="userInfo.userName" clearable /></Col>
         <Col span="8">密码：<Input v-model="userInfo.pwd" clearable/></Col>
         <Col span="8">确认密码：<Input v-model="userInfo.password" clearable/></Col>
       </Row>
       <Row>
-        <Col span="8">姓&nbsp;&nbsp;&nbsp;&nbsp;名：<Input v-model="userInfo.name" clearable /></Col>
+    
+        <Col span="8">姓名：<Input v-model="userInfo.name" clearable /></Col>
         <Col span="8">性别：
           <Select v-model="userInfo.sex" style="width:200px">
             <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -17,7 +18,8 @@
         <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：<Input v-model="userInfo.age" clearable /></Col>
       </Row>
       <Row>
-        <Col span="8">年&nbsp;&nbsp;&nbsp;&nbsp;级：<Input v-model="userInfo.grade" clearable /></Col>
+      
+        <Col span="8">年级：<Input v-model="userInfo.grade" clearable /></Col>
         <Col span="8">
           专业：<Input v-model="userInfo.major" clearable />
         </Col>
@@ -91,24 +93,32 @@
       //创建用户
       creatUser() {
         let that = this;
-        let url = that.BaseConfig + '/insertUser';
-        let data = that.userInfo;
-        that
-          .$http(url,'', data, 'post')
-          .then(res => {
-            console.log(res);
-            if(res.data.retCode === 0) {
-              that.$Message.success('创建成功');
-              that.$router.push({
-                path: '/index/userIndex',
-              })
-            } else {
-              that.$Message.error(res.data.retMsg);
-            }
-          })
-          .catch(err => {
-            that.$Message.error('请求错误');
-          })
+        if(that.userInfo.userName === '') {
+          this.$Message.warning('学号不能为空');
+        } else if(that.userInfo.name === '') {
+          this.$Message.warning('姓名不能为空');
+        } else if(that.userInfo.pwd === '') {
+          this.$Message.warning('密码不能为空');
+        } else {
+          let url = that.BaseConfig + '/insertUser';
+          let data = that.userInfo;
+          that
+            .$http(url,'', data, 'post')
+            .then(res => {
+              console.log(res);
+              if(res.data.retCode === 0) {
+                that.$Message.success('创建成功');
+                that.$router.push({
+                  path: '/index/userIndex',
+                })
+              } else {
+                that.$Message.error(res.data.retMsg);
+              }
+            })
+            .catch(err => {
+              that.$Message.error('请求错误');
+            })
+        }
       },
 
       ok() {
