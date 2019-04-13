@@ -36,6 +36,9 @@ import assnView from "@/views/web/assnView";       //社团风采
 import recruitNew from "@/views/web/recruitNew";   //社团招新
 import applyTable from "@/views/web/applyTable";   //申请表格
 import morePage from "@/views/web/morePage";       //更多
+import createAssnApply from "@/views/web/createAssnApply";   //建团申请
+
+import fileUpload from "@/views/components/file-upload"
 
 
 Vue.use(Router)
@@ -247,9 +250,22 @@ export default new Router({
           }
         },
         {
+          path: '/index/web/createAssnApply',
+          name: 'createAssnApply',
+          component: createAssnApply,
+          meta: {
+            title: '建团申请'
+          }
+        },
+        {
           path: '/index/web/morePage',
           name: 'morePage',
           component: morePage,
+        },
+        {
+          path: '/fileUpload',
+          name: 'fileUpload',
+          component: fileUpload,
         },
       ]
     },

@@ -58,9 +58,6 @@
           </div>
         </div>
         <div class="c-depart">
-          <div class="depart-left">
-            <div class="chart" id="homeChart" style="width: 150px;height: 300px"></div>
-          </div>
           <div class="depart-right">
             <p class="depart-title">部门名称/介绍</p>
             <p class="depart-detail">部门职能介绍，部门人数等部门职能介绍，部门人数等部门职能介绍，部门人数等部门职能介绍，部门人数等
@@ -349,15 +346,8 @@
         width: 71%;
         display: flex;
         background-color: #f6f6f6;
-        .depart-left {
-          width: 35%;
-          border: 1px solid #000;
-          canvas {
-            width: 400px;
-          }
-        }
         .depart-right {
-          width: 65%;
+          width: 100%;
           padding: 15px;
           .depart-title {
             font-size: 25px;

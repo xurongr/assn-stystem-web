@@ -26,7 +26,6 @@
             </CarouselItem>
           </Carousel>
         </div>
-        <div class="right">招新时间段</div>
       </div>
       <div class="recruit-cont">
         <p class="title">如何入团<span>?</span></p>
@@ -56,9 +55,12 @@
             <p>填写社团申请表，包含：个人资料，所要加入的社团等等填写社团申请表，包含：个人资料，所要加入的社团等等
               填写社团申请表，包含：个人资料，所要加入的社团等等v填写社团申请表，包含：个人资料，所要加入的社团等等</p>
           </div>
+          <div class="cont-step">
+            <p>去申请</p>
+            <p class="img_icon"><img src="./img/icon_ss.jpg" ><Router-link to="/index/web/applyTable"><Button type="success">点 <span style="color: red;font-size: 26px">此</span> 申请</Button></Router-link></p>
+          </div>
         </div>
       </div>
-      <Router-link to="/index/web/applyTable" style="color: #000">去申请</Router-link>
     </div>
 </template>
 
@@ -91,7 +93,7 @@
       display: flex;
       width: 100%;
       .left {
-        width: 15%;
+        width: 30%;
         padding: 12px;
         .l-title {
           padding-top: 7px;
@@ -116,14 +118,11 @@
         }
       }
       .center {
-        width: 65%;
+        width: 70%;
         padding: 0 12px;
         img {
           .box(100%, 380px);
         }
-      }
-      .right {
-        width: 20%;
       }
     }
     .recruit-cont {
@@ -171,6 +170,16 @@
           }
         }
       }
+    }
+  }
+  .img_icon {
+    button {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    img{
+      width: 65px;
+      padding-left: 15px;
     }
   }
 </style>
