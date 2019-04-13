@@ -1,26 +1,16 @@
 <template>
   <div>
     <div class="annouce-manage">
-      <div style="display: flex">
-        <Select v-model="sortValue" style="width:150px">
-          <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      <div style="margin: 25px 0 10px" v-if="loginInfo.identityId === 0">
+        所属社团：
+        <Select v-model="searchAssnValue" style="width:200px" @on-change="getActivityList">
+          <Option v-for="item in searchAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <!--<div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容" v-model="searchValue" @click="searchAct"/></div>-->
-        <Select v-model="searchValue" style="width:200px">
-          <Option v-for="item in searchInfo" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-        <Button type="primary" @click="searchAct">搜索</Button>
       </div>
       <Router-link to="/index/activityManage/addActivity">
         <Button type="primary">创建活动</Button>
       </Router-link>
     </div>
-    <!--<div style="margin: 25px 0 10px" v-if="loginInfo.identityId === 0">-->
-      <!--所属社团：-->
-      <!--<Select v-model="searchAssnValue" style="width:200px">-->
-        <!--<Option v-for="item in searchAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-      <!--</Select>-->
-    <!--</div>-->
     <Table border ref="selection" :columns="columns4" :data="activityList"></Table>
     <Modal
       v-model="modal3"
@@ -161,15 +151,25 @@
 
     created() {
       this.loginInfo = JSON.parse(window.localStorage.getItem("loginInfo"));
-      this.getActivityList();
-      // this.getAssnList();
+      console.log(this.loginInfo)
+      if(this.loginInfo.identityId === 0) {
+        this.getAssnList();
+      } else {
+        let assnBasicList = this.loginInfo.assnBasicList;
+        assnBasicList.map(item => {
+          if(item.job === '会长' || item.job === '部长') {
+            this.searchAssnValue =  item.associationId;
+            this.getActivityList();
+          }
+        });
+      }
     },
 
     methods: {
       //改变页数
       pageChange(val) {
         this.pageNo = val;
-        this.getInfo();
+        this.getActivityList();
       },
 
       //获取活动列表信息
@@ -177,6 +177,7 @@
         let that = this;
         let url = that.BaseConfig + '/selectAssnAAll';
         let params = {
+          associationId: that.searchAssnValue,
           pageNo: that.pageNo,
           pageSize: 10,
         };
@@ -196,44 +197,12 @@
           })
       },
 
-      //搜索活动(活动标题、负责人)
-      searchAct() {
-        let that = this;
-        let url = that.BaseConfig + '/selectAssnAAll';
-        let params;
-        if(that.sortValue === 'associationId') {
-////             获取社团列表
-//          that.getAssnList();
-//          params = {
-//            associationId: that.searchValue,
-//            pageNo: that.pageNo,
-//            pageSize: 10
-//          }
-        } else if(that.sortValue === 'userId') {
-//          获取用户列表
-        }
-        let data = null;
-//        that
-//          .$http(url, params , data, 'get')
-//          .then(res =>{
-//            console.log(res)
-//            data = res.data;
-//            if(data.retCode === 0) {
-//              that.userInfo = data.data.data;
-//              that.total = data.data.total;
-//            }
-//          })
-//          .catch(err => {
-//            that.$Message.error('请求错误');
-//          })
-      },
-
       //获取社团列表
-      getAssnList(done) {
+      getAssnList() {
         let that = this;
         let url = that.BaseConfig + '/selectAssociationAll';
         let params = {
-          pageNo1: that.pageNo1,
+          pageNo: that.pageNo1,
           pageSize: 10
         };
         let data = null;
@@ -256,11 +225,9 @@
             } else {
               that.$Message.error(data.retMsg);
             }
-            done?done():null;
           })
           .catch(err => {
             that.$Message.error('请求错误');
-            done?done():null;
           })
       },
 

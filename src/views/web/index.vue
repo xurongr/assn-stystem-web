@@ -11,7 +11,7 @@
       <div class="banner-right">
         <img src="" alt="">
         <p>{{loginInfo.name}}</p>
-        <p style="padding-left: 10px" @click="exitLogin">退出</p>
+        <p style="padding-left: 10px">退出</p>
       </div>
     </div>
     <!--导航栏-->

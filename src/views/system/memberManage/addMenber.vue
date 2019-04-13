@@ -152,6 +152,7 @@
               pageSize: 10,
             };
             let data = null;
+            console.log(params)
             that
               .$http(url, params, data, 'get')
               .then(res => {
@@ -164,6 +165,7 @@
                     that.getDepartList();
                   }
                   that.departList.map(item => {
+                    console.log(item)
                     that.depList.push({
                       value: item.id,
                       label: item.departmentName,

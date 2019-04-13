@@ -3,34 +3,46 @@
     <!--系统管理员创建社团-->
     <div class="assn-manage">
       <div style="display: flex">
-        <Select v-model="sortValue" style="width:150px">
-          <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-        <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容"/></div>
+        <div v-if="identityId === 0">
+          选择社团：
+          <Select v-model="associationId" style="width:150px;margin-bottom: 10px" @on-change="getDepartList">
+            <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+          <!--选择部门：-->
+          <!--<Select v-model="sortValue" style="width:150px;margin-bottom: 10px">-->
+          <!--<Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
+          <!--</Select>-->
+        </div>
       </div>
-      <!--<Router-link to="/index/departManage/addDepart">-->
-        <Button type="primary" @click="addDepart">添加部门</Button>
-      <!--</Router-link>-->
+      <Button type="primary" @click="addDepart">添加部门</Button>
     </div>
-    <div v-if="identityId === 0">
-      选择社团：
-      <Select v-model="associationId" style="width:150px;margin-bottom: 10px" @on-change="getDepartList">
-        <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-      </Select>
-      <!--选择部门：-->
-      <!--<Select v-model="sortValue" style="width:150px;margin-bottom: 10px">-->
-        <!--<Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-      <!--</Select>-->
-    </div>
-
     <Table border ref="selection" :columns="columns4" :data="departList"></Table>
-    <div style="margin-top: 20px; display: flex;justify-content: space-between">
-      <div>
-        <Button @click="handleSelectAll(true)" type="primary">全选</Button>
-        <Button @click="handleSelectAll(false)">取消全选</Button>
-      </div>
+    <div style="margin-top: 20px; display: flex;justify-content: flex-end">
       <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
     </div>
+
+    <!--编辑部门信息-->
+    <Modal
+      v-model="modal1"
+      title="编辑部门信息"
+      @on-ok="ok">
+      <div>
+        <Form :model="formItem" :label-width="80">
+          <FormItem label="部门名称：">
+            <Input v-model="formItem.departmentName" ></Input>
+          </FormItem>
+          <FormItem label="部长学号：">
+            <Input v-model="userName" @on-blur="searchUser" placeholder="请输入学号，如：2015102210"></Input>
+          </FormItem>
+          <FormItem label="部长名字：">
+            <Input v-model="formItem.ministerUserName" disabled></Input>
+          </FormItem>
+          <FormItem label="部门介绍：">
+            <Input v-model="formItem.content" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="在此输入部门简介..."></Input>
+          </FormItem>
+        </Form>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -44,7 +56,25 @@
         total: 0,
         current: 1,
         departList: [],   //部门列表
+        formItem: {
+          associationId: null,
+          departmentName: '',
+          content: '',
+          ministerUserId: null,
+          ministerUserName: '',
+          createTime: new Date().getTime(),
+        },
+        userName: '',
+        identityId: null,
+        sortAssnList: [],    //查找社团-管理员
+        associationId: '',  //社团id
+        modal1: false,
         columns4: [
+          {
+            title: '序号',
+            type: 'index',
+            align: 'center',
+          },
           {
             title: '部门名称',
             key: 'departmentName',
@@ -74,63 +104,20 @@
                   },
                   on: {
                     click: () => {
-                      this.$router.push({
-                        path: '/index/assnManage/infoManage',
-                        query: {
-                          assnInfo: params.row,
-                        }
-                      })
-                    }
-                  }
-                }, '查看'),
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.$router.push({
-                        path: '/index/assnManage/infoManage',
-                        query: {
-                          assnInfo: params.row,
-                        }
-                      })
+                      this.modal1 = true;
+                      this.formItem.associationId = params.row.associationId;
+                      this.formItem.associationName = params.row.associationName;
+                      this.formItem.departmentName = params.row.departmentName;
+                      this.formItem.content = params.row.content;
+                      this.formItem.ministerUserId = params.row.ministerUserId;
+                      this.formItem.ministerUserName = params.row.ministerUserName;
                     }
                   }
                 }, '编辑'),
-                h('Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  on: {
-                    click: () => {
-                      this.remove(params.index)
-                    }
-                  }
-                }, '解散')
               ]);
             }
           }
         ],
-        sortList: [
-          {
-            value: 'associationName',
-            label: '社团名称'
-          },
-          {
-            value: 'recruitState',
-            label: '招募状态'
-          },
-        ],    //查找条件
-        sortValue:'',
-        identityId: null,
-        sortAssnList: [],    //查找社团-管理员
-        associationId: '',  //社团id
       }
     },
 
@@ -227,6 +214,54 @@
             }
           })
         }
+      },
+
+      //编辑部门信息
+      ok() {
+        let that = this;
+        let url = that.BaseConfig + '/updateDepartment';
+        let data = that.formItem;
+        console.log(data)
+        that
+          .$http(url, '', data, 'post')
+          .then(res => {
+            console.log('--修改部门成功--',res)
+               if(res.data.retCode === 0) {
+                 that.$Message.success('部门信息修改成功');
+                 that.getDepartList();
+               } else {
+                 that.$Message.warning(res.data.retMsg)
+               }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
+      },
+
+      //查找是否有次用户
+      searchUser() {
+        let that = this;
+        let url = that.BaseConfig + '/selectUsersAll';
+        let params = {
+          associationId: that.formItem.associationId,
+          userName: that.userName,
+          pageNo: 1,
+          pageSize: 10,
+        };
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            data = res.data;
+            if(data.retCode === 0) {
+              that.searchInfo = data.data.data;
+              that.formItem.ministerUserName = that.searchInfo[0].name;
+              that.formItem.ministerUserId = that.searchInfo[0].id;
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
       },
 
     },

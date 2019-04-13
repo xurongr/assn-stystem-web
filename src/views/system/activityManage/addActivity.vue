@@ -62,14 +62,22 @@
         <FormItem label="开始时间：">
           <Row>
             <Col span="11">
-            <DatePicker type="date" placeholder="选择开始时间" v-model="formItem.startTime"></DatePicker>
+              <DatePicker type="date" placeholder="Select date" v-model="sDate"></DatePicker>
+            </Col>
+            <Col span="2" style="text-align: center">-</Col>
+            <Col span="11">
+              <TimePicker type="time" placeholder="Select time" v-model="sTime"></TimePicker>
             </Col>
           </Row>
         </FormItem>
         <FormItem label="结束时间：">
           <Row>
             <Col span="11">
-            <DatePicker type="date" placeholder="选择结束时间" v-model="formItem.endTime"></DatePicker>
+              <DatePicker type="date" placeholder="Select date" v-model="eDate"></DatePicker>
+            </Col>
+            <Col span="2" style="text-align: center">-</Col>
+            <Col span="11">
+              <TimePicker type="time" placeholder="Select time" v-model="eTime"></TimePicker>
             </Col>
           </Row>
         </FormItem>
@@ -92,12 +100,15 @@
     export default {
         data() {
             return {
+              sDate:'',
+              sTime: '',
+              eDate: '',
+              eTime: '',
               formItem: {
                 activityName: '',
                 address: '',
-                date: '',
-                time: '',
                 content: '',
+                image: '',
                 associationId: null,
                 userId: null,
                 score : null,
@@ -107,20 +118,10 @@
               pageNo: 1,
               pageNo1: 1,
               associationList: [],   // 社团列表
-              searchAssnList: '',
+              searchAssnList: [],
               userInfo: [],       //社团下的用户列表
-              userAssnList: '',
-
-              defaultList: [
-                {
-                  'name': 'a42bdcc1178e62b4694c830f028db5c0',
-                  'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-                },
-                {
-                  'name': 'bc7521e033abdd1e92222d733590f104',
-                  'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-                }
-              ],
+              userAssnList: [],
+              defaultList: [],
               imgName: '',
               visible: false,
               uploadList: []
@@ -133,11 +134,11 @@
 
         methods: {
           //获取社团列表
-          getAssnList(done) {
+          getAssnList() {
             let that = this;
             let url = that.BaseConfig + '/selectAssociationAll';
             let params = {
-              pageNo1: that.pageNo1,
+              pageNo: that.pageNo1,
               pageSize: 10
             };
             let data = null;
@@ -145,27 +146,25 @@
               .$http(url, params , data, 'GET')
               .then(res =>{
                 data = res.data;
+                console.log(data)
                 if(data.retCode === 0) {
                   that.associationList = that.associationList.concat(data.data.data);
+                  if(that.associationList.length < data.data.total) {
+                    that.pageNo1++;
+                    that.getAssnList();
+                  }
                   that.associationList.map(item =>{
                     that.searchAssnList.push({
                       value: item.id,
                       label: item.associationName
                     });
                   });
-                  if(that.associationList.length < data.data.total) {
-                    that.pageNo1++;
-                    that.getAssnList();
-                  }
-                  that.getInfo();
                 } else {
                   that.$Message.error(data.retMsg);
                 }
-                done?done():null;
               })
               .catch(err => {
                 that.$Message.error('请求错误');
-                done?done():null;
               })
           },
 
@@ -193,16 +192,16 @@
                 data = res.data;
                 if(data.retCode === 0) {
                   that.userInfo = data.data.data;
+                  if(that.userInfo < data.data.total) {
+                    that.pageNo++;
+                    that.getInfo();
+                  }
                   that.userInfo.map(item =>{
                     that.userAssnList.push({
                       value: item.id,
                       label: item.name
                     });
                   });
-                  if(that.userInfo < data.data.total) {
-                    that.pageNo++;
-                    that.getInfo();
-                  }
                 }
               })
               .catch(err => {
@@ -213,8 +212,13 @@
           //创建活动
           addActivity() {
             let that = this;
-            let url = that.BaseConfig + '/selectUsersAll';
+            let url = that.BaseConfig + '/insertAssnA';
+            let date = that.sDate.getFullYear() + '-' + (that.sDate.getMonth() + 1) + '-' + that.sDate.getDate()+ ' ' + that.sTime;
+            that.formItem.startTime = new Date(date).getTime();
+            let endDate = that.eDate.getFullYear() + '-' + (that.eDate.getMonth() + 1) + '-' + that.eDate.getDate()+ ' ' + that.eTime;
+            that.formItem.endTime = new Date(endDate).getTime();
             let data = that.formItem;
+            console.log(data)
             that
               .$http(url, '', data, 'post')
               .then(res => {
@@ -237,19 +241,20 @@
             })
           },
 
+          //图片上传
           handleView (name) {
             this.imgName = name;
             this.visible = true;
           },
           handleRemove (file) {
-            console.log(file)
             const fileList = this.$refs.upload.fileList;
             this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            this.formItem.image = fileList
           },
-          handleSuccess (res, file) {
-            console.log(res.data)
+          handleSuccess (res, file, fileList) {
             file.url = res.data;
-            file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+            file.name = this.formItem.activityName;
+            this.formItem.image = fileList;
           },
           handleFormatError (file) {
             this.$Notice.warning({

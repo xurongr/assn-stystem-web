@@ -17,11 +17,7 @@
       </Select>
     </div>
     <Table border ref="selection" :columns="columns4" :data="userInfo"></Table>
-    <div style="margin-top: 20px; display: flex;justify-content: space-between">
-      <div>
-        <Button @click="handleSelectAll(true)" type="primary">全选</Button>
-        <Button @click="handleSelectAll(false)">取消全选</Button>
-      </div>
+    <div style="margin-top: 20px; display: flex;justify-content: flex-end">
       <Page :total="total" :key="total" :current.sync="current" :on-change="pageChange" />
     </div>
   </div>
@@ -32,6 +28,26 @@
     data() {
       return {
         userInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
+        pageNo: 1,
+        pageNo1: 1,
+        current: 1,
+        total:0,           //获取用户列表total
+        assnInfo: [],      //社团列表
+        sortList: [
+          {
+            value: 'userName',
+            label: '学号'
+          },
+          {
+            value: 'name',
+            label: '姓名'
+          },
+        ],    //查找条件
+        sortValue:'',
+        sortAssnList: [],    //查找社团-管理员
+        userId: null,
+        associationId: null,
+        identityId: null,
         columns4: [
           {
             type: 'selection',
@@ -121,26 +137,6 @@
             }
           }
         ],
-        pageNo: 1,
-        pageNo1: 1,
-        current: 1,
-        total:0,           //获取用户列表total
-        assnInfo: [],      //社团列表
-        sortList: [
-          {
-            value: 'userName',
-            label: '学号'
-          },
-          {
-            value: 'name',
-            label: '姓名'
-          },
-        ],    //查找条件
-        sortValue:'',
-        sortAssnList: [],    //查找社团-管理员
-        userId: null,
-        associationId: null,
-        identityId: null,
       }
     },
 
@@ -163,11 +159,6 @@
     },
 
     methods: {
-      //全选
-      handleSelectAll (status) {
-        this.$refs.selection.selectAll(status);
-      },
-
       //改变页数
       pageChange(val) {
         this.pageNo = val;

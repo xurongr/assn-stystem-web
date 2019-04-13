@@ -128,7 +128,7 @@
                   } else {
                     that.$Message.warning('无此用户，请重新输入');
                   }
-                  console.log(that.searchInfo)
+                  console.log(that.searchInfo);
                 }
               })
               .catch(err => {
