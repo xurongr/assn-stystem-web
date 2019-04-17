@@ -80,25 +80,25 @@
                     }
                   }
                 }, '查看'),
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.$router.push({
-                        path: '/index/assnManage/userInfomation',
-                        query: {
-                          userInfo: this.userInfo,
-                        }
-                      })
-                    }
-                  }
-                }, '编辑'),
+                // h('Button', {
+                //   props: {
+                //     type: 'primary',
+                //     size: 'small'
+                //   },
+                //   style: {
+                //     marginRight: '5px'
+                //   },
+                //   on: {
+                //     click: () => {
+                //       this.$router.push({
+                //         path: '/index/assnManage/userInfomation',
+                //         query: {
+                //           userInfo: this.userInfo,
+                //         }
+                //       })
+                //     }
+                //   }
+                // }, '编辑'),
               ]);
             }
           }

@@ -3,9 +3,9 @@
       <div class="login">
         <p>登录</p>
         <p>用户名：<Input v-model="userName" placeholder="请输入账号" style="width: 172px" /></p>
-        <p>密&nbsp;&nbsp; 码：<Input v-model="pwd" placeholder="请输入密码" style="width: 172px" /></p>
+        <p>密&nbsp;&nbsp; 码：<Input v-model="pwd" type="password" placeholder="请输入密码" style="width: 172px" /></p>
         <div class="login-btn"><Button type="primary" style="width: 100%" @click="login">登录</Button></div>
-        <p><span style="color: #2d78f4">免费注册</span><span>忘记密码？</span></p>
+        <p><span style="color: #2d78f4" @click="goRegister">免费注册</span><span>忘记密码？</span></p>
       </div>
     </div>
 </template>
@@ -23,7 +23,6 @@
           login() {
             let that = this;
             let url = that.BaseConfig + '/login';
-
             let data = {
               userName: that.userName,
               pwd: that.pwd,
@@ -38,11 +37,19 @@
                   that.$router.push({
                     path: '/index/web',
                   })
+                } else {
+                  that.$Message.error(res.data.retMsg)
                 }
               })
               .catch(err => {
-
+                that.$Message.error('请求错误')
               })
+          },
+
+          goRegister() {
+            this.$router.push({
+              name: 'register'
+            })
           },
         }
     }

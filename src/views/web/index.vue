@@ -6,7 +6,6 @@
       <div class="banner-icon">
         <img src="./img/icon.png">
         <img src="./img/banner_name.png">
-        <span @click="goSystem">后台管理入口</span>
       </div>
       <div class="banner-right">
         <img src="" alt="">
@@ -22,7 +21,7 @@
           <li class="views-nav">
             <Dropdown>
               <a href="javascript:void(0)">
-                hover 触发
+                我的社团
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
@@ -38,6 +37,7 @@
           <li><Router-link to="/index/web/recruitNew">社团招新</Router-link></li>
           <li><Router-link to="/index/web/createAssnApply">创社申请</Router-link></li>
           <li>关于我们</li>
+          <li @click="goSystem">后台管理</li>
         </ul>
       </div>
     </div>
@@ -57,10 +57,14 @@
               loginInfo: '',
             }
         },
+      mounted() {
+        this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+      },
 
       created() {
-          this.loginInfo = this.$store.state.loginInfo;
-          console.log(1,this.loginInfo)
+        this.$nextTick(function () {
+          this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+        })
       },
 
         methods: {
@@ -124,7 +128,7 @@
         li {
           height: 40px;
           line-height: 40px;
-          padding: 0 40px;
+          padding: 0 30px;
           font-size: 15px;
           font-weight: 600;
           color: #fff;

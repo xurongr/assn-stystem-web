@@ -7,7 +7,7 @@
         </Select>
         <div style="width: 340px"><Input search enter-button="搜索" placeholder="输入要查找的内容" /></div>
       </div>
-      <Button type="primary" @click="addAssnUser">添加社员</Button>
+      <Button type="primary" @click="addAssnUser">添加成员</Button>
     </div>
     <!--管理员可以选择社团查看社团成员-->
     <div style="margin-top:10px; margin-bottom: 10px" v-if="identityId === 0">

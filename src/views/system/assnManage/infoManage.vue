@@ -112,15 +112,18 @@
       updateAssnInfo() {
         let that = this;
         let url = that.BaseConfig + '/updateAssociation';
+        that.formItem.createTime = new Date().getTime();
         let association = that.formItem;
         that
           .$http(url, '', association, 'post')
           .then(res => {
             if(res.data.retCode ===0) {
-              that.$Message.error('修改成功');
+              that.$Message.success('修改成功');
               that.$router.push({
                 path: '/index/assnManage'
               })
+            } else {
+              that.$Message.error(res.data.retMsg)
             }
           })
           .catch(err => {

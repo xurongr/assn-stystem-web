@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import login from "@/views/login";  //登录页
+import register from "@/views/register";  //用户注册页
 
 import index from "@/views/system";                                      //后台管理首页
 import userIndex from "@/views/system/userManage/index";                 //用户管理
@@ -28,6 +29,7 @@ import departManage from "@/views/system/departManage/index";            // 部�
 import addDepart from "@/views/system/departManage/addDepart";           // 添加部门
 
 import identityChange from "@/views/system/identityChange";              // 更改身份
+import editPassword from "@/views/system/editPassword";                  //修改密码
 
 // 前端
 import webIndex from "@/views/web/index";
@@ -55,6 +57,14 @@ export default new Router({
       component: login,
       meta: {
         title: '登录页',
+      }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: register,
+      meta: {
+        title: '注册页',
       }
     },
     {
@@ -203,6 +213,14 @@ export default new Router({
           component: identityChange,
           meta: {
             title: '身份变更',
+          }
+        },
+        {
+          path: '/index/editPassword',
+          name: 'editPassword',
+          component: editPassword,
+          meta: {
+            title: '修改密码',
           }
         },
       ]

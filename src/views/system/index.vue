@@ -28,7 +28,7 @@
               <Icon type="ios-analytics"></Icon>
               权限管理
             </template>
-            <Router-link to="/index/identityChange">
+            <Router-link to="/index/editPassword">
               <MenuItem name="3-1">修改密码</MenuItem>
             </Router-link>
             <Router-link to="/index/identityChange">
@@ -41,7 +41,6 @@
               审核管理
             </template>
             <MenuItem name="3-1">入团申请</MenuItem>
-            <MenuItem name="3-1">建团申请</MenuItem>
           </Submenu>
         </Menu>
       </Sider>

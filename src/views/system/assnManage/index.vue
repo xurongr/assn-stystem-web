@@ -21,6 +21,19 @@
       </div>
       <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
     </div>
+
+    <Modal
+      v-model="modal1"
+      :title= associationName
+      @on-ok="ok">
+      <div>
+        <p>社团成员总数：{{assnDataCount.userCount}}</p>
+        <p>社团部门总数：{{assnDataCount.departmentCount}}</p>
+        <p>社团公告总数：{{assnDataCount.noticeCount}}</p>
+        <p>社团活动总数：{{assnDataCount.userCount}}</p>
+        <p style="color: red;font-size: 18px;font-weight: 600">确定要解散社团？解散后相关数据将清除！</p>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -29,6 +42,24 @@
     data() {
       return {
         assnInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
+        sortList: [
+          {
+            value: 'associationName',
+            label: '社团名称'
+          },
+          {
+            value: 'recruitState',
+            label: '招募状态'
+          },
+        ],    //查找条件
+        sortValue:'',
+        total: 0,
+        pageNo:1,
+        current: 1,
+        modal1: false,
+        associationId: null,
+        associationName:'',
+        assnDataCount: [],
         columns4: [
           {
             type: 'selection',
@@ -107,7 +138,10 @@
                   },
                   on: {
                     click: () => {
-                      this.remove(params.index)
+                      this.associationId = params.row.id;
+                      this.associationName = params.row.associationName;
+                      this.getAssnCount(params.row.id);
+                      this.modal1 = true;
                     }
                   }
                 }, '解散')
@@ -115,20 +149,6 @@
             }
           }
         ],
-        sortList: [
-          {
-            value: 'associationName',
-            label: '社团名称'
-          },
-          {
-            value: 'recruitState',
-            label: '招募状态'
-          },
-        ],    //查找条件
-        sortValue:'',
-        total: 0,
-        pageNo:1,
-        current: 1,
       }
     },
 
@@ -166,6 +186,48 @@
                   item.recruitState = '关闭'
                 }
               })
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
+      },
+
+      //获取社团成员人数
+      getAssnCount(id) {
+        let that = this;
+        let url = that.BaseConfig + '/getAssociationInfoCount';
+        let params = {associationId: id};
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            data = res.data;
+            if(data.retCode ===0) {
+              that.assnDataCount = data.data;
+              console.log(that.assnDataCount)
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
+      },
+
+      //解散社团
+      ok() {
+        let that = this;
+        let url = that.BaseConfig + '/deleteAssociation';
+        let params = {associationId: that.associationId};
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            data = res.data;
+            if(data.retCode ===0) {
+              that.$Message.success('社团已解散');
+              that.getInfo();
+            } else {
+              that.$Message.warning(data.retMsg)
             }
           })
           .catch(err => {
