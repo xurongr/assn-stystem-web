@@ -59,20 +59,32 @@
           <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
         </Modal>
       </FormItem>
-      <FormItem label="开始时间：">
+      <FormItem label="活动时间：">
+         {{formItem.startTime}} ~ {{formItem.endTime}}
+         <span @click="timeUp = true" style="color: blue;padding-left: 10px;font-size: 16px">修改</span>
+      </FormItem>
+      <FormItem label="开始时间：" v-if="timeUp">
         <Row>
           <Col span="11">
-          <DatePicker type="date" placeholder="选择开始时间" v-model="formItem.startTime"></DatePicker>
+            <DatePicker type="date" placeholder="Select date" v-model="sDate"></DatePicker>
+          </Col>
+          <Col span="2" style="text-align: center">-</Col>
+          <Col span="11">
+            <TimePicker type="time" placeholder="Select time" v-model="formItem.start"></TimePicker>
           </Col>
         </Row>
       </FormItem>
-      <FormItem label="结束时间：">
+      <FormItem label="结束时间："  v-if="timeUp">
         <Row>
           <Col span="11">
-          <DatePicker type="date" placeholder="选择结束时间" v-model="formItem.endTime"></DatePicker>
+            <DatePicker type="date" placeholder="Select date" v-model="eDate"></DatePicker>
+          </Col>
+          <Col span="2" style="text-align: center">-</Col>
+          <Col span="11">
+            <TimePicker type="time" placeholder="Select time" v-model="eTime"></TimePicker>
           </Col>
         </Row>
-      </FormItem>
+      </FormItem >
       <FormItem>
         <div class="add-btn">
           <Poptip
@@ -92,15 +104,19 @@
   export default {
     data() {
       return {
+        sDate:'',
+        sTime: '',
+        eDate: '',
+        eTime: '',
         associationActivityId: '',    //活动id
-        formItem: '',                 //活动详情
+        formItem: [],                 //活动详情
         pageNo: 1,
         pageNo1: 1,
         associationList: [],   // 社团列表
-        searchAssnList: '',
+        searchAssnList: [],
         userInfo: [],       //社团下的用户列表
-        userAssnList: '',
-
+        userAssnList: [],
+        timeUp: false,
         defaultList: [
           {
             'name': 'a42bdcc1178e62b4694c830f028db5c0',
@@ -125,11 +141,11 @@
 
     methods: {
       //获取社团列表
-      getAssnList(done) {
+      getAssnList() {
         let that = this;
         let url = that.BaseConfig + '/selectAssociationAll';
         let params = {
-          pageNo1: that.pageNo1,
+          pageNo: that.pageNo1,
           pageSize: 10
         };
         let data = null;
@@ -137,6 +153,7 @@
           .$http(url, params , data, 'GET')
           .then(res =>{
             data = res.data;
+            console.log('--社团列表--',data)
             if(data.retCode === 0) {
               that.associationList = that.associationList.concat(data.data.data);
               that.associationList.map(item =>{
@@ -153,11 +170,9 @@
             } else {
               that.$Message.error(data.retMsg);
             }
-            done?done():null;
           })
           .catch(err => {
             that.$Message.error('请求错误');
-            done?done():null;
           })
       },
 
@@ -191,6 +206,7 @@
                   label: item.name
                 });
               });
+              console.log(that.userAssnList)
               if(that.userInfo < data.data.total) {
                 that.pageNo++;
                 that.getInfo();
@@ -214,9 +230,9 @@
           .$http(url, params, data, 'get')
           .then(res => {
             data = res.data;
-            console.log('--获取某个活动信息---',res)
             if(data.retCode === 0) {
-              that.formItem = data.data.data;
+              that.formItem = data.data;
+              console.log('--获取某个活动信息---',that.formItem)
             }
           })
           .catch(err => {
@@ -228,6 +244,23 @@
       editActivity() {
         let that = this;
         let url = that.BaseConfig + '/updateAssnA';
+        if(that.sDate !== '' || that.sTime !== '') {
+          let date = that.sDate.getFullYear() + '-' + (that.sDate.getMonth() + 1) + '-' + that.sDate.getDate()+ ' ' + that.sTime;
+          that.formItem.startTime = new Date(date).getTime();
+          that.formItem.endTime = new Date(that.formItem.endTime).getTime();
+        } else if(that.eDate !== ''|| that.eTime !== '') {
+          let endDate = that.eDate.getFullYear() + '-' + (that.eDate.getMonth() + 1) + '-' + that.eDate.getDate()+ ' ' + that.eTime;
+          that.formItem.endTime = new Date(endDate).getTime();
+          that.formItem.startTime = new Date(that.formItem.startTime).getTime();
+        }else if((that.sDate !== '' || that.sTime !== '') && (that.eDate !== ''|| that.eTime !== '')) {
+          let date = that.sDate.getFullYear() + '-' + (that.sDate.getMonth() + 1) + '-' + that.sDate.getDate()+ ' ' + that.sTime;
+          that.formItem.startTime = new Date(date).getTime();
+          let endDate = that.eDate.getFullYear() + '-' + (that.eDate.getMonth() + 1) + '-' + that.eDate.getDate()+ ' ' + that.eTime;
+          that.formItem.endTime = new Date(endDate).getTime();
+        }else{
+          that.formItem.startTime = new Date(that.formItem.startTime).getTime();
+          that.formItem.endTime = new Date(that.formItem.endTime).getTime();
+        }
         let data = that.formItem;
         that
           .$http(url, '', data, 'post')
@@ -235,9 +268,9 @@
             console.log('--修改成功---',res)
             if(res.data.retCode === 0) {
               that.$Message.success('修改成功');
-//                  that.$router.push({
-//                    name: 'activityManage'
-//                  })
+                 that.$router.push({
+                   name: 'activityManage'
+                 })
             }
           })
           .catch(err => {

@@ -2,10 +2,7 @@
     <div>
       <div class="search-user">
         <div style="display: flex;margin-bottom: 25px">
-          <Select v-model="sortValue" style="width:150px">
-            <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-          <div style="width: 340px"><Input search enter-button="查找成员" placeholder="输入要查找的内容" v-model="searchValue" @on-enter="searchUser" @on-search="searchUser"/></div>
+          <div style="width: 340px"><Input search enter-button="查找成员" placeholder="输入学号：如：B2015102210" v-model="searchValue" @on-change="searchUser" @on-enter="searchUser" @on-search="searchUser"/></div>
         </div>
       </div>
       <div class="seach-info">
@@ -13,9 +10,8 @@
       </div>
       <Modal
         v-model="modal6"
-        title="Title"
-        :loading="loading"
-        @on-ok="addUserToAssn">
+        title="选择部门"
+        @on-ok="addUserToDepart">
         <div>
           <Select v-model="departmentId" style="width:150px">
             <Option v-for="item in depList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -29,17 +25,8 @@
     export default {
         data() {
             return {
-              sortList: [
-                {
-                  value: 'name',
-                  label: '姓名'
-                },
-                {
-                  value: 'userName',
-                  label: '学号'
-                },
-              ],    //查找条件
-              sortValue: '',
+              searchValue:'',
+              userInfo:[],
               columns4: [
                 {
                   title: '用户名',
@@ -81,7 +68,7 @@
                           click: () => {
                             console.log('userId',params.row.id)
                             this.userId = params.row.id;
-                            this.modal6 = true;
+                            this.addUser();
                           }
                         }
                       }, '添加社员')
@@ -89,8 +76,6 @@
                   }
                 }
               ],
-              searchValue:'',
-              userInfo:[],
               associationId: '',    //社团id
               modal6: false,
               loading: true,
@@ -98,34 +83,28 @@
               departList: [],
               depList: [],   //部门列表
               pageNo:1,
-              departmentId:'',   //部门Id
+              flag: 0,    //0-添加社团成员   1-添加部门成员
+              departmentId: null,   //部门Id
             }
         },
 
         created() {
           this.associationId = this.$route.query.associationId;
+          this.flag = this.$route.query.flag;
+          console.log(this.flag)
           this.getDepartList();
         },
 
         methods: {
-          //搜索用户(学号、姓名)
+          //搜索用户(学号)
           searchUser() {
             let that = this;
             let url = that.BaseConfig + '/selectUsersAll';
-            let params;
-            if(that.sortValue === 'name') {
-              params = {
-                name: that.searchValue,
-                pageNo: 1,
-                pageSize: 10,
-              };
-            } else if(that.sortValue === 'userName') {
-              params = {
+            let params = {
                 userName: that.searchValue,
                 pageNo: 1,
                 pageSize: 10,
-              };
-            }
+            };
             let data = null;
             that
               .$http(url, params , data, 'get')
@@ -134,7 +113,6 @@
                 data = res.data;
                 if(data.retCode === 0) {
                   that.userInfo = data.data.data;
-                  that.total = data.data.total;
                 }
               })
               .catch(err => {
@@ -179,10 +157,45 @@
               })
           },
 
-          //添加用户进入社团某部门
+          addUser() {
+            if(this.flag === 1) {
+              this.addUserToAssn();
+            } else {
+              this.modal6 = true;
+            }
+          },
+
+          //添加用户进入社团
           addUserToAssn() {
             let that = this;
             let url = that.BaseConfig + '/insertUserToAssociation';
+            let params = {
+              userId: that.userId,
+              associationId: that.associationId,
+            };
+            let data = null;
+            that
+              .$http(url, params , data, 'get')
+              .then(res =>{
+                data = res.data;
+                console.log(data)
+                if(data.retCode === 0) {
+                  that.$Message.success('添加成功');
+                  this.modal6 = false;
+                  that.$router.push({
+                    path: '/index/memberManage',
+                  })
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //添加用户进入社团某部门
+          addUserToDepart() {
+            let that = this;
+            let url = that.BaseConfig + '/insertUserToDepartment';
             let params = {
               userId: that.userId,
               associationId: that.associationId,
@@ -193,8 +206,9 @@
               .$http(url, params , data, 'get')
               .then(res =>{
                data = res.data;
+               console.log(data)
                if(data.retCode === 0) {
-                 that.$Message.success('添加成功');
+                 that.$Message.success('添加成员成功');
                  this.modal6 = false;
                  that.$router.push({
                    path: '/index/memberManage',

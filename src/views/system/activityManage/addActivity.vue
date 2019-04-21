@@ -108,7 +108,7 @@
                 activityName: '',
                 address: '',
                 content: '',
-                image: '',
+                image: [],
                 associationId: null,
                 userId: null,
                 score : null,
@@ -122,7 +122,7 @@
               userInfo: [],       //社团下的用户列表
               userAssnList: [],
               defaultList: [],
-              imgName: '',
+              imgName: [],
               visible: false,
               uploadList: []
             }
@@ -196,7 +196,7 @@
                     that.pageNo++;
                     that.getInfo();
                   }
-                  that.userInfo.map(item =>{
+                  that.userInfo.map((item,index) =>{
                     that.userAssnList.push({
                       value: item.id,
                       label: item.name
@@ -222,12 +222,11 @@
             that
               .$http(url, '', data, 'post')
               .then(res => {
-                console.log('--创建活动成功---',res)
                 if(res.data.retCode === 0) {
                   that.$Message.success('创建成功');
-//                  that.$router.push({
-//                    name: 'activityManage'
-//                  })
+                 that.$router.push({
+                   name: 'activityManage'
+                 })
                 }
               })
               .catch(err => {
@@ -249,12 +248,16 @@
           handleRemove (file) {
             const fileList = this.$refs.upload.fileList;
             this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-            this.formItem.image = fileList
+            fileList.map((item,index) => {
+              this.formItem.image[index] = item.url
+            })
           },
           handleSuccess (res, file, fileList) {
             file.url = res.data;
             file.name = this.formItem.activityName;
-            this.formItem.image = fileList;
+            fileList.map((item,index) => {
+              this.formItem.image[index] = item.url
+            })
           },
           handleFormatError (file) {
             this.$Notice.warning({

@@ -31,8 +31,11 @@
             <Router-link to="/index/editPassword">
               <MenuItem name="3-1">修改密码</MenuItem>
             </Router-link>
+            <Router-link to="/index/identityManage">
+              <MenuItem name="3-2">身份管理</MenuItem>
+            </Router-link>
             <Router-link to="/index/identityChange">
-              <MenuItem name="3-2">身份变更</MenuItem>
+              <MenuItem name="3-3">身份变更</MenuItem>
             </Router-link>
           </Submenu>
           <Submenu name="4">
