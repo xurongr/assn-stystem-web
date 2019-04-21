@@ -32,7 +32,7 @@
             <Input v-model="formItem.departmentName" ></Input>
           </FormItem>
           <FormItem label="部长学号：">
-            <Input v-model="userName" @on-blur="searchUser" placeholder="请输入学号，如：2015102210"></Input>
+            <Input v-model="userName" @on-change="searchUser" placeholder="请输入学号，如：2015102210"></Input>
           </FormItem>
           <FormItem label="部长名字：">
             <Input v-model="formItem.ministerUserName" disabled></Input>
@@ -41,6 +41,21 @@
             <Input v-model="formItem.content" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="在此输入部门简介..."></Input>
           </FormItem>
         </Form>
+      </div>
+    </Modal>
+
+    <!--删除部门-->
+    <Modal v-model="modalDel" width="360">
+      <p slot="header" style="color:#f60;text-align:center">
+        <Icon type="ios-information-circle"></Icon>
+        <span>删除确认</span>
+      </p>
+      <div style="text-align:center">
+        <p>该部门属于<span style="color: red">{{formItem.associationName}}</span>,部门现有<span style="color: red">{{departNum}}</span>人。</p>
+        <p>是否确认删除<span style="color: red">{{formItem.departmentName}}</span>?</p>
+      </div>
+      <div slot="footer">
+        <Button type="error" size="large" long @click="delDepart">删除</Button>
       </div>
     </Modal>
   </div>
@@ -57,6 +72,7 @@
         current: 1,
         departList: [],   //部门列表
         formItem: {
+          id: null,
           associationId: null,
           departmentName: '',
           content: '',
@@ -69,6 +85,8 @@
         sortAssnList: [],    //查找社团-管理员
         associationId: '',  //社团id
         modal1: false,
+        modalDel: false,
+        departNum: 0,
         columns4: [
           {
             title: '序号',
@@ -111,9 +129,25 @@
                       this.formItem.content = params.row.content;
                       this.formItem.ministerUserId = params.row.ministerUserId;
                       this.formItem.ministerUserName = params.row.ministerUserName;
+                      this.formItem.id = params.row.id;
                     }
                   }
                 }, '编辑'),
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.formItem = params.row;
+                      this.getDepartNum(params.row.id);
+                    }
+                  }
+                }, '删除'),
               ]);
             }
           }
@@ -221,7 +255,6 @@
         let that = this;
         let url = that.BaseConfig + '/updateDepartment';
         let data = that.formItem;
-        console.log(data)
         that
           .$http(url, '', data, 'post')
           .then(res => {
@@ -253,6 +286,7 @@
           .$http(url, params, data, 'get')
           .then(res => {
             data = res.data;
+            console.log(data)
             if(data.retCode === 0) {
               that.searchInfo = data.data.data;
               that.formItem.ministerUserName = that.searchInfo[0].name;
@@ -260,10 +294,51 @@
             }
           })
           .catch(err => {
-            that.$Message.error('请求错误');
+            that.$Message.error('该社团无此人！');
           })
       },
 
+      //删除部门前获取该部门人数
+      getDepartNum(id) {
+        let that = this;
+        let url = that.BaseConfig + '/getDepartmentUserCount';
+        let params = {departmentId : id,};
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            data = res.data;
+            console.log('--部门人数--',data)
+            if(data.retCode === 0) {
+              that.departNum = data.data;
+              that.modalDel = true;
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误！');
+          })
+      },
+
+      //删除部门
+      delDepart() {
+        let that = this;
+        let url = that.BaseConfig + '/deleteDepartment';
+        let params = {departmentId : that.formItem.id};
+        that
+          .$http(url, params, '', 'get')
+          .then(res => {
+            if(res.data.retCode === 0) {
+              that.$Message.success('部门删除成功！');
+              that.modalDel = false;
+              that.getDepartList();
+            } else {
+              that.$Message.warning(res.data.retMsg);
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误！');
+          })
+      },
     },
   }
 </script>

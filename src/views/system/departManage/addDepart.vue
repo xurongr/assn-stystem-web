@@ -5,7 +5,7 @@
           <Input v-model="formItem.departmentName" ></Input>
         </FormItem>
         <FormItem label="部长学号：">
-          <Input v-model="userName" @on-blur="searchUser" placeholder="请输入学号，如：2015102210"></Input>
+          <Input v-model="userName" @on-change="searchUser" placeholder="请输入学号，如：2015102210"></Input>
         </FormItem>
         <FormItem label="部长名字：">
           <Input v-model="formItem.ministerUserName" disabled></Input>
@@ -86,9 +86,10 @@
               .$http(url, '', data, 'post')
               .then(res => {
                 console.log('--添加部门成功--',res)
-//                if(res.data.retCode === 0) {
-//
-//                }
+               if(res.data.retCode === 0) {
+                 that.$Message.success('添加部门成功！');
+                 that.$router.push({name: 'departManage'})
+               }
               })
               .catch(err => {
                 that.$Message.error('请求错误');

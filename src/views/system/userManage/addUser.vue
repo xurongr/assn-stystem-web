@@ -17,7 +17,7 @@
       <FormItem label="性别" prop="sex">
         <RadioGroup v-model="formValidate.sex">
           <Radio label="1">男生</Radio>
-          <Radio label="0">女生</Radio>
+          <Radio label="2">女生</Radio>
         </RadioGroup>
       </FormItem>
       <FormItem label="年龄" prop="age">
@@ -76,7 +76,7 @@
           pwd: '',
           pwdCheck: '',
           age: null,
-          sex: null,  // 0-女生   1-男生
+          sex: null,  // 2-女生   1-男生
           grade: null,
           major: '',
           telNumber: null,

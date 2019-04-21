@@ -2,7 +2,7 @@
     <div>
       <Form :model="formItem" :label-width="80">
         <FormItem label="标题：">
-          <Input v-model="formItem.name"></Input>
+          <Input v-model="formItem.title"></Input>
         </FormItem>
         <FormItem label="所属社团：">
           <Select v-model="formItem.associationId" style="width:200px">
@@ -33,7 +33,7 @@
                 associationId: 0,
                 associationName: "",
                 content: "",
-                name: "",
+                title: "",
                 type: 0,   //0-社团公告，1-系统公告
                 userId: null,
               },

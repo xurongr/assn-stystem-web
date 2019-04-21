@@ -4,8 +4,6 @@
     <div class="add-selfinfo">
       <Row>
         <Col span="8">用户名：<Input v-model="userInfo.userName" readonly /></Col>
-        <Col span="8">密码：<Input v-model="userInfo.pwd" readonly/></Col>
-        <Col span="8">确认密码：<Input v-model="userInfo.pwd" readonly/></Col>
       </Row>
       <Row>
         <Col span="8">姓&nbsp;&nbsp;&nbsp;&nbsp;名：<Input v-model="userInfo.name" clearable /></Col>
@@ -77,7 +75,7 @@
             label: '男'
           },
           {
-            value: 0,
+            value: 2,
             label: '女'
           },
         ],           //select 性别
@@ -115,32 +113,40 @@
             label: '社团成员'
           }
         ],       //身份选择
-        majorData: [{
-          value: '信息与机电工程学院',
-          label: '信息与机电工程学院',
-          children: [
-            {
-              value: '计算机科学与技术',
-              label: '计算机科学与技术'
-            },
-            {
-              value: '电子信息工程',
-              label: '电子信息工程'
-            }
-          ]
-        }],     //专业级联选择框
-        userInfo: '',
+        userInfo: [],
         userId: '',
         flag: null,     //1-查看，2-编辑
       }
     },
     created() {
-      this.userInfo = this.$route.query.userInfo;
+      this.userId = this.$route.query.userId;
       this.flag = this.$route.query.flag;
-      console.log(this.userInfo,this.userInfo.assnBasicList.length)
+      this.getUserInfo();
     },
 
     methods: {
+      getUserInfo() {    //获取社团成员个人信息
+        let that = this;
+        let url = that.BaseConfig + '/selectByUserId';
+        let params = {
+          UserId: that.userId,
+        };
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            data = res.data;
+            if(data.retCode === 0) {
+              that.userInfo = data.data;
+              console.log('userinfo',that.userInfo)
+            } else {
+              that.$Message.warning(data.retMsg)
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
+      },
       ok() {},
       cancel() {},
     },

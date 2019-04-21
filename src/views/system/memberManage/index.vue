@@ -64,11 +64,17 @@
           },
           {
             title: '部门',
-            key: 'departmentName'
+            key: 'departmentName',
+            render: (h,params) => {
+              return h('p',params.row.departmentName === null ? '无' : params.row.departmentName)
+            }
           },
           {
             title: '职务',
-            key: 'job'
+            key: 'job',
+            render: (h,params) => {
+              return h('p',params.row.job === null ? '无' : params.row.job)
+            }
           },
           {
             title: '联系方式',
@@ -91,14 +97,14 @@
                   },
                   on: {
                     click: () => {
-                      // console.log(params.row)
-                      this.$router.push({
-                        path: '/index/memberManage/editMember',
-                        query: {
-                          userInfo: params.row,
-                          flag: 1,
-                        }
-                      })
+                      console.log(params.row)
+                      // this.$router.push({
+                      //   path: '/index/memberManage/editMember',
+                      //   query: {
+                      //     userId: params.row.id,
+                      //     flag: 1,
+                      //   }
+                      // })
                     }
                   }
                 }, '查看'),

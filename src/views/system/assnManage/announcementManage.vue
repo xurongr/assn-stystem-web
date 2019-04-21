@@ -12,6 +12,7 @@
         </Router-link>
       </div>
       <Table border ref="selection" :columns="columns4" :data="announceInfo"></Table>
+      <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
       <Modal
         v-model="modal3"
         title="公告内容"
@@ -19,7 +20,14 @@
       >
         <p>{{anContent}}</p>
       </Modal>
-      <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
+
+      <Modal
+        v-model="modal4"
+        @on-ok="delAnnounce"
+      >
+        <p style="text-align: center;font-size: 18px;letter-spacing: 1px">确定删除该公告?</p>
+      </Modal>
+
     </div>
 </template>
 
@@ -38,7 +46,7 @@
                 },
                 {
                   title: '公告标题',
-                  key: 'name',
+                  key: 'title',
                 },
                 {
                   title: '公告内容',
@@ -105,7 +113,8 @@
                         },
                         on: {
                           click: () => {
-                            this.remove(params.index)
+                            this.modal4 = true;
+                            this.noticeId  = params.row.id;
                           }
                         }
                       }, '删除')
@@ -127,6 +136,8 @@
               total: 0,
               pageNo:1,
               current: 1,
+              modal4: false,
+              noticeId: null
             }
         },
 
@@ -138,7 +149,7 @@
           //改变页数
           pageChange(val) {
             this.pageNo = val;
-            this.getInfo();
+            this.getAnnouceInfo();
           },
 
           //获取公告信息
@@ -159,6 +170,26 @@
                   console.log(that.announceInfo)
                 } else {
                   that.$Message.error(res.data.retMsg);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          delAnnounce() {  //删除公告
+            let that = this;
+            let url = that.BaseConfig + '/deleteNotice';
+            let params = {noticeId: that.noticeId };
+            let data = null;
+            that
+              .$http(url, params , data, 'GET')
+              .then(res =>{
+                if(res.data.retCode === 0) {
+                  that.$Message.success('公告删除成功');
+                  that.getAnnouceInfo();
+                } else {
+                  that.$Message.warning(res.data.retMsg);
                 }
               })
               .catch(err => {

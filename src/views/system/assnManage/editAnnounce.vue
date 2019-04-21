@@ -2,7 +2,7 @@
     <div>
       <Form :model="announceInfo" :label-width="80">
         <FormItem label="标题：">
-          <Input v-model="announceInfo.name"></Input>
+          <Input v-model="announceInfo.title"></Input>
         </FormItem>
         <FormItem label="所属社团：">
           <Select v-model="announceInfo.associationId" style="width:200px">
@@ -12,7 +12,7 @@
         <FormItem label="公告内容：">
           <Input v-model="announceInfo.content" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="输入公告内容..."></Input>
         </FormItem>
-        <FormItem label="创建时间：">
+        <FormItem label="发布时间：">
           <Input v-model="announceInfo.createTime"></Input>
         </FormItem>
         <FormItem>
@@ -112,6 +112,7 @@
       editAnounce() {
         let that = this;
         let url = that.BaseConfig + '/updateNotice';
+        that.announceInfo.createTime = new Date().getTime();
         let data = that.announceInfo;
         that
           .$http(url, '' , data, 'post')
