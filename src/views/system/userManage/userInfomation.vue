@@ -4,6 +4,7 @@
     <div class="add-selfinfo">
       <Row>
         <Col span="8">学号：<Input v-model="userInfo.userName" readonly /></Col>
+        <Col span="8">学号：<Input v-model="userInfo.pwd" readonly /></Col>
       </Row>
       <Row>
         <Col span="8">姓名：<Input v-model="userInfo.name" clearable /></Col>
@@ -24,14 +25,17 @@
     </div>
     <div v-if="userInfo.assnBasicList.length !== 0">
       <div v-for="(item,index) in userInfo.assnBasicList" :key="index">
-        <p>加入社团{{index}}</p>
+        <p>加入社团{{index+1}}</p>
         <div class="add-selfinfo" >
           <Row>
             <Col span="8">社团名称：
               <Input v-model="item.associationName" readonly />
             </Col>
-            <Col span="8">部门名称：
-              <Input v-model="item.departmentBasicList[1].departmentName" readonly />
+            <Col span="8" v-if="item.departmentBasicList.length !== 0">部门名称：
+              <Input v-model="item.departmentBasicList[0].departmentName" readonly />
+            </Col>
+            <Col span="8" v-if="item.departmentBasicList.length === 0">部门名称：
+              <Input readonly />
             </Col>
             <Col span="8" v-if="item.job !== null">职务：<Input v-model="item.job" readonly /></Col>
             <Col span="8" v-if="item.job === null">职务：<Input v-model="userInfo.identityName" readonly /></Col>
@@ -39,23 +43,18 @@
           <Row>
             <Col span="8">身份权限：
               <Input v-model="userInfo.identityName" readonly />
-            </Col>
-            <Col span="8">
-              <Router-link to="" style="color: blue">->修改用户权限</Router-link>
+              <Router-link to="" style="color: blue">->修改身份权限</Router-link>
             </Col>
           </Row>
         </div>
       </div>
     </div>
+    <div v-if="userInfo.assnBasicList.length === 0" style="border: 1px solid #ccc;line-height: 40px;
+    border-radius: 5px;ont-size: 18px;text-align: center;">
+      暂未加入社团~~
+    </div>
     <div class="add-btn">
-      <Poptip
-        confirm
-        title="确认取消修改用户信息？"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <Button>取消</Button>
-      </Poptip>
-      <Button type="primary" style="margin: 0 20px" @click="editUser">确认</Button>
+      <Button type="primary" style="margin: 0 20px" @click="goBack">返回</Button>
     </div>
   </div>
 </template>
@@ -74,41 +73,42 @@
             label: '女'
           },
         ],           //select 性别
-        userInfo: '',
+        userInfo: [],
         userId: '',
       }
     },
     created() {
-      this.userInfo = this.$route.query.userInfo;
+      this.getOneInfo(this.$route.query.id)
     },
 
     methods: {
-      editUser() {
+      //获取用户个人信息
+      getOneInfo(id) {
         let that = this;
-        let url = that.BaseConfig + '/updateUser';
-        let data = that.userInfo;
+        let url = that.BaseConfig + '/selectByUserId';
+        let params = { UserId: id };
+        let data = null;
         that
-          .$http(url, '', data, 'post')
+          .$http(url, params, data, 'get')
           .then(res => {
-            if(res.data.retCode === 0) {
-              that.$Message.success('修改用户信息成功！');
-              that.$router.push({
-                name: 'userIndex'
-              })
+            data = res.data;
+            if(data.retCode === 0) {
+              that.userInfo = data.data;
+              console.log(that.userInfo)
             } else {
-              that.$Message.error(res.data.retMsg);
+              that.$Message.error(data.retMsg || '用户信息获取失败');
             }
           })
           .catch(err => {
             that.$Message.error('请求错误');
           })
       },
-      ok() {
+
+      goBack() {
         this.$router.push({
           name: 'userIndex'
         })
       },
-      cancel() {},
     },
 
   }

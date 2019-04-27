@@ -19,20 +19,20 @@
         <Card :bordered="false">
           <p slot="title" style="font-size: 18px;">宁德师院学生社团登记表</p>
           <p>
-            http://localhost:8082/upload_tmp/2019-04-14/doc/1555177703832-社团登记表 （模板）.doc
-            <a href="http://localhost:8082/upload_tmp/2019-04-14/doc/1555177703832-社团登记表 （模板）.doc" style="padding-left: 10px">
+            http://localhost:8082/upload_tmp/2019-04-26/doc/1556236830077-社团登记表 （模板）.doc
+            <a href="http://localhost:8082/upload_tmp/2019-04-26/doc/1556236830077-社团登记表 （模板）.doc" style="padding-left: 10px">
               <Button type="error">点此下载社团登记表（模板）</Button>
             </a>
           </p>
           <p>
-            http://localhost:8082/upload_tmp/2019-04-14/doc/1555177695857-社团登记表.doc
-            <a href="http://localhost:8082/upload_tmp/2019-04-14/doc/1555177695857-社团登记表.doc" style="padding-left: 10px">
+            http://localhost:8082/upload_tmp/2019-04-26/doc/1556236907748-社团登记表.doc
+            <a href="http://localhost:8082/upload_tmp/2019-04-26/doc/1556236907748-社团登记表.doc" style="padding-left: 10px">
               <Button type="info">点此下载社团登记表（空白版）</Button>
             </a>
           </p>
           <p>
-            http://localhost:8082/upload_tmp/2019-04-14/doc/1555177684144-社团申请表.doc
-            <a href="http://localhost:8082/upload_tmp/2019-04-14/doc/1555177684144-社团申请表.doc" style="padding-left: 10px">
+            http://localhost:8082/upload_tmp/2019-04-26/doc/1556236932240-社团申请表.doc
+            <a href="http://localhost:8082/upload_tmp/2019-04-26/doc/1556236932240-社团申请表.doc" style="padding-left: 10px">
               <Button type="info">点此下载社团申请表（空白版）</Button>
             </a>
           </p>

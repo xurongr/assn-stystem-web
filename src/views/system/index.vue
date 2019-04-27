@@ -32,10 +32,7 @@
               <MenuItem name="3-1">修改密码</MenuItem>
             </Router-link>
             <Router-link to="/index/identityManage">
-              <MenuItem name="3-2">身份管理</MenuItem>
-            </Router-link>
-            <Router-link to="/index/identityChange">
-              <MenuItem name="3-3">身份变更</MenuItem>
+              <MenuItem name="3-2">系统权限管理</MenuItem>
             </Router-link>
           </Submenu>
           <Submenu name="4">
@@ -43,7 +40,10 @@
               <Icon type="ios-analytics"></Icon>
               审核管理
             </template>
-            <MenuItem name="3-1">入团申请</MenuItem>
+            <MenuItem name="4-1">入团申请</MenuItem>
+            <Router-link to="/index/identityChange">
+              <MenuItem name="4-2">身份变更申请</MenuItem>
+            </Router-link>
           </Submenu>
         </Menu>
       </Sider>
@@ -177,6 +177,10 @@ export default {
   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-opened .ivu-menu-submenu-title,
   .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu-title:hover {
     background-color: #000c17;
+  }
+  .ivu-layout-header {
+    height: 58px;
+    line-height: 58px;
   }
 
 </style>

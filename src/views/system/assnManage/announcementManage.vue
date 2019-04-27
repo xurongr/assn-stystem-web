@@ -1,18 +1,26 @@
 <template>
     <div>
-      <div class="annouce-manage">
-        <div style="display: flex">
-          <Select v-model="sortValue" style="width:150px">
+      <div class="search-title">
+        <div><p>活动标题：</p><Input placeholder="关键字模糊搜索" style="width: 140px;margin-top: 8px" /></div>
+        <div><p>发布者：</p><Input style="width: 140px;margin-top: 8px" /></div>
+        <!--所属社团系统管理员才有-->
+        <div>
+          <p>所属社团：</p>
+          <Select v-model="recruitState" style="width:200px;margin-top: 8px">
             <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容"/></div>
         </div>
+      </div>
+      <div class="annouce-manage">
+        <Button type="primary">查询</Button>
         <Router-link to="/index/announcementManage/addAnnoucement">
           <Button type="primary">发布公告</Button>
         </Router-link>
       </div>
       <Table border ref="selection" :columns="columns4" :data="announceInfo"></Table>
-      <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
+      <div style="display: flex;justify-content: flex-end;margin-top: 10px">
+        <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange"/>
+      </div>
       <Modal
         v-model="modal3"
         title="公告内容"
@@ -40,7 +48,8 @@
               anContent:'',
               columns4: [
                 {
-                  type: 'selection',
+                  title: '序号',
+                  type: 'index',
                   width: 60,
                   align: 'center'
                 },
@@ -202,9 +211,11 @@
 
 <style lang="less" scoped>
   .annouce-manage {
-    margin-bottom: 20px;
+    margin: 10px 0;
     display: flex;
-    justify-content: space-between;
+    button {
+      margin-right: 15px;
+    }
   }
   /deep/ .ivu-table-cell {
     white-space: nowrap;

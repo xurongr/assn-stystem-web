@@ -2,19 +2,21 @@
   <div class="info-manage">
     <Form :model="formItem" :label-width="100">
       <FormItem label="社团名称：">
-        <Input v-model="formItem.associationName" readonly></Input>
+        <Input v-model="formItem.associationName"></Input>
       </FormItem>
       <FormItem label="社团负责人：">
-        <Input v-model="name" @on-blur="searchUser"></Input>
-        <Modal
-          v-model="modal2"
-          title="选择社团负责人"
-          :footer-hide="true"
-        >
-          <p>
-          <Table border ref="selection" :columns="columns4" :data="searchInfo"></Table>
-          </p>
-        </Modal>
+        <Input v-model="name" disabled></Input>
+        <RouterLink to="" style="color: blue;font-size: 14px">->变更社团负责人</RouterLink>
+        <!--<Input v-model="name" @on-blur="searchUser"></Input>-->
+        <!--<Modal-->
+          <!--v-model="modal2"-->
+          <!--title="选择社团负责人"-->
+          <!--:footer-hide="true"-->
+        <!--&gt;-->
+          <!--<p>-->
+          <!--<Table border ref="selection" :columns="columns4" :data="searchInfo"></Table>-->
+          <!--</p>-->
+        <!--</Modal>-->
       </FormItem>
       <FormItem label="社团地址：">
         <Input v-model="formItem.address" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="社团地址..."></Input>
@@ -86,7 +88,8 @@
                   },
                   on: {
                     click: () => {
-                      this.addName(params.row.id)
+                      this.formItem.userId = params.row.id;
+                      this.modal2 = false;
                     }
                   }
                 }, '确定'),
@@ -153,10 +156,6 @@
           .catch(err => {
             that.$Message.error('请求错误');
           })
-      },
-      addName(id) {
-        this.formItem.userId = id;
-        this.modal2 = false;
       },
 
       //取消修改

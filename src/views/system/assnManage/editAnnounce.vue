@@ -12,9 +12,9 @@
         <FormItem label="公告内容：">
           <Input v-model="announceInfo.content" type="textarea" :autosize="{minRows: 4,maxRows: 5}" placeholder="输入公告内容..."></Input>
         </FormItem>
-        <FormItem label="发布时间：">
-          <Input v-model="announceInfo.createTime"></Input>
-        </FormItem>
+        <!--<FormItem label="发布时间：">-->
+          <!--<Input v-model="announceInfo.createTime"></Input>-->
+        <!--</FormItem>-->
         <FormItem>
           <Button type="primary" @click="editAnounce">修改</Button>
           <Poptip

@@ -5,24 +5,23 @@
           <p class="l-title">招新Top榜</p>
           <p class="l-cont">
             <ul>
-              <li><span>!</span>青年志愿者协会</li>
-              <li><span>!</span>后山夜校</li>
-              <li><span>!</span></li>
-              <li><span>!</span></li>
-              <li><span>!</span></li>
+              <li v-for="item in assnInfo" :key="item.id">
+                <span>!</span>
+                {{item.associationName}}
+              </li>
             </ul>
           </p>
         </div>
         <div class="center">
           <Carousel autoplay v-model="picNum" loop>
             <CarouselItem>
-              <div><img src="./img/tu1.jpg" /></div>
+              <div><img src="./img/banner1.png" /></div>
             </CarouselItem>
             <CarouselItem>
-              <div><img src="./img/tu2.jpg" /></div>
+              <div><img src="./img/banner2.jpeg" /></div>
             </CarouselItem>
             <CarouselItem>
-              <div><img src="./img/tu3.jpg" /></div>
+              <div><img src="./img/banner3.jpg" /></div>
             </CarouselItem>
           </Carousel>
         </div>
@@ -69,14 +68,44 @@
         data() {
             return {
               picNum: 0,   //轮播图播放索引
+              pageNo: 1,
+              assnInfo:[],
             }
         },
 
         created() {
-
+          this.getInfo();
         },
 
-        methods: {},
+        methods: {
+          //获取社团列表
+          getInfo() {
+            let that = this;
+            let url = that.BaseConfig + '/selectAssociationAll';
+            let params = {
+              pageNo: that.pageNo,
+              pageSize: 10,
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.assnInfo = that.assnInfo.concat(data.data.data);
+                  let total = data.data.total;
+                  if(that.assnInfo < total) {
+                    that.pageNo++;
+                    that.getInfo();
+                  }
+                  console.log('社团列表',  that.assnInfo)
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+        },
     }
 </script>
 

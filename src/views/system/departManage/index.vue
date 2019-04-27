@@ -5,7 +5,7 @@
       <div style="display: flex">
         <div v-if="identityId === 0">
           选择社团：
-          <Select v-model="associationId" style="width:150px;margin-bottom: 10px" @on-change="getDepartList">
+          <Select v-model="associationId" style="width:150px;" @on-change="getDepartList">
             <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           <!--选择部门：-->

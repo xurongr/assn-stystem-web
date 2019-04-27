@@ -70,7 +70,7 @@
           </Col>
           <Col span="2" style="text-align: center">-</Col>
           <Col span="11">
-            <TimePicker type="time" placeholder="Select time" v-model="formItem.start"></TimePicker>
+            <TimePicker type="time" placeholder="Select time" v-model="sTime"></TimePicker>
           </Col>
         </Row>
       </FormItem>
@@ -117,18 +117,9 @@
         userInfo: [],       //社团下的用户列表
         userAssnList: [],
         timeUp: false,
-        defaultList: [
-          {
-            'name': 'a42bdcc1178e62b4694c830f028db5c0',
-            'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-          },
-          {
-            'name': 'bc7521e033abdd1e92222d733590f104',
-            'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-          }
-        ],
         imgName: '',
         visible: false,
+        defaultList: [],
         uploadList: []
       }
     },
@@ -232,6 +223,8 @@
             data = res.data;
             if(data.retCode === 0) {
               that.formItem = data.data;
+              that.uploadList = this.formItem.image.split(',');
+              console.log(that.uploadList)
               console.log('--获取某个活动信息---',that.formItem)
             }
           })
@@ -291,12 +284,19 @@
       handleRemove (file) {
         console.log(file)
         const fileList = this.$refs.upload.fileList;
-        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+        let image = [];
+        fileList.map((item,index) => {
+          image[index] = item.url
+        })
       },
-      handleSuccess (res, file) {
+      handleSuccess (res, file, fileList) {
         console.log(res.data)
         file.url = res.data;
-        file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+        let image = [];
+        fileList.map((item,index) => {
+          image[index] = item.url
+        })
+        this.formItem.image = image.join(',');
       },
       handleFormatError (file) {
         this.$Notice.warning({

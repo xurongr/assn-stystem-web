@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="annouce-manage">
-      <div style="margin: 25px 0 10px" v-if="loginInfo.identityId === 0">
+      <div v-if="loginInfo.identityId === 0">
         所属社团：
         <Select v-model="searchAssnValue" style="width:200px" @on-change="getActivityList">
           <Option v-for="item in searchAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -91,19 +91,20 @@
           {
             title: '活动图片',
             key: 'image',
+            align: 'center',
             render: (h,params) =>{
-              console.log(params.row.image)
-              // return h('img',{
-              //   attrs: {
-              //     src:params.row.image.url
-              //   }
-              // })
+              let images = params.row.image.split(',');
+              return h('img',{
+                attrs: {
+                  src: images[0],style: 'width: 76px;height: 74px; padding-top: 2px;border-radius: 2px;'
+                }
+              })
             }
           },
           {
             title: '学分',
             key: 'score',
-            width: 80,
+            width: 60,
           },
           {
             title: '所属社团',

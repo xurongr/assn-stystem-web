@@ -108,7 +108,7 @@
                 activityName: '',
                 address: '',
                 content: '',
-                image: [],
+                image: '',
                 associationId: null,
                 userId: null,
                 score : null,
@@ -248,16 +248,22 @@
           handleRemove (file) {
             const fileList = this.$refs.upload.fileList;
             this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            let image = [];
             fileList.map((item,index) => {
-              this.formItem.image[index] = item.url
+              image[index] = item.url
             })
+            this.formItem.image = image.join(',');
+            console.log(this.formItem.image)
           },
           handleSuccess (res, file, fileList) {
             file.url = res.data;
             file.name = this.formItem.activityName;
+            let image = [];
             fileList.map((item,index) => {
-              this.formItem.image[index] = item.url
+              image[index] = item.url
             })
+            this.formItem.image = image.join(',');
+            console.log(fileList,this.formItem.image)
           },
           handleFormatError (file) {
             this.$Notice.warning({

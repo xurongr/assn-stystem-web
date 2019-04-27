@@ -1,13 +1,17 @@
 <template>
   <div>
-    <!--系统管理员创建社团-->
-    <div class="assn-manage">
-      <div style="display: flex">
-        <Select v-model="sortValue" style="width:150px">
+    <div class="search-title">
+      <div><p>社团名称：</p><Input placeholder="关键字模糊搜索" style="width: 140px;margin-top: 8px" v-model="selectAssnName"/></div>
+      <div>
+        <p>招募状态：</p>
+        <Select v-model="recruitState" style="width:200px;margin-top: 8px">
           <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容"/></div>
       </div>
+    </div>
+    <!--系统管理员创建社团-->
+    <div class="assn-manage">
+      <Button type="primary" @click="searchAssn">查询</Button>
       <Router-link to="/index/assnManage/addAssn">
         <Button type="primary">创建社团</Button>
       </Router-link>
@@ -15,10 +19,6 @@
 
     <Table border ref="selection" :columns="columns4" :data="assnInfo"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: space-between">
-      <div>
-        <Button @click="handleSelectAll(true)" type="primary">全选</Button>
-        <Button @click="handleSelectAll(false)">取消全选</Button>
-      </div>
       <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
     </div>
 
@@ -41,24 +41,30 @@
   export default {
     data() {
       return {
-        assnInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
+        selectAssnName:'',
+        associationName: '',
+        recruitState: 2,
         sortList: [
           {
-            value: 'associationName',
-            label: '社团名称'
+            value: 2,
+            label: '全部'
           },
           {
-            value: 'recruitState',
-            label: '招募状态'
+            value: 0,
+            label: '招募中'
+          },
+          {
+            value: 1,
+            label: '招募未开启'
           },
         ],    //查找条件
+        assnInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
         sortValue:'',
         total: 0,
         pageNo:1,
         current: 1,
         modal1: false,
         associationId: null,
-        associationName:'',
         assnDataCount: [],
         columns4: [
           {
@@ -163,12 +169,21 @@
         this.getInfo();
       },
 
+      searchAssn() {   //搜索
+        this.pageNo = 1;
+        this.getInfo();
+      },
+
       //获取社团列表
       getInfo() {
         let that = this;
         let url = that.BaseConfig + '/selectAssociationAll';
+        let recruitState;
+        that.recruitState === 2 ? recruitState = '' : recruitState = that.recruitState;
         let params = {
           pageNo: that.pageNo,
+          associationName: that.selectAssnName,
+          recruitState: recruitState,
           pageSize: 10,
         };
         let data = null;
@@ -241,8 +256,10 @@
 
 <style lang="less" scoped>
 .assn-manage {
-  margin-bottom: 20px;
+  margin: 10px 0;
   display: flex;
-  justify-content: space-between;
+  button {
+    margin-right: 15px;
+  }
 }
 </style>

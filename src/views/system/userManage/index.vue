@@ -1,15 +1,17 @@
 <template>
   <div>
-    <div class="user-manage">
-      <div style="display: flex">
-        <Select v-model="sortValue" style="width:150px">
-          <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+    <div class="search-title">
+      <div><p>学号：</p><Input placeholder="关键字模糊搜索" style="width: 140px;margin-top: 8px" v-model="userName"/></div>
+      <div><p>用户名称：</p><Input style="width: 140px;margin-top: 8px" v-model="name"/></div>
+      <div>
+        <p>身份状态：</p>
+        <Select v-model="identityId" style="width:200px;margin-top: 8px">
+          <Option v-for="item in identityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <div style="width: 270px;margin-left: 3px"><Input search enter-button="搜索" placeholder="输入要查找的内容" v-model="name" @on-enter="searchUser" @on-search="searchUser"/></div>
       </div>
-      <Router-link to="/index/userIndex/addUser">
-        <Button type="primary">添加用户</Button>
-      </Router-link>
+    </div>
+    <div class="user-manage">
+      <Button type="primary" @click="searchUser">查询</Button>
     </div>
     <Table border ref="selection" :columns="columns4" :data="userInfo"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: flex-end">
@@ -22,9 +24,36 @@
   export default {
     data() {
       return {
+        pageNo: 1,
+        total:0,
+        name: '',
+        userName: '',
+        identityId: 0,
         current: 1,
-        loginInfo:'',
         userInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
+        identityList: [
+          {
+            value: 0,
+            label: '全部'
+          },
+          {
+            value: 4,
+            label: '普通用户'
+          },
+          {
+            value: 3,
+            label: '社团成员'
+          },
+          {
+            value: 2,
+            label: '社团管理员'
+          },
+          {
+            value: 1,
+            label: '系统管理员'
+          },
+        ],    //查找条件
+        oneUserInfo: [],
         columns4: [
           {
             title: '学号',
@@ -43,15 +72,11 @@
             key: 'major'
           },
           {
-            title: '参与社团',
-            key: 'associationName'
-          },
-          {
             title: '联系方式',
             key: 'telNumber'
           },
           {
-            title: '用户权限',
+            title: '身份',
             key: 'identityName'
           },
           {
@@ -74,67 +99,33 @@
                       this.$router.push({
                         path: '/index/assnManage/userInfomation',
                         query: {
-                          userInfo: params.row,
+                          id: params.row.id,
                         }
                       })
                     }
                   }
                 }, '查看'),
-                // h('Button', {
-                //   props: {
-                //     type: 'primary',
-                //     size: 'small'
-                //   },
-                //   style: {
-                //     marginRight: '5px'
-                //   },
-                //   on: {
-                //     click: () => {
-                //       this.$router.push({
-                //         path: '/index/assnManage/userInfomation',
-                //         query: {
-                //           userInfo: this.userInfo,
-                //         }
-                //       })
-                //     }
-                //   }
-                // }, '编辑'),
               ]);
             }
           }
         ],
-        pageNo: 1,
-        total:0,
-        name: '',
-        sortList: [
-          {
-            value: 'userName',
-            label: '学号'
-          },
-          {
-            value: 'name',
-            label: '姓名'
-          },
-        ],    //查找条件
-        sortValue:'',
       }
     },
 
     created() {
-      //获取用户个人信息
-      this.loginInfo = this.$store.state.loginInfo;
       this.getInfo();
     },
 
     methods: {
-      //全选
-      handleSelectAll (status) {
-        this.$refs.selection.selectAll(status);
-      },
-
       //改变页数
       pageChange(val) {
         this.pageNo = val;
+        this.getInfo();
+      },
+
+      //搜索
+      searchUser() {
+        this.pageNo = 1;
         this.getInfo();
       },
 
@@ -142,7 +133,12 @@
       getInfo() {
         let that = this;
         let url = that.BaseConfig + '/selectUsersAll';
+        let identityId;
+        that.identityId === 0 ? identityId = '' : identityId = that.identityId;
         let params = {
+          name: that.name,
+          identityId: identityId,
+          userName: that.userName,
           pageNo: that.pageNo,
           pageSize: 10,
         };
@@ -154,81 +150,24 @@
             if(data.retCode === 0) {
               that.userInfo = data.data.data;
               that.total = data.data.total;
-              console.log(that.userInfo)
             } else {
-              that.$Message.error(data.retMsg);
+              that.$Message.error(data.retMsg || '用户信息获取失败');
             }
           })
           .catch(err => {
             that.$Message.error('请求错误');
           })
       },
-
-      //删除用户
-      cancelUser(userId) {
-        let that = this;
-        let url = that.BaseConfig + '/deleteUser';
-        let params = {
-          UserId: userId,
-        };
-        let data = null;
-        that
-          .$http(url, params, data, 'get')
-          .then(res => {
-            console.log(res)
-            // data = res.data;
-            // if(data.retCode === 0) {
-            //    that.$Message.success('删除成功');
-            //    that.getInfo();
-            // }
-          })
-          .catch(err => {
-            that.$Message.error('请求错误');
-          })
-      },
-
-      //搜索用户(学号、姓名、身份)
-      searchUser() {
-        let that = this;
-        let url = that.BaseConfig + '/selectUsersAll';
-        let params;
-        if(that.sortValue == '姓名') {
-          params = {
-            name: that.name,
-            // identityName: that.identityName,
-            pageNo: 1,
-            pageSize: 10,
-          };
-        } else if(that.sortValue == '学号'){
-          params = {
-            userName: that.name,
-            // identityName: that.identityName,
-            pageNo: 1,
-            pageSize: 10,
-          };
-        }
-        let data = null;
-        that
-          .$http(url, params , data, 'get')
-          .then(res =>{
-            console.log(res)
-            data = res.data;
-            if(data.retCode === 0) {
-              that.userInfo = data.data.data;
-              that.total = data.data.total;
-            }
-          })
-          .catch(err => {
-            that.$Message.error('请求错误');
-          })
-      },
-
     },
   }
 </script>
 
 <style lang="less" scoped>
 .user-manage {
-  margin-bottom: 20px;display: flex;justify-content: space-between;
+  margin:15px 0;
+  display: flex;
+  button {
+    margin-right: 10px;
+  }
 }
 </style>

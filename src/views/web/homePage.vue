@@ -5,13 +5,13 @@
           <div class="imgUrl">
             <Carousel autoplay v-model="picNum" loop>
               <CarouselItem>
-                <div><img src="./img/tu1.jpg" /></div>
+                <div><img src="./img/banner1.png" /></div>
               </CarouselItem>
               <CarouselItem>
-                <div><img src="./img/tu2.jpg" /></div>
+                <div><img src="./img/banner2.jpeg" /></div>
               </CarouselItem>
               <CarouselItem>
-                <div><img src="./img/tu3.jpg" /></div>
+                <div><img src="./img/banner3.jpg" /></div>
               </CarouselItem>
             </Carousel>
           </div>
@@ -41,20 +41,17 @@
             <div class="cont-announce">
               <div class="announce-title">
                 <p>公告通知</p>
-                <p><a href="">更多>></a></p>
+                <!--<p><a href="">更多>></a></p>-->
               </div>
               <div class="an_content">
                 <div class="content-new">
                   <p>最新</p>
-                  <p>公告标题</p>
+                  <p>{{announceInfo[0].title}}</p>
+                  <p>{{announceInfo[0].content}}</p>
                 </div>
                 <ul>
-                  <li>1</li>
-                  <li>2</li>
-                  <li>3</li>
-                  <li>4</li>
-                  <li>5</li>
-                  <li>6</li>
+                  <li v-for="i in announceInfo.slice(1,10)">{{i.title}}</li>
+                  <li style="color: blue">更多精彩>></li>
                 </ul>
               </div>
             </div>
@@ -102,10 +99,41 @@
         data() {
             return {
               picNum: 0,   //轮播图片播放索引
+              announceInfo: [],
             }
         },
 
-        methods: {}
+      created() {
+          this.getAnnouceInfo();
+      },
+
+        methods: {
+          //获取公告信息
+          getAnnouceInfo() {
+            let that = this;
+            let url = that.BaseConfig + '/selectNoticeAll';
+            let params = {
+              type: 0,    //type：0 社团公告，，要根据userId判断type
+              pageNo: 1,
+              pageSize: 10,
+            };
+            let data = null;
+            that
+              .$http(url, params , data, 'GET')
+              .then(res =>{
+                if(res.data.retCode === 0) {
+                  that.announceInfo = res.data.data.data;
+                  console.log(that.announceInfo)
+                  console.log(that.announceInfo.slice(1,10))
+                } else {
+                  that.$Message.error(res.data.retMsg);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+        }
     }
 </script>
 
