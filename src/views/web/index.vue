@@ -8,7 +8,7 @@
         <img src="./img/banner_name.png">
       </div>
       <div class="banner-right">
-        <img src="" alt="">
+        <img :src="loginInfo.userImg" alt="">
         <span>
               <Dropdown>
                 <a href="javascript:void(0)" class="user-top">
@@ -17,36 +17,29 @@
                  </a>
                   <DropdownMenu slot="list">
                      <DropdownItem><span @click="editModal = true">我的信息</span></DropdownItem>
-                     <DropdownItem>修改密码</DropdownItem>
+                     <DropdownItem><span>我的申请</span></DropdownItem>
+                     <DropdownItem><span @click="modal1 = true">修改密码</span></DropdownItem>
                   </DropdownMenu>
               </Dropdown>
             </span>
-        <p style="padding-left: 10px">退出</p>
+        <p style="padding-left: 10px" @click="exitSystem">退出</p>
       </div>
     </div>
     <!--导航栏-->
     <div class="nav">
       <div class="nav-cont">
         <ul>
-          <li><Router-link to="/index/web">首页</Router-link></li>
-          <li class="views-nav">
-            <Dropdown>
-              <a href="javascript:void(0)">
-                我的社团
-                <Icon type="ios-arrow-down"></Icon>
-              </a>
-              <DropdownMenu slot="list">
-                <DropdownItem v-for="item in assnInfo" :key="item.id">
-                  <span @click="goAssnDetail(item.id)">{{item.associationName}}</span>
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+          <Router-link to="/index/web"><li>首页</li></Router-link>
+          <li class="views-nav" @mouseenter="assnShow = true" @mouseleave="assnShow = false">我的社团
+            <div  class="assn-list" v-if="assnShow">
+              <div class="scroll" >
+                <p @click="goAssnDetail(item.id)" v-for="item in assnInfo" :key="item.id">{{item.associationName}}</p>
+              </div>
+            </div>
           </li>
-          <!--<li><Router-link to="/index/web/assnView">社团风采</Router-link></li>-->
-          <li><Router-link to="/index/web/recruitNew">社团招新</Router-link></li>
-          <li><Router-link to="/index/web/createAssnApply">创社申请</Router-link></li>
-          <!--<li>关于我们</li>-->
-          <li @click="goSystem">后台管理</li>
+          <Router-link to="/index/web/recruitNew"><li>社团招新</li></Router-link>
+          <Router-link to="/index/web/createAssnApply"><li>创社须知</li></Router-link>
+          <li @click="goSystem" v-if="type !== 0">后台管理</li>
         </ul>
       </div>
     </div>
@@ -55,27 +48,49 @@
       <router-view/>
     </div>
     <!--底部-->
-    <div class="footer">底部</div>
+    <div class="footer">
+      <div class="footer-cont">
+        <img src="./img/icon.png" alt="">
+        <p>&nbsp;&nbsp; &copy; 2015 宁德师范学院学生社团 &nbsp;&nbsp;地址：福建省宁德市东侨开发区宁德师范学院</p>
+      </div>
+    </div>
+
+    <Modal
+      v-model="modal1"
+      title="修改密码"
+      @on-ok="editSubmit">
+      <div class="edit-info">
+        <Form ref="editPwd" :model="editPwd" :label-width="80">
+          <FormItem label="学号" prop="userName">
+            <Input v-model="editPwd.userName" disabled></Input>
+          </FormItem>
+          <FormItem label="旧密码" prop="oldPwd">
+            <Input v-model="editPwd.oldPwd"></Input>
+          </FormItem>
+          <FormItem label="身份证号" prop="idCard">
+            <Input v-model="editPwd.idCard" />
+          </FormItem>
+          <FormItem label="新密码" prop="newPwd">
+            <Input v-model="editPwd.newPwd" />
+          </FormItem>
+        </Form>
+      </div>
+    </Modal>
+
     <Modal
       v-model="editModal"
       title="个人信息"
       @on-ok="ok">
-      <div>
-        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+      <div class="edit-info">
+        <Form ref="formValidate" :model="formValidate" :label-width="80">
           <FormItem label="学号" prop="userName">
-            <Input v-model="formValidate.userName"></Input>
+            <Input v-model="formValidate.userName" disabled></Input>
           </FormItem>
           <FormItem label="姓名" prop="name">
-            <Input v-model="formValidate.name"></Input>
-          </FormItem>
-          <FormItem label="性别" prop="sex">
-            <RadioGroup v-model="formValidate.sex">
-              <Radio label="1">男生</Radio>
-              <Radio label="0">女生</Radio>
-            </RadioGroup>
+            <Input v-model="formValidate.name" disabled></Input>
           </FormItem>
           <FormItem label="年级" prop="grade">
-            <Input v-model="formValidate.grade"></Input>
+            <Input v-model="formValidate.grade" disabled></Input>
           </FormItem>
           <FormItem label="专业" prop="major">
             <Input v-model="formValidate.major" clearable />
@@ -83,12 +98,39 @@
           <FormItem label="联系电话" prop="telNumber">
             <Input v-model="formValidate.telNumber" clearable />
           </FormItem>
-          <!--<FormItem label="用户头像" prop="telNumber">-->
-            <!--<Input type="hidden" v-model="formValidate.userImg" clearable />-->
-
-          <!--</FormItem>-->
-          <FormItem>
-            <Button type="primary" @click="handleSubmit('formValidate')">注册并登陆</Button>
+          <FormItem label="用户头像" prop="telNumber">
+            <div class="demo-upload-list" v-for="item in uploadList">
+              <template v-if="item.status === 'finished'">
+                <img :src="item.url">
+                <div class="demo-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                  <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                </div>
+              </template>
+              <template v-else>
+                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+              </template>
+            </div>
+            <Upload
+              ref="upload"
+              :show-upload-list="false"
+              :default-file-list="defaultList"
+              :on-success="handleSuccess"
+              :format="['jpg','jpeg','png']"
+              :max-size="2048"
+              :on-format-error="handleFormatError"
+              :on-exceeded-size="handleMaxSize"
+              :before-upload="handleBeforeUpload"
+              type="drag"
+              action="http://localhost:8082/fileUpload"
+              style="display: inline-block;width:58px;">
+              <div style="width: 58px;height:58px;line-height: 58px;">
+                <Icon type="ios-camera" size="20"></Icon>
+              </div>
+            </Upload>
+            <Modal title="View Image" v-model="visible">
+              <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+            </Modal>
           </FormItem>
         </Form>
       </div>
@@ -100,7 +142,10 @@
     export default {
         data() {
             return {
+              assnShow: false,
               loginInfo: '',
+              access: [],
+              type: 4,
               pageNo: 1,
               assnInfo: [],
               editModal: false,
@@ -111,17 +156,31 @@
                 grade: null,
                 major: '',
                 telNumber: null,
-                identityId: 2,
-                identityName: "社团管理员",
                 userImg: '',
               },
+              editPwd: {
+                userName: JSON.parse(localStorage.getItem('loginInfo')).userName,
+                oldPwd: '',
+                idCard: '',
+                newPwd: '',
+              },
+              visible: false,
+              uploadList: [],
+              defaultList: [],
+              imgName: '',
+              modal1: false,
             }
         },
+      mounted () {
+        this.uploadList = this.$refs.upload.fileList;
+      },
 
       created() {
         this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
+        console.log(this.loginInfo)
         this.formValidate = this.loginInfo;
-        console.log(this.formValidate)
+        this.access = JSON.parse(localStorage.getItem('access'));
+        this.type = parseInt(localStorage.getItem('type'));
         this.getInfo();
       },
 
@@ -164,7 +223,7 @@
           //跳转社团详情
           goAssnDetail(id) {
             this.$router.push({
-              path:'/index/web/assnView',
+              path:'/blank',
               query: {
                 associationId: id,
               }
@@ -174,14 +233,12 @@
           ok() {
             let that = this;
             let url = that.BaseConfig + '/updateUser';
-            // that.formValidate.identityId = 2;
             let data = that.formValidate;
             that
               .$http(url, '', data, 'post')
               .then(res => {
-                console.log(res)
                 if(res.data.retCode ===0) {
-
+                  console.log('修改成功')
                 }
               })
               .catch(err => {
@@ -189,6 +246,82 @@
               })
           },
 
+          exitSystem() {
+            localStorage.removeItem('loginInfo');
+            localStorage.removeItem('access');
+            localStorage.removeItem('type');
+            this.$router.push({name: 'login'})
+          },
+
+          handleView (name) {
+            this.imgName = name;
+            this.visible = true;
+          },
+
+          handleRemove (file) {
+            const fileList = this.$refs.upload.fileList;
+            this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            let image = [];
+            fileList.map((item,index) => {
+              image[index] = item.url
+            })
+            this.formValidate.userImg = image.join(',');
+          },
+
+          handleSuccess (res, file, fileList) {
+            file.url = res.data;
+            let image = [];
+            console.log(fileList)
+            fileList.map((item,index) => {
+              image[index] = item.url
+            })
+            this.formValidate.userImg = image.join(',');
+          },
+
+          handleFormatError (file) {
+            this.$Notice.warning({
+              title: 'The file format is incorrect',
+              desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+            });
+          },
+          handleMaxSize (file) {
+            this.$Notice.warning({
+              title: 'Exceeding file size limit',
+              desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+            });
+          },
+          handleBeforeUpload () {
+            const check = this.uploadList.length < 5;
+            if (!check) {
+              this.$Notice.warning({
+                title: 'Up to five pictures can be uploaded.'
+              });
+            }
+            return check;
+          },
+
+          editSubmit() {
+            let that = this;
+            let url = that.BaseConfig + '/updatePwd';
+            let params = that.editPwd;
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.$Message.success('密码修改成功,请重新登录');
+                  setInterval(()=> {
+                    that.$router.push({name: 'login'})
+                  },3000)
+                } else {
+                  that.$Message.warning(data.retMsg)
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
         }
     }
 </script>
@@ -200,6 +333,7 @@
   }
   .banner {
     .box(100%, 140px);
+    background: linear-gradient(0deg, #fff 0%, #57a3f3 100%);
     padding: 10px 20px 10px 12%;
     margin: 0 auto;
     display: flex;
@@ -222,6 +356,7 @@
     .banner-right {
       line-height: 40px;
       display: flex;
+      margin-right: 13%;
       a {
         color: #444;
       }
@@ -231,48 +366,120 @@
       img {
         .box(40px, 40px);
         border-radius: 50%;
-        border: 1px solid #000;
         margin-right: 10px;
       }
     }
   }
 
   .nav {
-    .box(100%, 40px);
-    background-color: #3765FF;
+    .box(75%, 50px);
+    margin: 0 auto;
+    background-color: #fff;
     .nav-cont {
-      .box(75%, 40px);
+      .box(91%, 50px);
       margin: 0 auto;
       ul {
         display: flex;
         li {
-          height: 40px;
-          line-height: 40px;
+          height: 50px;
+          line-height: 50px;
           padding: 0 30px;
           font-size: 15px;
           font-weight: 600;
-          color: #fff;
+          color: #444;
           letter-spacing: 1px;
           &:hover{
-            background-color: blue;
+            background-color: #2b81f3;
+            color: #fff;
           }
           /deep/ .ivu-dropdown-menu {
             display: block;
           }
           /deep/ .ivu-dropdown-item {
-            color: #3765FF;
+            color: #444;
             &:hover {
               color: #fff;
+              background-color: #2b81f3;
             }
           }
         }
       }
     }
+    /deep/ .ivu-select-dropdown {
+      height: 300px;
+      overflow: hidden;
+      overflow-y: scroll;
+    }
+    /deep/ .ivu-dropdown-rel {
+      a {
+        color: #444;
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
   }
 
-  .footer {
-    .box(100%, 50px);
-    border: 1px solid #000;
+  .views-nav {
+    position: relative;
+    .assn-list {
+      position: absolute;
+      top: 50px;
+      left: 0px;
+      background-color: #2b81f3;
+      color: #fff;
+      z-index: 1000;
+      width: 150px;
+      height: 260px;
+      overflow: hidden;
+      .scroll {
+        width: 172px;
+        height: 260px;
+        overflow-y: scroll;
+      }
+      p {
+        &:hover {
+          background-color: #081bf3;
+          color: #fff;
+        }
+      }
+    }
   }
+
+    .footer {
+      margin-top: 10px;
+      .box(100%, 130px);
+      background-color: #1552a2;
+      &-cont {
+        color: #fff;
+        justify-content: center;
+        align-content: center;
+        padding-top: 35px;
+        display: flex;
+        img {
+          width: 50px;
+          height: 50px;
+        }
+        p {
+          line-height: 50px;
+          font-size: 20px;
+          letter-spacing: 1px;
+        }
+      }
+
+    }
+
+    .edit-info {
+      .ivu-form-item {
+        margin-bottom: 10px;
+      }
+      /deep/ .ivu-input {
+        width: 84%;
+      }
+      img {
+        .box(40px, 40px);
+        border-radius: 50%;
+      }
+    }
 
 </style>

@@ -59,19 +59,33 @@
                   align: 'center',
                   render: (h, params) => {
                     return h('div', [
+                      // h('Button', {
+                      //   props: {
+                      //     type: 'info',
+                      //     size: 'small'
+                      //   },
+                      //   style: {
+                      //     marginRight: '10px'
+                      //   },
+                      //   on: {
+                      //     click: () => {
+                      //       this.userId = params.row.id;
+                      //       this.addUserToAssn();
+                      //     }
+                      //   }
+                      // }, '加入社团'),
                       h('Button', {
                         props: {
-                          type: 'error',
+                          type: 'success',
                           size: 'small'
                         },
                         on: {
                           click: () => {
-                            console.log('userId',params.row.id)
                             this.userId = params.row.id;
-                            this.addUser();
+                            this.modal6 = true;
                           }
                         }
-                      }, '添加社员')
+                      }, '添加')
                     ]);
                   }
                 }
@@ -91,7 +105,6 @@
         created() {
           this.associationId = this.$route.query.associationId;
           this.flag = this.$route.query.flag;
-          console.log(this.flag)
           this.getDepartList();
         },
 
@@ -157,14 +170,6 @@
               })
           },
 
-          addUser() {
-            if(this.flag === 1) {
-              this.addUserToAssn();
-            } else {
-              this.modal6 = true;
-            }
-          },
-
           //添加用户进入社团
           addUserToAssn() {
             let that = this;
@@ -178,7 +183,6 @@
               .$http(url, params , data, 'get')
               .then(res =>{
                 data = res.data;
-                console.log(data)
                 if(data.retCode === 0) {
                   that.$Message.success('添加成功');
                   this.modal6 = false;
@@ -196,6 +200,10 @@
           addUserToDepart() {
             let that = this;
             let url = that.BaseConfig + '/insertUserToDepartment';
+            if(null === that.departmentId || undefined === that.departmentId) {
+              this.$Message.warning('请选择部门！');
+              return;
+            }
             let params = {
               userId: that.userId,
               associationId: that.associationId,
@@ -208,7 +216,7 @@
                data = res.data;
                console.log(data)
                if(data.retCode === 0) {
-                 that.$Message.success('添加成员成功');
+                 // that.addUserToAssn();
                  this.modal6 = false;
                  that.$router.push({
                    path: '/index/memberManage',

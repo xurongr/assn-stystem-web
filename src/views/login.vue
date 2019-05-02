@@ -34,9 +34,35 @@
                 if(res.data.retCode === 0) {
                   //把登录信息缓存起来localStorage
                   localStorage.setItem('loginInfo', JSON.stringify(res.data.data));
-                  that.$router.push({
-                    path: '/index/web',
+                  let assnBasicList = res.data.data.assnBasicList;
+                  let access =[];
+                  assnBasicList.map(item => {
+                    if(item.identityId === 2) {
+                      access.push({
+                        identityId: 2,
+                        associationName: item.associationName,
+                        associationId: item.associationId,
+                        job: item.job,
+                      })
+                    }
                   })
+                  if(access.length === 0) {
+                    localStorage.setItem('type', JSON.stringify(0));
+                  } else if(access.length === 1){
+                    localStorage.setItem('type', JSON.stringify(1));
+                  } else{
+                    localStorage.setItem('type', JSON.stringify(2));
+                  }
+                  localStorage.setItem('access', JSON.stringify(access));
+                  if(that.userName === 'admin') {
+                    that.$router.push({
+                      path: '/index',
+                    })
+                  } else {
+                    that.$router.push({
+                      path: '/index/web',
+                    })
+                  }
                 } else {
                   that.$Message.error(res.data.retMsg)
                 }

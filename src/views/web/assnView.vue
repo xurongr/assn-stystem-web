@@ -1,19 +1,5 @@
 <template>
     <div class="webIndex">
-      <div class="viewImg" >
-        <p @click="changeView">风采<Icon type="ios-arrow-down" /></p>
-        <Carousel autoplay v-model="value2" loop v-if="openImg">
-          <CarouselItem>
-            <div><img src="./img/tu1.jpg" /></div>
-          </CarouselItem>
-          <CarouselItem>
-            <div><img src="./img/tu2.jpg" /></div>
-          </CarouselItem>
-          <CarouselItem>
-            <div><img src="./img/tu3.jpg" /></div>
-          </CarouselItem>
-        </Carousel>
-      </div>
       <div class="assn-view">
         <div class="assn-we">
           <div class="we-title">
@@ -40,7 +26,7 @@
         </div>
       </div>
       <Progress :percent="100" status="active" />
-      <div class="assn-center">
+      <div class="assn-center" v-if="announceInfo.length !== 0">
         <div class="c-announce">
           <div class="announce-title">
             <p>社团公告</p>
@@ -62,6 +48,7 @@
           </div>
         </div>
       </div>
+      <div class="assn-center" v-if="announceInfo.length === 0" style="font-size: 25px;line-height: 100px;justify-content: center">暂无公告~</div>
       <Progress :percent="100" status="active" />
       <div class="depart-cont">
         <div class="depart-cont-left">
@@ -199,9 +186,6 @@
       created() {
           this.departDetailInfo =[];
           this.associationId = this.$route.query.associationId;
-          setTimeout(() =>{
-            this.openImg = false;
-          },3000);
           this.assnDetailInfo();   //获取社团详情
           this.getAnnouceInfo();   //获取社团公告
           this.getDepartList();
@@ -210,12 +194,6 @@
       },
 
       methods: {
-
-          //顶部图片
-          changeView(){
-            this.openImg = !this.openImg;
-          },
-
           assnDetailInfo() {   //获取社团详情
             let that = this;
             let url = that.BaseConfig + '/selectAssociationById';
@@ -528,12 +506,14 @@
     width: 75%;
     /*!*min-width: 800px;*!   为了不不变形要设置最小宽度*/
     text-align: left;
-    margin: 10px auto;
+    margin: 0 auto;
     position: relative;
     overflow: hidden;
     .viewImg {
       width: 100%;
+      border-radius: 10px;
       img {
+        border-radius: 10px;
         .box(100%, 280px);
       }
       p {
@@ -559,7 +539,7 @@
       margin-bottom: 10px;
       .assn-we {
         width: 50%;
-        height: 400px;
+        height: 380px;
         padding: 20px;
         .we-title {
           display: flex;
@@ -602,7 +582,7 @@
       }
       .assn-announce {
         width: 50%;
-        height: 400px;
+        height: 380px;
         position: relative;
         overflow: hidden;
         &-bgUrl {
@@ -633,6 +613,7 @@
     .assn-center {
       margin: 15px 0;
       width: 100%;
+      height: 200px;
       display: flex;
       justify-content: space-between;
       .c-announce {
@@ -656,9 +637,6 @@
               }
             }
           }
-        }
-        .an_content {
-
         }
       }
       .c-depart {
@@ -838,7 +816,7 @@
   }
 
   .content-new {
-    .box(90%, 150px);
+    .box(90%, 200px);
     margin: 10px auto;
     border: 1px dashed #f10f19;
     border-radius: 5px;

@@ -5,7 +5,7 @@
           <Input v-model="formItem.associationName"></Input>
         </FormItem>
         <FormItem label="社团负责人：">
-          <Input v-model="name" @on-blur="searchUser"></Input>
+          <Input v-model="name" placeholder="输入名字，如：徐蓉蓉" @on-blur="searchUser"></Input>
           <Modal
             v-model="modal2"
             title="选择社团负责人"
@@ -103,7 +103,6 @@
           this.loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
           this.formItem.userId = this.loginInfo.id;
           this.formItem.name = this.loginInfo.name;
-          console.log(this.formItem);
         },
 
         methods: {
@@ -145,12 +144,80 @@
               .$http(url, '' , data, 'post')
               .then(res =>{
                 if(res.data.retCode === 0) {
+                  that.$Message.success('创建成功！');
+                  that.getInfo(that.formItem.associationName,that.formItem.userId);
                   that.$router.push({
                     path: '/index/assnManage'
                   })
                 } else {
                   that.$Message.error(res.data.retMsg);
                 }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //获取社团列表
+          getInfo(associationName,userId) {
+            let that = this;
+            let url = that.BaseConfig + '/selectAssociationAll';
+            let params = {
+              pageNo: 1,
+              associationName: associationName,
+              userId: userId,
+              pageSize: 10,
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  let assnInfo = data.data.data;
+                  this.changeIdentity(assnInfo[0].id,userId);
+                  this.changeJob(assnInfo[0].id,userId);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          changeIdentity(id,userId) {
+            let that = this;
+            let url = that.BaseConfig + '/updateUserIdentity';
+            let params = {
+              associationId: id,
+              userId: userId,
+              identityId: 2
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {}
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          changeJob(id,userId) {
+            let that = this;
+            let url = that.BaseConfig + '/updateJob';
+            let params = {
+              associationId: id,
+              userId: userId,
+              job : '会长'
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {}
               })
               .catch(err => {
                 that.$Message.error('请求错误');
@@ -167,6 +234,7 @@
               path: '/index/assnManage'
             })
           },
+
           cancel() {},
 
         },

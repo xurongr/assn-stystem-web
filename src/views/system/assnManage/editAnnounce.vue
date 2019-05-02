@@ -5,7 +5,7 @@
           <Input v-model="announceInfo.title"></Input>
         </FormItem>
         <FormItem label="所属社团：">
-          <Select v-model="announceInfo.associationId" style="width:200px">
+          <Select v-model="announceInfo.associationId" style="width:200px" disabled>
             <Option v-for="item in assnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>

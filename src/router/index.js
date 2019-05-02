@@ -30,16 +30,21 @@ import addDepart from "@/views/system/departManage/addDepart";           // 添�
 
 import identityManage from "@/views/system/powerManage/identityManage";   //身份管理
 import identityChange from "@/views/system/identityChange";              // 更改身份
+import joinApply from "@/views/system/applyManage/joinApply";                        // 入团申请
+import dismissApply from "@/views/system/applyManage/dismissApply";                        // 入团申请
 import editPassword from "@/views/system/editPassword";                  //修改密码
 
 // 前端
 import webIndex from "@/views/web/index";
 import homePage from "@/views/web/homePage";       //首页
 import assnView from "@/views/web/assnView";       //社团风采
+import blank from "@/views/web/blank";
 import recruitNew from "@/views/web/recruitNew";   //社团招新
 import applyTable from "@/views/web/applyTable";   //申请表格
+import applyPage from "@/views/web/applyPage";   //申请表格
 import morePage from "@/views/web/morePage";       //更多
 import createAssnApply from "@/views/web/createAssnApply";   //建团申请
+import readMe from "@/views/web/readMe";   //建团申请
 
 import fileUpload from "@/views/components/file-upload"
 
@@ -217,6 +222,22 @@ export default new Router({
           }
         },
         {
+          path: '/index/applyManage/joinApply',
+          name: 'joinApply',
+          component: joinApply,
+          meta: {
+            title: '入团申请',
+          }
+        },
+        {
+          path: '/index/applyManage/dismissApply',
+          name: 'dismissApply',
+          component: dismissApply,
+          meta: {
+            title: '解散申请',
+          }
+        },
+        {
           path: '/index/identityChange',
           name: 'identityChange',
           component: identityChange,
@@ -261,6 +282,11 @@ export default new Router({
           }
         },
         {
+          path: '/blank',
+          name: 'blank',
+          component: blank,
+        },
+        {
           path: '/index/web/recruitNew',
           name: 'recruitNew',
           component: recruitNew,
@@ -295,6 +321,14 @@ export default new Router({
           component: fileUpload,
         },
       ]
+    },
+    {
+      path: '/index/web/applyPage',
+      name: 'applyPage',
+      component: applyPage,
+      meta: {
+        title: '申请表格'
+      }
     },
   ]
 })

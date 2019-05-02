@@ -4,8 +4,13 @@
         <FormItem label="标题：">
           <Input v-model="formItem.title"></Input>
         </FormItem>
-        <FormItem label="所属社团：">
+        <FormItem label="所属社团：" v-if="type !== 1">
           <Select v-model="formItem.associationId" style="width:200px">
+            <Option v-for="item in assnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="所属社团：" v-if="type === 1" >
+          <Select v-model="formItem.associationId" style="width:200px" disabled>
             <Option v-for="item in assnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -29,6 +34,8 @@
     export default {
         data() {
             return {
+              type: 4,
+              access: [],
               formItem: {
                 associationId: 0,
                 associationName: "",
@@ -44,9 +51,23 @@
         },
 
       created() {
-        //获取用户个人信息
+        this.access = JSON.parse(localStorage.getItem('access'));
+        this.type = parseInt(localStorage.getItem('type'));
+        if(this.type === 1) {
+          this.formItem.associationId = this.access[0].associationId;
+        } else if(this.type === 2) {
+          this.assnList = [];
+          this.access.map(item=> {
+            this.assnList.push({
+              value: item.associationId,
+              label: item.associationName,
+            })
+          })
+        } else if(this.type === 0) {
+          this.assnList = [];
+          this.getAssnList();
+        }
         this.formItem.userId = JSON.parse(window.localStorage.getItem("loginInfo")).id;
-        this.getAssnList();
       },
 
         methods: {

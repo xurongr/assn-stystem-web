@@ -1,18 +1,16 @@
 <template>
     <div>
       <div class="search-title">
-        <div><p>活动标题：</p><Input placeholder="关键字模糊搜索" style="width: 140px;margin-top: 8px" /></div>
-        <div><p>发布者：</p><Input style="width: 140px;margin-top: 8px" /></div>
         <!--所属社团系统管理员才有-->
-        <div>
+        <div v-if="type !== 1">
           <p>所属社团：</p>
-          <Select v-model="recruitState" style="width:200px;margin-top: 8px">
-            <Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Select v-model="associationId"  style="width:200px;margin-top: 8px">
+            <Option v-for="item in assnSeclect" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
       </div>
       <div class="annouce-manage">
-        <Button type="primary">查询</Button>
+        <Button type="primary" @click="searchAnnoun">查询</Button>
         <Router-link to="/index/announcementManage/addAnnoucement">
           <Button type="primary">发布公告</Button>
         </Router-link>
@@ -43,6 +41,9 @@
     export default {
         data() {
             return {
+              associationId: 0,
+              access: [],
+              type: 4,
               announceInfo: [],
               modal3: false,
               anContent:'',
@@ -146,11 +147,30 @@
               pageNo:1,
               current: 1,
               modal4: false,
-              noticeId: null
+              noticeId: null,
+              assnSeclect: [],
+              pageNo3:1,
+              assnInfo: [],
             }
         },
 
         created() {
+          this.access = JSON.parse(localStorage.getItem('access'));
+          this.type = parseInt(localStorage.getItem('type'));
+          if(this.type === 1) {
+            this.associationId = this.access[0].associationId;
+          } else if(this.type === 0) {
+            this.associationId = 0;
+            this.getInfo();
+          } else if(this.type === 2) {
+            this.associationId = this.access[0].associationId;
+            this.access.map(item=> {
+              this.assnSeclect.push({
+                value: item.associationId,
+                label: item.associationName,
+              })
+            })
+          }
           this.getAnnouceInfo();
         },
 
@@ -161,11 +181,19 @@
             this.getAnnouceInfo();
           },
 
+          searchAnnoun() {
+            this.pageNo = 1;
+            this.getAnnouceInfo();
+          },
+
           //获取公告信息
           getAnnouceInfo() {
             let that = this;
             let url = that.BaseConfig + '/selectNoticeAll';
+            let associationId;
+            that.associationId === 0 ? associationId ='' : associationId = that.associationId;
             let params = {
+              associationId: associationId,
               type: 0,    //type：0 社团公告，，要根据userId判断type
               pageNo: that.pageNo,
               pageSize: 10,
@@ -179,6 +207,38 @@
                   console.log(that.announceInfo)
                 } else {
                   that.$Message.error(res.data.retMsg);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //获取社团列表
+          getInfo() {
+            let that = this;
+            let url = that.BaseConfig + '/selectAssociationAll';
+            let params = {
+              pageNo: that.pageNo3,
+              pageSize: 10,
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.assnInfo = that.assnInfo.concat(data.data.data);
+                  that.assnInfo.map(item =>{
+                    that.assnSeclect.push({
+                      value: item.id,
+                      label: item.associationName,
+                    });
+                  })
+                  if(that.assnInfo.length < data.data.total) {
+                    that.pageNo3++;
+                    that.getInfo();
+                  }
                 }
               })
               .catch(err => {

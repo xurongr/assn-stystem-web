@@ -9,7 +9,11 @@
             return {}
         },
 
-        methods: {}
+        created() {
+
+        },
+
+        methods: {},
     }
 </script>
 

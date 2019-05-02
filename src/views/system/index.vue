@@ -6,7 +6,7 @@
           <div class="header-name">
             <p>社团管理</p>
           </div>
-          <MenuItem name="1">
+          <MenuItem name="1" v-if="type === 0">
             <Icon type="ios-navigate"></Icon>
             <Router-link to="/index/userIndex">
               <span>用户管理</span>
@@ -23,7 +23,7 @@
             <MenuItem name="2-4"><Router-link to="/index/activityManage">社团活动管理</Router-link></MenuItem>
             <MenuItem name="2-5"><Router-link to="/index/departManage">社团部门管理</Router-link></MenuItem>
           </Submenu>
-          <Submenu name="3">
+          <Submenu name="3" v-if="type === 0">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
               权限管理
@@ -40,17 +40,26 @@
               <Icon type="ios-analytics"></Icon>
               审核管理
             </template>
-            <MenuItem name="4-1">入团申请</MenuItem>
+            <Router-link to="/index/applyManage/joinApply">
+              <MenuItem name="4-1">入团申请</MenuItem>
+            </Router-link>
             <Router-link to="/index/identityChange">
-              <MenuItem name="4-2">身份变更申请</MenuItem>
+              <MenuItem name="4-2">更换社团管理员</MenuItem>
+            </Router-link>
+            <Router-link to="/index/applyManage/dismissApply">
+              <MenuItem name="4-3">解散申请</MenuItem>
             </Router-link>
           </Submenu>
         </Menu>
       </Sider>
       <Layout>
-        <Header :style="{padding: 0}" class="layout-header-bar" style="display: flex">
-          <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin: '0 20px'}" type="md-menu" size="24"></Icon>
-          <p><Router-link to="/index/web" style="color: #999">返回前端</Router-link></p>
+        <Header :style="{padding: '0 16px'}" class="layout-header-bar" style="display: flex;justify-content: space-between;">
+          <p><Router-link to="/index/web" style="color: #444" v-if="type !== 0">返回前端</Router-link></p>
+          <div style="display: flex">
+            <p>欢迎登陆 | {{loginInfo.name}}{{type === 0 ? '（系统管理员）': '（社团管理员）'}}</p>
+            <p style="padding: 0 12px"><img :src="loginInfo.userImg" style="width: 40px;height: 40px;border-radius: 50%;margin-top: 8px"></p>
+            <p @click="exitSystem">退出系统</p>
+          </div>
         </Header>
         <Content :style="{margin: '12px 15px 30px', background: '#fff', padding: '25px 12px',borderRadius: '5px', border: '1px solid #dcdee2'}">
           <router-view></router-view>
@@ -67,6 +76,8 @@ export default {
   data () {
     return {
       isCollapsed: false,
+      type: null,
+      loginInfo: [],
     }
   },
   computed: {
@@ -84,10 +95,17 @@ export default {
     }
   },
   created() {
-
+    this.type = parseInt(localStorage.getItem('type'));
+    this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
   },
 
   methods: {
+    exitSystem() {
+      localStorage.removeItem('loginInfo');
+      localStorage.removeItem('access');
+      localStorage.removeItem('type');
+      this.$router.push({name: 'login'})
+    },
 
     collapsedSider () {
       this.$refs.side1.toggleCollapse();

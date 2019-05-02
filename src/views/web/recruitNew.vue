@@ -56,7 +56,7 @@
           </div>
           <div class="cont-step">
             <p>去申请</p>
-            <p class="img_icon"><img src="./img/icon_ss.jpg" ><Router-link to="/index/web/applyTable"><Button type="success">点 <span style="color: red;font-size: 26px">此</span> 申请</Button></Router-link></p>
+            <p class="img_icon"><Router-link to="/index/web/applyPage"><img src="./img/icon_enter.png" ></Router-link></p>
           </div>
         </div>
       </div>
@@ -207,7 +207,7 @@
       font-weight: 600;
     }
     img{
-      width: 65px;
+      width: 334px;
       padding-left: 15px;
     }
   }

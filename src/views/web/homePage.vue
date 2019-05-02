@@ -5,37 +5,18 @@
           <div class="imgUrl">
             <Carousel autoplay v-model="picNum" loop>
               <CarouselItem>
-                <div><img src="./img/banner1.png" /></div>
+                <div><img src="./img/sy2.jpg" /></div>
+              </CarouselItem>
+              <CarouselItem>
+                <div><img src="./img/1.jpg" /></div>
               </CarouselItem>
               <CarouselItem>
                 <div><img src="./img/banner2.jpeg" /></div>
               </CarouselItem>
-              <CarouselItem>
-                <div><img src="./img/banner3.jpg" /></div>
-              </CarouselItem>
             </Carousel>
           </div>
-          <div class="news">
-            <div class="news-title">
-              <p>站内热点</p>
-              <p><a href="">更多>></a></p>
-            </div>
-            <div class="news-info">
-              <ul>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-                <li><p><span>计算机协会义务维修</span><span>2019-03-10</span></p></li>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-                <li><p><span>实践活动1</span><span>2019-03-10</span></p></li>
-              </ul>
-            </div>
-          </div>
         </div>
+
         <div class="cont-center">
           <div class="c-center">
             <div class="cont-announce">
@@ -55,41 +36,68 @@
                 </ul>
               </div>
             </div>
-            <div class="cont-view">
+            <div class="news">
               <div class="news-title">
-                <p>社团风采</p>
-                <p><Router-link to="/index/web/morePage">更多>></Router-link></p>
+                <p>社团活动</p>
+                <p><a href="">更多>></a></p>
               </div>
-              <div class="views">
-                <div class="views-detail">
-                  <img src="./img/tu2.jpg" alt="">
-                  <p>义务维修</p>
-                </div>
-                <div class="views-detail">
-                  <img src="./img/tu3.jpg" alt="">
-                  <p>义务维修</p>
-                </div>
-                <div class="views-detail">
-                  <img src="./img/tu2.jpg" alt="">
-                  <p>义务维修</p>
-                </div>
-                <div class="views-detail">
-                  <img src="./img/tu1.jpg" alt="">
-                  <p>义务维修</p>
-                </div>
-                <div class="views-detail">
-                  <img src="./img/tu2.jpg" alt="">
-                  <p>义务维修</p>
-                </div>
-                <div class="views-detail">
-                  <img src="./img/tu1.jpg" alt="">
-                  <p>义务维修</p>
-                </div>
+              <div class="news-info">
+                <ul>
+                  <li><p><span>摄影活动part1</span><span>2019-05-10</span></p></li>
+                  <li><p><span>计算机协会义务维修</span><span>2019-05-07</span></p></li>
+                  <li><p><span>“摄出自我”活动</span><span>2019-05-01</span></p></li>
+                  <li><p><span>志愿者活动</span><span>2019-04-17</span></p></li>
+                  <li><p><span>戚继光公园志愿活动</span><span>2019-04-14</span></p></li>
+                  <li><p><span>实践活动1</span><span>2019-04-12</span></p></li>
+                  <li><p><span>南继山志愿活动</span><span>2019-04-12</span></p></li>
+                  <li><p><span>4义务维修</span><span>2019-04-11</span></p></li>
+                  <li><p><span>2月义维修</span><span>2019-03-10</span></p></li>
+                  <li><p><span>塔山自愿服务</span><span>2019-03-10</span></p></li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
 
+        <div class="cont-views">
+          <div class="cont-view">
+            <div class="cont-view-title">
+              <p>社团风采</p>
+              <p><Router-link to="/index/web/morePage">更多>></Router-link></p>
+            </div>
+            <div class="views">
+              <div class="views-detail">
+                <img src="./img/tu2.jpg" alt="">
+                <p>义务维修</p>
+              </div>
+              <div class="views-detail">
+                <img src="./img/tu3.jpg" alt="">
+                <p>义务维修</p>
+              </div>
+              <div class="views-detail">
+                <img src="./img/tu2.jpg" alt="">
+                <p>义务维修</p>
+              </div>
+              <div class="views-detail">
+                <img src="./img/tu1.jpg" alt="">
+                <p>义务维修</p>
+              </div>
+              <div class="views-detail">
+                <img src="./img/tu2.jpg" alt="">
+                <p>义务维修</p>
+              </div>
+              <div class="views-detail">
+                <img src="./img/tu1.jpg" alt="">
+                <p>义务维修</p>
+              </div>
+            </div>
+          </div>
+          <div class="cont-tool">
+            <div class="cont-tool-title">
+              <p>常用链接</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 </template>
@@ -144,7 +152,7 @@
   }
   .webIndex {
     width: 75%;
-    margin: 10px auto;
+    margin: 0 auto;
     display: flex;
     text-align: left;
     .content {
@@ -155,16 +163,13 @@
         justify-content: space-between;
         padding-bottom: 10px;
         border-bottom: 3px solid #3765FF;
+        border-radius: 10px;
         .imgUrl {
-          .box(55%, 370px);
+          .box(100%, 370px);
+          border-radius: 10px;
           img {
             .box(100%, 370px);
-          }
-        }
-        .news {
-          .box(43%, 370px);
-          .news-info {
-            width: 100%;
+            border-radius: 10px;
           }
         }
       }
@@ -172,11 +177,12 @@
         display: flex;
         padding: 12px 0;
         .c-center {
-          width: 100%;
+          width: 90%;
           display: flex;
+          margin: 0 auto;
           justify-content: space-between;
           .cont-announce {
-            width: 300px;
+            width: 345px;
             .announce-title {
               height: 35px;
               line-height: 35px;
@@ -230,41 +236,82 @@
               }
             }
           }
-          .cont-view {
-            width: 68%;
-            .views {
-              display: flex;
-              justify-content: space-around;
-              flex-wrap: wrap;
-              .views-detail {
-                width: 29%;
-                margin: 10px;
-                text-align: center;
-                position: relative;
-                img {
-                  .box(90%, 170px);
-                  border-radius: 5px;
-                }
-                p {
-                  width: 90%;
-                  height: 29px;
-                  line-height: 29px;
-                  background: rgba(0, 0, 0, 0.5);
-                  color: #fff;
-                  position: absolute;
-                  bottom: 6px;
-                  left: 14px;
-                  text-align: left;
-                  padding-left: 15px;
-                  font-size: 14px;
-                  border-radius: 0 0 5px 5px;
-                }
-              }
+          .news {
+            .box(60%, 370px);
+            .news-info {
+              width: 100%;
             }
           }
         }
       }
     }
+    .cont-views {
+      width: 90%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      .cont-tool {
+        width: 30%;
+        &-title {
+          height: 35px;
+          line-height: 35px;
+          color: #444;
+          margin-top: -13px;
+          border-bottom: 4px solid #081bf3;
+          p {
+            font-weight: 600;
+            font-size: 22px;
+          }
+        }
+      }
+      .cont-view {
+        width: 65%;
+        &-title {
+          height: 35px;
+          line-height: 35px;
+          color: #444;
+          margin-top: -13px;
+          border-bottom: 4px solid #f36909;
+          p {
+            font-weight: 600;
+            font-size: 22px;
+          }p {
+             font-weight: 600;
+             font-size: 22px;
+           }
+        }
+        .views {
+          display: flex;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          .views-detail {
+            width: 30%;
+            margin: 10px 0;
+            text-align: center;
+            position: relative;
+            img {
+              .box(100%, 170px);
+              border-radius: 5px;
+            }
+            p {
+              width: 90%;
+              height: 29px;
+              line-height: 29px;
+              background: rgba(0, 0, 0, 0.5);
+              color: #fff;
+              position: absolute;
+              bottom: 6px;
+              left: 14px;
+              text-align: left;
+              padding-left: 15px;
+              font-size: 14px;
+              border-radius: 0 0 5px 5px;
+            }
+          }
+        }
+      }
+    }
+
   }
 
   /*公共样式*/

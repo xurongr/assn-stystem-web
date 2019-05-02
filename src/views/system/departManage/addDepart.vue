@@ -53,7 +53,7 @@
           //查找是否有次用户
           searchUser() {
             let that = this;
-            let url = that.BaseConfig + '/selectUsersAll';
+            let url = that.BaseConfig + '/selectAssociationUserAll';
             let params = {
               associationId: that.formItem.associationId,
               userName: that.userName,
@@ -72,7 +72,7 @@
                 }
               })
               .catch(err => {
-                that.$Message.error('请求错误');
+                that.$Message.error('社团无此人！ 2 ');
               })
           },
 
@@ -97,7 +97,9 @@
           },
 
           ok() {
-
+            this.$router.push({
+              name: 'departManage'
+            })
           },
 
         },

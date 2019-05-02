@@ -1,29 +1,35 @@
 <template>
   <div>
-    <div class="annouce-manage">
-      <div v-if="loginInfo.identityId === 0">
-        所属社团：
-        <Select v-model="searchAssnValue" style="width:200px" @on-change="getActivityList">
+    <div class="search-title">
+      <div v-if="type !== 1">
+        <p>所属社团：</p>
+        <Select v-model="searchAssnValue"  style="width:150px;margin-top: 8px">
           <Option v-for="item in searchAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
       </div>
+      <div><p>活动标题：</p><Input placeholder="关键字模糊搜索" v-model="activityName" style="width: 140px;margin-top: 8px" /></div>
+    </div>
+    <div class="annouce-manage">
+      <Button type="primary" @click="searchActivity">查询</Button>
       <Router-link to="/index/activityManage/addActivity">
         <Button type="primary">创建活动</Button>
       </Router-link>
     </div>
     <Table border ref="selection" :columns="columns4" :data="activityList"></Table>
-    <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
+    <div style="display: flex;justify-content: flex-end;margin-top:10px"><Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" /></div>
     <Modal
       v-model="modal3"
       :title="activityDetail.activityName"
       :footer-hide="true"
     >
       <div class="act-detail">
-        <p>活动内容：{{activityDetail.content}}</p>
-        <p>活动地点：{{activityDetail.address}}</p>
-        <p>活动时间：{{activityDetail.startTime}} ~ {{activityDetail.endTime}}</p>
-        <p>活动图片：
-          <img src="" alt="">
+        <p><span>活动内容：</span>{{activityDetail.content}}</p>
+        <p><span>活动地点：</span>{{activityDetail.address}}</p>
+        <p><span>活动时间：</span>{{activityDetail.startTime}} ~ {{activityDetail.endTime}}</p>
+        <p><span>活动图片：</span>
+          <span v-for="(item,index) in imageUser" :key="index">
+            <img :src="item">
+          </span>
         </p>
       </div>
     </Modal>
@@ -58,6 +64,9 @@
   export default {
     data() {
       return {
+        access: [],
+        type: 4,
+        activityName: '',
         loginInfo: '',    //用户登录信息
         activityList: [],    //活动列表
         modal3: false,      //是否查看内容
@@ -65,6 +74,7 @@
         activityDetail: [],
         modalDel: false,
         modal7: false,
+        imageUser: [],
         columns4: [
           {
             type: 'selection',
@@ -155,6 +165,7 @@
                   on: {
                     click: () => {
                       this.activityDetail = params.row;
+                      this.imageUser = this.activityList[0].image.split(',');
                       this.modal3 = true;
                     }
                   }
@@ -216,17 +227,22 @@
     },
 
     created() {
+      this.access = JSON.parse(localStorage.getItem('access'));
+      this.type = parseInt(localStorage.getItem('type'));
       this.loginInfo = JSON.parse(window.localStorage.getItem("loginInfo"));
-      if(this.loginInfo.identityId === 0) {
+      if(this.type === 0) {
         this.getAssnList();
-      } else {
-        let assnBasicList = this.loginInfo.assnBasicList;
-        assnBasicList.map(item => {
-          if(item.job === '会长' || item.job === '部长') {
-            this.searchAssnValue =  item.associationId;
-            this.getActivityList();
-          }
-        });
+      } else if(this.type === 1) {
+        this.searchAssnValue = this.access[0].associationId;
+        this.getActivityList();
+      } else if(this.type === 2) {
+        this.searchAssnValue = this.access[0].associationId;
+        this.access.map(item => {
+          this.searchAssnList.push({
+            value: item.associationId,
+            label: item.associationName,
+          })
+        })
       }
     },
 
@@ -237,11 +253,17 @@
         this.getActivityList();
       },
 
+      searchActivity() {
+        this.pageNo = 1;
+        this.getActivityList();
+      },
+
       //获取活动列表信息
       getActivityList() {
         let that = this;
         let url = that.BaseConfig + '/selectAssnAAll';
         let params = {
+          activityName: that.activityName,
           associationId: that.searchAssnValue,
           pageNo: that.pageNo,
           pageSize: 10,
@@ -310,14 +332,12 @@
         that
           .$http(url, params , data, 'GET')
           .then(res =>{
-            console.log(res)
             if(res.data.retCode === 0) {
               that.actUserAllList = that.actUserAllList.concat(res.data.data.data);
               if(that.actUserAllList< res.data.data.total) {
                 that.pageNo3++;
                 that.getActUserAll();
               }
-              console.log(that.actUserAllList)
             } else {
               that.$Message.error(res.data.retMsg);
             }
@@ -355,9 +375,11 @@
 
 <style lang="less" scoped>
   .annouce-manage {
-    margin-bottom: 20px;
+    margin: 10px 0;
     display: flex;
-    justify-content: space-between;
+    button {
+      margin-right: 15px;
+    }
   }
   /deep/ .ivu-table-cell {
     white-space: nowrap;
@@ -366,6 +388,13 @@
   .act-detail {
     p {
       line-height: 30px;
+      span {
+        font-weight: 600;
+      }
+      img {
+        width: 450px;
+        height: 230px;
+      }
     }
   }
 </style>

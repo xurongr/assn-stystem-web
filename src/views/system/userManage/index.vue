@@ -3,12 +3,6 @@
     <div class="search-title">
       <div><p>学号：</p><Input placeholder="关键字模糊搜索" style="width: 140px;margin-top: 8px" v-model="userName"/></div>
       <div><p>用户名称：</p><Input style="width: 140px;margin-top: 8px" v-model="name"/></div>
-      <div>
-        <p>身份状态：</p>
-        <Select v-model="identityId" style="width:200px;margin-top: 8px">
-          <Option v-for="item in identityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </div>
     </div>
     <div class="user-manage">
       <Button type="primary" @click="searchUser">查询</Button>
@@ -28,31 +22,8 @@
         total:0,
         name: '',
         userName: '',
-        identityId: 0,
         current: 1,
         userInfo: [],    //用户列表,配合接口请求时，为了搭配分页使用要有两个动态参数pageNum,pageNo，条数与页数。
-        identityList: [
-          {
-            value: 0,
-            label: '全部'
-          },
-          {
-            value: 4,
-            label: '普通用户'
-          },
-          {
-            value: 3,
-            label: '社团成员'
-          },
-          {
-            value: 2,
-            label: '社团管理员'
-          },
-          {
-            value: 1,
-            label: '系统管理员'
-          },
-        ],    //查找条件
         oneUserInfo: [],
         columns4: [
           {
@@ -74,10 +45,6 @@
           {
             title: '联系方式',
             key: 'telNumber'
-          },
-          {
-            title: '身份',
-            key: 'identityName'
           },
           {
             title: '操作',
@@ -133,11 +100,8 @@
       getInfo() {
         let that = this;
         let url = that.BaseConfig + '/selectUsersAll';
-        let identityId;
-        that.identityId === 0 ? identityId = '' : identityId = that.identityId;
         let params = {
           name: that.name,
-          identityId: identityId,
           userName: that.userName,
           pageNo: that.pageNo,
           pageSize: 10,

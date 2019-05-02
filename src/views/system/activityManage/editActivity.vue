@@ -66,7 +66,7 @@
       <FormItem label="开始时间：" v-if="timeUp">
         <Row>
           <Col span="11">
-            <DatePicker type="date" placeholder="Select date" v-model="sDate"></DatePicker>
+            <DatePicker type="date" :options="options3" placeholder="Select date" v-model="sDate"></DatePicker>
           </Col>
           <Col span="2" style="text-align: center">-</Col>
           <Col span="11">
@@ -77,7 +77,7 @@
       <FormItem label="结束时间："  v-if="timeUp">
         <Row>
           <Col span="11">
-            <DatePicker type="date" placeholder="Select date" v-model="eDate"></DatePicker>
+            <DatePicker type="date" :options="options3" placeholder="Select date" v-model="eDate"></DatePicker>
           </Col>
           <Col span="2" style="text-align: center">-</Col>
           <Col span="11">
@@ -104,6 +104,11 @@
   export default {
     data() {
       return {
+        options3: {
+          disabledDate (date) {
+            return date && date.valueOf() < Date.now() - 86400000;
+          }
+        },
         sDate:'',
         sTime: '',
         eDate: '',
@@ -223,9 +228,14 @@
             data = res.data;
             if(data.retCode === 0) {
               that.formItem = data.data;
-              that.uploadList = this.formItem.image.split(',');
+              let uploadList = this.formItem.image.split(',');
+              uploadList.map((item,index) =>{
+                that.uploadList.push({
+                  name: index,
+                  url: item
+                })
+              });
               console.log(that.uploadList)
-              console.log('--获取某个活动信息---',that.formItem)
             }
           })
           .catch(err => {
@@ -282,12 +292,13 @@
         this.visible = true;
       },
       handleRemove (file) {
-        console.log(file)
         const fileList = this.$refs.upload.fileList;
         let image = [];
         fileList.map((item,index) => {
           image[index] = item.url
         })
+        this.formItem.image = image.join(',');
+        console.log(this.formItem.image)
       },
       handleSuccess (res, file, fileList) {
         console.log(res.data)

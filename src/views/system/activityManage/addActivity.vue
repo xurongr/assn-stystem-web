@@ -62,7 +62,7 @@
         <FormItem label="开始时间：">
           <Row>
             <Col span="11">
-              <DatePicker type="date" placeholder="Select date" v-model="sDate"></DatePicker>
+              <DatePicker type="date" :options="options3" placeholder="Select date" v-model="sDate"></DatePicker>
             </Col>
             <Col span="2" style="text-align: center">-</Col>
             <Col span="11">
@@ -73,7 +73,7 @@
         <FormItem label="结束时间：">
           <Row>
             <Col span="11">
-              <DatePicker type="date" placeholder="Select date" v-model="eDate"></DatePicker>
+              <DatePicker type="date" :options="options3" placeholder="Select date" v-model="eDate"></DatePicker>
             </Col>
             <Col span="2" style="text-align: center">-</Col>
             <Col span="11">
@@ -100,6 +100,11 @@
     export default {
         data() {
             return {
+              options3: {
+                disabledDate (date) {
+                  return date && date.valueOf() < Date.now() - 86400000;
+                }
+              },
               sDate:'',
               sTime: '',
               eDate: '',

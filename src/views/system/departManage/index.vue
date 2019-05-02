@@ -1,25 +1,38 @@
 <template>
   <div>
-    <!--系统管理员创建社团-->
-    <div class="assn-manage">
-      <div style="display: flex">
-        <div v-if="identityId === 0">
-          选择社团：
-          <Select v-model="associationId" style="width:150px;" @on-change="getDepartList">
-            <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-          <!--选择部门：-->
-          <!--<Select v-model="sortValue" style="width:150px;margin-bottom: 10px">-->
-          <!--<Option v-for="item in sortList" :value="item.value" :key="item.value">{{ item.label }}</Option>-->
-          <!--</Select>-->
-        </div>
+    <div class="search-title">
+      <div v-if="type !== 1">
+        <p>所属社团：</p>
+        <Select v-model="associationId"  style="width:150px;margin-top: 8px">
+          <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
       </div>
+      <div v-if="type === 1">
+        <p>所属社团：</p>
+        <Select v-model="associationId"  style="width:150px;margin-top: 8px" disabled>
+          <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+      </div>
+    </div>
+    <div class="assn-manage">
+      <Button type="primary" @click="searchDepart" v-if="type !== 1">查询</Button>
       <Button type="primary" @click="addDepart">添加部门</Button>
     </div>
     <Table border ref="selection" :columns="columns4" :data="departList"></Table>
     <div style="margin-top: 20px; display: flex;justify-content: flex-end">
       <Page :total="total" :key="total" :current.sync="current" @on-change="pageChange" />
     </div>
+
+    <Modal
+      v-model="modalMem"
+      title="部门成员列表"
+     >
+      <div>
+        <p v-for="item in departMember" :key="item.id">
+          {{item.name}}
+        </p>
+      </div>
+    </Modal>
 
     <!--编辑部门信息-->
     <Modal
@@ -32,7 +45,7 @@
             <Input v-model="formItem.departmentName" ></Input>
           </FormItem>
           <FormItem label="部长学号：">
-            <Input v-model="userName" @on-change="searchUser" placeholder="请输入学号，如：2015102210"></Input>
+            <Input v-model="userName" @on-change="searchUsers" placeholder="请输入学号，如：2015102210"></Input>
           </FormItem>
           <FormItem label="部长名字：">
             <Input v-model="formItem.ministerUserName" disabled></Input>
@@ -68,6 +81,7 @@
         pageNo1:1,
         assnInfo: [],       // 社团列表
         pageNo:1,
+        pageNo2: 1,
         total: 0,
         current: 1,
         departList: [],   //部门列表
@@ -87,24 +101,50 @@
         modal1: false,
         modalDel: false,
         departNum: 0,
+        departMember: [],
+        modalMem: false,
+        access: [],
+        type: 4,
         columns4: [
           {
             title: '序号',
             type: 'index',
             align: 'center',
+            width: 80,
           },
           {
             title: '部门名称',
             key: 'departmentName',
+            align: 'center',
           },
           {
             title: '部长',
-            key: 'ministerUserName'
+            key: 'ministerUserName',
+            align: 'center',
           },
           {
             title: '部门简介',
             key: 'content',
             width: 440,
+            align: 'center',
+          },
+          {
+            title: '部门成员',
+            align: 'center',
+            render: (h,params) => {
+              return h('div',[
+                h('p', {
+                  style: {
+                    color: 'blue'
+                  },
+                  on: {
+                    click: () => {
+                      this.getDepartMem(params.row.id,params.row.associationId);
+                    }
+                  }
+                }, '查看'),
+              ])
+            }
           },
           {
             title: '操作',
@@ -156,19 +196,24 @@
     },
 
     created() {
-      this.identityId = this.$store.state.loginInfo.identityId;
-      if(this.identityId === 0) {
+      this.access = JSON.parse(localStorage.getItem('access'));
+      this.type = parseInt(localStorage.getItem('type'));
+      if(this.type === 1) {
+        this.associationId = this.access[0].associationId;
+        this.getDepartList();
+      } else if(this.type === 0) {
         this.associationId = null;
-      } else {
-        let assnBasicList = this.$store.state.loginInfo.assnBasicList;
-        assnBasicList.map(item => {
-          if(item.job === '会长' || item.job === '部长') {
-            this.associationId =  item.associationId;
-            this.getDepartList();
-          }
-        });
+        this.getAssnInfo();
+      } else if(this.type === 2) {
+        this.associationId = this.access[0].associationId;
+        this.access.map(item => {
+          this.sortAssnList.push({
+            value: item.associationId,
+            label: item.associationName,
+          })
+        })
+        this.getDepartList();
       }
-      this.getAssnInfo();
     },
 
     methods: {
@@ -210,6 +255,11 @@
           })
       },
 
+      searchDepart() {
+        this.pageNo = 1;
+        this.getDepartList();
+      },
+
       //获取部门列表
       getDepartList() {
         let that = this;
@@ -219,7 +269,6 @@
           pageNo: that.pageNo,
           pageSize: 10,
         };
-        console.log(params)
         let data = null;
         that
           .$http(url, params, data, 'get')
@@ -236,9 +285,41 @@
           })
       },
 
+      getDepartMem(departmentId, associationId) {
+        let that = this;
+        let url = that.BaseConfig + '/selectDepartmentUserAll';
+        let params = {
+          associationId: associationId,
+          departmentId: departmentId,
+          pageNo: that.pageNo2,
+          pageSize: 10,
+        };
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            data = res.data;
+            if(data.retCode === 0) {
+              that.departMember = data.data.data;
+              that.modalMem = true;
+              let total = data.data.total;
+              if(that.departMember.length <total) {
+                that.pageNo2++;
+                that.getDepartMem();
+              }
+            } else {
+              that.$Message.error(data.retMsg);
+            }
+          })
+          .catch(err => {
+            that.$Message.error('请求错误');
+          })
+      },
+
       //进入-添加部门
       addDepart() {
-        if(this.associationId === null ||this.associationId === 'undefined') {
+        console.log(this.associationId)
+        if(this.associationId === null ||this.associationId === undefined || this.associationId === '') {
           this.$Message.warning('请先选择社团');
         } else {
           this.$router.push({
@@ -268,6 +349,33 @@
           })
           .catch(err => {
             that.$Message.error('请求错误');
+          })
+      },
+      //查找部门是否有次用户
+      searchUsers() {
+        let that = this;
+        let url = that.BaseConfig + '/selectDepartmentUserAll';
+        let params = {
+          associationId: that.formItem.associationId,
+          departmentId: that.formItem.id,
+          userName: that.userName,
+          pageNo: 1,
+          pageSize: 10,
+        };
+        let data = null;
+        that
+          .$http(url, params, data, 'get')
+          .then(res => {
+            data = res.data;
+            if(data.retCode === 0) {
+              that.searchInfo = data.data.data;
+              console.log(that.searchInfo)
+              that.formItem.ministerUserName = that.searchInfo[0].name;
+              that.formItem.ministerUserId = that.searchInfo[0].userId;
+            }
+          })
+          .catch(err => {
+            that.$Message.error('该社团无此人！');
           })
       },
 
@@ -345,8 +453,10 @@
 
 <style lang="less" scoped>
   .assn-manage {
-    margin-bottom: 20px;
+    margin: 10px 0;
     display: flex;
-    justify-content: space-between;
+    button {
+      margin-right: 15px;
+    }
   }
 </style>

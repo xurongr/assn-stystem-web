@@ -6,7 +6,7 @@
       </FormItem>
       <FormItem label="社团负责人：">
         <Input v-model="name" disabled></Input>
-        <RouterLink to="" style="color: blue;font-size: 14px">->变更社团负责人</RouterLink>
+        <RouterLink to="/index/identityChange" style="color: blue;font-size: 14px">->变更社团负责人</RouterLink>
         <!--<Input v-model="name" @on-blur="searchUser"></Input>-->
         <!--<Modal-->
           <!--v-model="modal2"-->
