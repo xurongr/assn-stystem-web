@@ -12,7 +12,7 @@
       created() {
           let associationId = this.$route.query.associationId;
           this.$router.push({
-            path:'/index/web/assnView',
+            path:'/index/web/assnViews',
             query: {
               associationId: associationId,
             }

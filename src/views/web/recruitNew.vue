@@ -15,13 +15,13 @@
         <div class="center">
           <Carousel autoplay v-model="picNum" loop>
             <CarouselItem>
-              <div><img src="./img/banner1.png" /></div>
+              <div><img src="./img/11.jpg" /></div>
             </CarouselItem>
+            <!--<CarouselItem>-->
+              <!--<div><img src="./img/banner2.jpeg" /></div>-->
+            <!--</CarouselItem>-->
             <CarouselItem>
-              <div><img src="./img/banner2.jpeg" /></div>
-            </CarouselItem>
-            <CarouselItem>
-              <div><img src="./img/banner3.jpg" /></div>
+              <div><img src="./img/13.jpg" /></div>
             </CarouselItem>
           </Carousel>
         </div>

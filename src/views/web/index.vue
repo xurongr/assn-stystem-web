@@ -17,7 +17,6 @@
                  </a>
                   <DropdownMenu slot="list">
                      <DropdownItem><span @click="editModal = true">我的信息</span></DropdownItem>
-                     <DropdownItem><span>我的申请</span></DropdownItem>
                      <DropdownItem><span @click="modal1 = true">修改密码</span></DropdownItem>
                   </DropdownMenu>
               </Dropdown>
@@ -39,7 +38,9 @@
           </li>
           <Router-link to="/index/web/recruitNew"><li>社团招新</li></Router-link>
           <Router-link to="/index/web/createAssnApply"><li>创社须知</li></Router-link>
-          <li @click="goSystem" v-if="type !== 0">后台管理</li>
+          <Router-link to="/index/web/readMe"><li>关于Me</li></Router-link>
+          <li @click="goSystem" v-if="type === 1">后台管理</li>
+          <li @click="goSystem" v-if="type === 2">后台管理</li>
         </ul>
       </div>
     </div>
@@ -65,13 +66,13 @@
             <Input v-model="editPwd.userName" disabled></Input>
           </FormItem>
           <FormItem label="旧密码" prop="oldPwd">
-            <Input v-model="editPwd.oldPwd"></Input>
+            <Input type="password" v-model="editPwd.oldPwd"></Input>
           </FormItem>
           <FormItem label="身份证号" prop="idCard">
-            <Input v-model="editPwd.idCard" />
+            <Input type="password" v-model="editPwd.idCard" @on-change="yanzhen" />
           </FormItem>
           <FormItem label="新密码" prop="newPwd">
-            <Input v-model="editPwd.newPwd" />
+            <Input type="password" v-model="editPwd.newPwd" />
           </FormItem>
         </Form>
       </div>
@@ -177,7 +178,6 @@
 
       created() {
         this.loginInfo = JSON.parse(localStorage.getItem('loginInfo'));
-        console.log(this.loginInfo)
         this.formValidate = this.loginInfo;
         this.access = JSON.parse(localStorage.getItem('access'));
         this.type = parseInt(localStorage.getItem('type'));
@@ -190,6 +190,10 @@
             this.$router.push({
               path: '/index',
             })
+          },
+
+          yanzhen() {
+
           },
 
           //获取社团列表
@@ -233,7 +237,19 @@
           ok() {
             let that = this;
             let url = that.BaseConfig + '/updateUser';
-            let data = that.formValidate;
+            let data = {
+              grade: that.formValidate.grade,
+              id:  that.formValidate.id,
+              idCard:  that.formValidate.idCard,
+              major: that.formValidate.major,
+              name:  that.formValidate.name,
+              pwd:  that.formValidate.pwd,
+              sex:  that.formValidate.sex,
+              telNumber:  that.formValidate.telNumber,
+              userImg:  that.formValidate.userImg,
+              userName: that.formValidate.userName,
+              age:  that.formValidate.age,
+            };
             that
               .$http(url, '', data, 'post')
               .then(res => {
@@ -310,10 +326,14 @@
               .then(res => {
                 data = res.data;
                 if(data.retCode ===0) {
-                  that.$Message.success('密码修改成功,请重新登录');
-                  setInterval(()=> {
-                    that.$router.push({name: 'login'})
-                  },3000)
+                  that.$Message.success('密码修改成功,请退出系统，重新登录');
+                  this.modal1 = false;
+                  that. editPwd = {
+                      userName: JSON.parse(localStorage.getItem('loginInfo')).userName,
+                      oldPwd: '',
+                      idCard: '',
+                      newPwd: '',
+                  };
                 } else {
                   that.$Message.warning(data.retMsg)
                 }

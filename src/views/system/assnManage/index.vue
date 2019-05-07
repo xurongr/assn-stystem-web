@@ -81,8 +81,9 @@
         assnSeclect: [],
         columns4: [
           {
-            type: 'selection',
-            width: 60,
+            title: '序号',
+            type: 'index',
+            width: 80,
             align: 'center'
           },
           {
@@ -154,7 +155,7 @@
                   props: {
                     type: 'error',
                     size: 'small',
-                    disabled: this.disable
+                    // disabled: this.disable
                   },
                   on: {
                     click: () => {
@@ -162,6 +163,7 @@
                       this.associationName = params.row.associationName;
                       this.getAssnCount(params.row.id);
                       this.modal1 = true;
+                      console.log(params.row)
                     }
                   }
                 }, this.type === 0? '解散': '解散申请')

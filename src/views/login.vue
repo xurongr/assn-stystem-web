@@ -5,7 +5,7 @@
         <p>用户名：<Input v-model="userName" placeholder="请输入账号" style="width: 172px" /></p>
         <p>密&nbsp;&nbsp; 码：<Input v-model="pwd" type="password" placeholder="请输入密码" style="width: 172px" /></p>
         <div class="login-btn"><Button type="primary" style="width: 100%" @click="login">登录</Button></div>
-        <p><span style="color: #2d78f4" @click="goRegister">免费注册</span><span>忘记密码？</span></p>
+        <p><span style="color:blue;" @click="goReSet">忘记密码？</span></p>
       </div>
     </div>
 </template>
@@ -46,12 +46,14 @@
                       })
                     }
                   })
-                  if(access.length === 0) {
+                  if(access.length === 0 && assnBasicList.length === 0) {
                     localStorage.setItem('type', JSON.stringify(0));
                   } else if(access.length === 1){
                     localStorage.setItem('type', JSON.stringify(1));
-                  } else{
+                  } else if(access.length > 1){
                     localStorage.setItem('type', JSON.stringify(2));
+                  } else if(access.length === 0 && assnBasicList.length !== 0) {
+                    localStorage.setItem('type', JSON.stringify(3));
                   }
                   localStorage.setItem('access', JSON.stringify(access));
                   if(that.userName === 'admin') {
@@ -72,11 +74,10 @@
               })
           },
 
-          goRegister() {
-            this.$router.push({
-              name: 'register'
-            })
+          goReSet() {
+            this.$router.push({name: 'resetPwd'})
           },
+
         }
     }
 </script>

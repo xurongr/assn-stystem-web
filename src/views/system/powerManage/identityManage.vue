@@ -50,33 +50,33 @@
             title: '身份权限',
             key: 'level'
           },
-          {
-            title: '操作',
-            key: 'action',
-            width: 170,
-            align: 'center',
-            render: (h, params) => {
-              return h('div', [
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.identityName = params.row.identityName;
-                      this.level = params.row.level;
-                      this.id = params.row.id;
-                      this.modal2 = true;
-                    }
-                  }
-                }, '修改'),
-              ]);
-            }
-          }
+          // {
+          //   title: '操作',
+          //   key: 'action',
+          //   width: 170,
+          //   align: 'center',
+          //   render: (h, params) => {
+          //     return h('div', [
+          //       h('Button', {
+          //         props: {
+          //           type: 'primary',
+          //           size: 'small'
+          //         },
+          //         style: {
+          //           marginRight: '5px'
+          //         },
+          //         on: {
+          //           click: () => {
+          //             this.identityName = params.row.identityName;
+          //             this.level = params.row.level;
+          //             this.id = params.row.id;
+          //             this.modal2 = true;
+          //           }
+          //         }
+          //       }, '修改'),
+          //     ]);
+          //   }
+          // }
         ],
         pageNo: 1,
         total: 0,

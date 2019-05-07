@@ -83,6 +83,7 @@
             key: 'job',
             align: 'center',
             render: (h,params) => {
+              console.log(params.row)
               return h('p',params.row.job === null ? '社团成员' : params.row.job)
             }
           },

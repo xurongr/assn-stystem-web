@@ -5,7 +5,7 @@
           <Input v-model="formItem.departmentName" ></Input>
         </FormItem>
         <FormItem label="部长学号：">
-          <Input v-model="userName" @on-change="searchUser" placeholder="请输入学号，如：2015102210"></Input>
+          <Input v-model="userName" @on-blur="searchUser" placeholder="请输入学号，如：2015102210"></Input>
         </FormItem>
         <FormItem label="部长名字：">
           <Input v-model="formItem.ministerUserName" disabled></Input>
@@ -54,6 +54,11 @@
           searchUser() {
             let that = this;
             let url = that.BaseConfig + '/selectAssociationUserAll';
+            if (that.userName === '') {
+              that.formItem.ministerUserName = '';
+              that.formItem.ministerUserId = null;
+              return;
+            }
             let params = {
               associationId: that.formItem.associationId,
               userName: that.userName,
@@ -66,13 +71,34 @@
               .then(res => {
                 data = res.data;
                 if(data.retCode === 0) {
+                  console.log(data)
                   that.searchInfo = data.data.data;
                   that.formItem.ministerUserName = that.searchInfo[0].name;
-                  that.formItem.ministerUserId = that.searchInfo[0].id;
+                  that.formItem.ministerUserId = that.searchInfo[0].userId;
+                  that.getUser(that.searchInfo[0].userId);
                 }
               })
               .catch(err => {
-                that.$Message.error('社团无此人！ 2 ');
+                that.$Message.error('社团无此人！ ');
+              })
+          },
+
+          getUser(id) {
+            let that = this;
+            let url = that.BaseConfig + '/selectByUserId';
+            let params = {
+              UserId: id,
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode === 0) {
+                 that.userName = data.data.userName;
+                }
+              })
+              .catch(err => {
               })
           },
 
@@ -88,7 +114,12 @@
                 console.log('--添加部门成功--',res)
                if(res.data.retCode === 0) {
                  that.$Message.success('添加部门成功！');
-                 that.$router.push({name: 'departManage'})
+                 that.$router.push({
+                   path: '/index/departManage',
+                   query: {
+                     id: this.formItem.associationId
+                   }
+                 })
                }
               })
               .catch(err => {

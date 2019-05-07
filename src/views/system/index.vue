@@ -46,7 +46,7 @@
             <Router-link to="/index/identityChange">
               <MenuItem name="4-2">更换社团管理员</MenuItem>
             </Router-link>
-            <Router-link to="/index/applyManage/dismissApply">
+            <Router-link to="/index/applyManage/dismissApply" v-if="type === 0">
               <MenuItem name="4-3">解散申请</MenuItem>
             </Router-link>
           </Submenu>
@@ -56,8 +56,8 @@
         <Header :style="{padding: '0 16px'}" class="layout-header-bar" style="display: flex;justify-content: space-between;">
           <p><Router-link to="/index/web" style="color: #444" v-if="type !== 0">返回前端</Router-link></p>
           <div style="display: flex">
-            <p>欢迎登陆 | {{loginInfo.name}}{{type === 0 ? '（系统管理员）': '（社团管理员）'}}</p>
-            <p style="padding: 0 12px"><img :src="loginInfo.userImg" style="width: 40px;height: 40px;border-radius: 50%;margin-top: 8px"></p>
+            <p style="padding: 0 12px">欢迎登陆 | {{loginInfo.name}}{{type === 0 ? '（系统管理员）': '（社团管理员）'}}</p>
+            <!--<p style="padding: 0 12px"><img :src="loginInfo.userImg" style="width: 40px;height: 40px;border-radius: 50%;margin-top: 8px"></p>-->
             <p @click="exitSystem">退出系统</p>
           </div>
         </Header>

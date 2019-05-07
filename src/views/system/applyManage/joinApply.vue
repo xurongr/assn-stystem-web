@@ -137,7 +137,8 @@
                       h('Button', {
                         props: {
                           type: 'primary',
-                          size: 'small'
+                          size: 'small',
+                          disabled: params.row.state === 0 ?false:'true'
                         },
                         style: {
                           marginRight: '5px'
@@ -151,7 +152,8 @@
                       h('Button', {
                         props: {
                           type: 'success',
-                          size: 'small'
+                          size: 'small',
+                          disabled: params.row.state === 0 ?false:'true'
                         },
                         style: {
                           marginRight: '5px'
@@ -184,8 +186,13 @@
           this.access = JSON.parse(localStorage.getItem('access'));
           this.type = parseInt(localStorage.getItem('type'));
           this.userId = JSON.parse(localStorage.getItem('loginInfo')).id;
-          this.getAssnInfo();
-          this.getApplyList();
+          if(this.type !== 1) {
+            this.getAssnInfo();
+            this.getApplyList();
+          } else {
+            this.apply.associationId = this.access[0].associationId;
+            this.getApplyList();
+          }
         },
 
         methods: {

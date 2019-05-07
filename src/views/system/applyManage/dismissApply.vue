@@ -125,7 +125,8 @@
                 h('Button', {
                   props: {
                     type: 'primary',
-                    size: 'small'
+                    size: 'small',
+                    disabled: params.row.state === 0 ?false:'true'
                   },
                   style: {
                     marginRight: '5px'
@@ -139,7 +140,8 @@
                 h('Button', {
                   props: {
                     type: 'success',
-                    size: 'small'
+                    size: 'small',
+                    disabled: params.row.state === 0 ?false:'true'
                   },
                   style: {
                     marginRight: '5px'
@@ -195,8 +197,9 @@
           .$http(url, params, data, 'get')
           .then(res => {
             data = res.data;
-            console.log(data)
             if(data.retCode ===0) {
+              that.$Message.success('审核完成！');
+              that.searchUser();
             } else {
               that.$Message.warning(data.retMsg);
             }

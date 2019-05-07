@@ -5,13 +5,13 @@
           <div class="imgUrl">
             <Carousel autoplay v-model="picNum" loop>
               <CarouselItem>
-                <div><img src="./img/sy2.jpg" /></div>
+                <div><img src="./img/18.jpg" /></div>
               </CarouselItem>
               <CarouselItem>
-                <div><img src="./img/1.jpg" /></div>
+                <div><img src="./img/19.jpg" /></div>
               </CarouselItem>
               <CarouselItem>
-                <div><img src="./img/banner2.jpeg" /></div>
+                <div><img src="./img/20.jpg" /></div>
               </CarouselItem>
             </Carousel>
           </div>
@@ -39,20 +39,13 @@
             <div class="news">
               <div class="news-title">
                 <p>社团活动</p>
-                <p><a href="">更多>></a></p>
+                <p><a href="javascript:(0)" @click="goNews(1,null)">更多>></a></p>
               </div>
               <div class="news-info">
                 <ul>
-                  <li><p><span>摄影活动part1</span><span>2019-05-10</span></p></li>
-                  <li><p><span>计算机协会义务维修</span><span>2019-05-07</span></p></li>
-                  <li><p><span>“摄出自我”活动</span><span>2019-05-01</span></p></li>
-                  <li><p><span>志愿者活动</span><span>2019-04-17</span></p></li>
-                  <li><p><span>戚继光公园志愿活动</span><span>2019-04-14</span></p></li>
-                  <li><p><span>实践活动1</span><span>2019-04-12</span></p></li>
-                  <li><p><span>南继山志愿活动</span><span>2019-04-12</span></p></li>
-                  <li><p><span>4义务维修</span><span>2019-04-11</span></p></li>
-                  <li><p><span>2月义维修</span><span>2019-03-10</span></p></li>
-                  <li><p><span>塔山自愿服务</span><span>2019-03-10</span></p></li>
+                  <li v-for="item in activityList.slice(0,10)" :key="item.id">
+                    <p @click="goNews(1,item.id)"><span>{{item.activityName}}</span><span>{{item.startTime}}</span></p>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -66,35 +59,21 @@
               <p><Router-link to="/index/web/morePage">更多>></Router-link></p>
             </div>
             <div class="views">
-              <div class="views-detail">
-                <img src="./img/tu2.jpg" alt="">
-                <p>义务维修</p>
-              </div>
-              <div class="views-detail">
-                <img src="./img/tu3.jpg" alt="">
-                <p>义务维修</p>
-              </div>
-              <div class="views-detail">
-                <img src="./img/tu2.jpg" alt="">
-                <p>义务维修</p>
-              </div>
-              <div class="views-detail">
-                <img src="./img/tu1.jpg" alt="">
-                <p>义务维修</p>
-              </div>
-              <div class="views-detail">
-                <img src="./img/tu2.jpg" alt="">
-                <p>义务维修</p>
-              </div>
-              <div class="views-detail">
-                <img src="./img/tu1.jpg" alt="">
-                <p>义务维修</p>
+              <div class="views-detail" v-for="item in activityList.slice(0,6)" :key="item.id" @click="goNews(1,item.id,item.associationId)">
+                <span v-if="item.image"><img :src="item.image"></span>
+                <span v-if="!item.image"><img src="./img/banner3.jpg"></span>
+                <p>{{item.activityName}}</p>
               </div>
             </div>
           </div>
           <div class="cont-tool">
             <div class="cont-tool-title">
               <p>常用链接</p>
+            </div>
+            <div class="cont-tool-cont">
+              <p>入团申请</p>
+              <p>咨询创社</p>
+              <p>联系管理员</p>
             </div>
           </div>
         </div>
@@ -108,11 +87,13 @@
             return {
               picNum: 0,   //轮播图片播放索引
               announceInfo: [],
+              activityList: [],
             }
         },
 
       created() {
           this.getAnnouceInfo();
+          this.getActivityList();
       },
 
         methods: {
@@ -140,6 +121,40 @@
               .catch(err => {
                 that.$Message.error('请求错误');
               })
+          },
+
+          //获取活动列表信息
+          getActivityList() {
+            let that = this;
+            let url = that.BaseConfig + '/selectAssnAAll';
+            let params = {
+              pageNo: 1,
+              pageSize: 10,
+            };
+            let data = null;
+            that
+              .$http(url, params , data, 'GET')
+              .then(res =>{
+                if(res.data.retCode === 0) {
+                  that.activityList = res.data.data.data;
+                  console.log('--活动列表--',that.activityList)
+                } else {
+                  that.$Message.error(res.data.retMsg);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          goNews(flag, id) {
+            this.$router.push({
+              path: '/index/web/news',
+              query: {
+                flag: flag,
+                activityId: id,
+              }
+            })
           },
         }
     }
@@ -258,9 +273,20 @@
           color: #444;
           margin-top: -13px;
           border-bottom: 4px solid #081bf3;
+          text-align: right;
           p {
             font-weight: 600;
             font-size: 22px;
+          }
+        }
+        &-cont {
+          text-align: right;
+          p {
+            font-size: 30px;
+            font-weight: 600;
+            padding: 10px 0;
+            color: #2b81f3;
+            border-bottom: 2px dashed #ccc;
           }
         }
       }
@@ -332,6 +358,10 @@
         margin-right: 10px;
         a {
           color: #3765FF;
+          &:hover {
+            color: darkblue;
+            font-weight: 600;
+          }
         }
       }
     }

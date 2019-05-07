@@ -6,12 +6,12 @@
         </FormItem>
         <!--所属社团，负责人为该社团下的成员-->
         <FormItem label="所属社团：">
-          <Select v-model="formItem.associationId" style="width:200px">
+          <Select v-model="formItem.associationId" style="width:200px" @on-open-change="choiceUser">
             <Option v-for="item in searchAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
         <FormItem label="负责人：">
-          <Select v-model="formItem.userId" style="width:200px" @on-open-change="choiceUser">
+          <Select v-model="formItem.userId" style="width:200px">
             <Option v-for="item in userAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </FormItem>
@@ -177,6 +177,9 @@
             if(this.formItem.associationId === null) {
               this.$Message.warning('请选择所属社团');
             } else {
+              this.pageNo = 1;
+              this.userInfo = [];
+              this.userAssnList = [];
               this.getInfo();
             }
           },
@@ -184,7 +187,7 @@
           //获取用户列表
           getInfo() {
             let that = this;
-            let url = that.BaseConfig + '/selectUsersAll';
+            let url = that.BaseConfig + '/selectAssociationUserAll';
             let params = {
               associationId: that.formItem.associationId,
               pageNo: that.pageNo,
@@ -196,7 +199,7 @@
               .then(res => {
                 data = res.data;
                 if(data.retCode === 0) {
-                  that.userInfo = data.data.data;
+                  that.userInfo = that.userInfo.concat(data.data.data);
                   if(that.userInfo < data.data.total) {
                     that.pageNo++;
                     that.getInfo();
@@ -222,6 +225,10 @@
             that.formItem.startTime = new Date(date).getTime();
             let endDate = that.eDate.getFullYear() + '-' + (that.eDate.getMonth() + 1) + '-' + that.eDate.getDate()+ ' ' + that.eTime;
             that.formItem.endTime = new Date(endDate).getTime();
+            if(that.formItem.endTime < that.formItem.startTime) {
+              that.$Message.warning('活动结束时间必须在开始时间之后！');
+              return;
+            }
             let data = that.formItem;
             console.log(data)
             that

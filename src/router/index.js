@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import login from "@/views/login";  //登录页
-import register from "@/views/register";  //用户注册页
+import resetPwd from "@/views/resetPwd";  //找回密码
 
 import index from "@/views/system";                                      //后台管理首页
 import userIndex from "@/views/system/userManage/index";                 //用户管理
@@ -38,6 +38,7 @@ import editPassword from "@/views/system/editPassword";                  //修�
 import webIndex from "@/views/web/index";
 import homePage from "@/views/web/homePage";       //首页
 import assnView from "@/views/web/assnView";       //社团风采
+import assnViews from "@/views/web/assnViews";       //社团风采
 import blank from "@/views/web/blank";
 import recruitNew from "@/views/web/recruitNew";   //社团招新
 import applyTable from "@/views/web/applyTable";   //申请表格
@@ -45,6 +46,7 @@ import applyPage from "@/views/web/applyPage";   //申请表格
 import morePage from "@/views/web/morePage";       //更多
 import createAssnApply from "@/views/web/createAssnApply";   //建团申请
 import readMe from "@/views/web/readMe";   //建团申请
+import news from "@/views/web/news";   //建团申请
 
 import fileUpload from "@/views/components/file-upload"
 
@@ -66,11 +68,11 @@ export default new Router({
       }
     },
     {
-      path: '/register',
-      name: 'register',
-      component: register,
+      path: '/resetPwd',
+      name: 'resetPwd',
+      component: resetPwd,
       meta: {
-        title: '注册页',
+        title: '找回密码',
       }
     },
     {
@@ -274,9 +276,9 @@ export default new Router({
           }
         },
         {
-          path: '/index/web/assnView',
-          name: 'assnView',
-          component: assnView,
+          path: '/index/web/assnViews',
+          name: 'assnViews',
+          component: assnViews,
           meta: {
             title: '社团风采',
           }
@@ -300,6 +302,22 @@ export default new Router({
           component: applyTable,
           meta: {
             title: '申请表格'
+          }
+        },
+        {
+          path: '/index/web/readMe',
+          name: 'readMe',
+          component: readMe,
+          meta: {
+            title: '关于我'
+          }
+        },
+        {
+          path: '/index/web/news',
+          name: 'news',
+          component: news,
+          meta: {
+            title: '详情'
           }
         },
         {

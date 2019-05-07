@@ -11,19 +11,24 @@
             <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
           ->
-          原社团负责人:<Input v-model="oldName" style="width:150px"></Input>
-          ->更换后的负责人：<Input v-model="nowName" @on-blur="searchUser" placeholder="输入名字，如：蓉蓉" style="width:150px"></Input>
+          原社团负责人:<Input v-model="oldName" disabled style="width:150px"></Input>
+          ->更换后的负责人：<Input v-model="nowName" placeholder="输入名字，如：蓉蓉" style="width:150px"></Input>
           <Button type="primary" @click="changePresident">确认更换该会长</Button>
         </div>
         <div>
+          选择社团：
+          <Select v-model="associationId1" @on-change="getDepartList" style="width:150px;">
+            <Option v-for="item in sortAssnList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+           ->
           选择部门：
-          <Select v-model="departmentId" style="width:150px;margin-bottom: 10px" @on-change="getDepartOldName">
+          <Select v-model="departmentId" style="width:150px" @on-change="getDepartOldName">
             <Option v-for="item in departList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
-          ->
+            ->
           原部门负责人:<Input v-model="getDepartName" style="width:150px;"></Input>
-          ->更换后的负责人：<Input v-model="nowName" @on-blur="searchUser" placeholder="输入名字，如：蓉蓉" style="width:150px"></Input>
-          <Button type="success">确认更换该部长</Button>
+            ->更换后的负责人：<Input v-model="nowDepartName" placeholder="输入名字，如：蓉蓉" style="width:150px"></Input>
+          <Button type="success" @click="changeMinister">确认更换该部长</Button>
         </div>
       </div>
       <Modal
@@ -41,10 +46,12 @@
     export default {
         data() {
             return {
+              level: null,
               oldName: '',
               oldId: null,
               nowName: '',
               getDepartName: '',
+              nowDepartName: '',
               oldDepartId: null,
               assnInfo: [],
               sortAssnList: [],  //社团列表
@@ -53,12 +60,16 @@
               departInfo: [],
               departList: [],    //某社团下的部门列表
               departmentId: null,
+              associationId1: null,
+              flag: 1,
               pageNo1:1,
               modal2: false,
               closeM: false,
               searchInfo: [],
               userId: null,
               assnHInfo: [],
+              assnBInfo: [],
+              departmentName: '',
               columns4: [
                 {
                   title: '姓名',
@@ -92,13 +103,30 @@
         },
 
       created() {
-          this.getInfo();
-          this.getDepartList();
+          this.level = parseInt(localStorage.getItem('type'));
+          if(this.level === 0) {
+            this.getInfo();
+          } else if(this.level === 2) {
+            let userId = JSON.parse(localStorage.getItem('loginInfo')).id
+            this.getUserInfo(userId);
+          } else {
+            this.access = JSON.parse(localStorage.getItem('access'));
+            this.associationId = this.access[0].associationId;
+            this.associationId1 = this.access[0].associationId;
+            this.sortAssnList.push({
+              value: this.access[0].associationId,
+              label: this.access[0].associationName
+            })
+            this.getOldName();
+            this.getDepartList();
+          }
+
       },
 
         methods: {
           getOldName() {   //获取原社团负责人
             let that = this;
+            this.flag = 1;
             let url = that.BaseConfig + '/selectAssociationById';
             let params = {
               associationId: that.associationId,
@@ -134,6 +162,7 @@
                 if(data.retCode ===0) {
                   that.getDepartName = data.data.ministerUserName;
                   that.oldDepartId = data.data.ministerUserId;
+                  that.departmentName = data.data.departmentName;
                 } else {
                   that.$Message.error(data.retMsg);
                 }
@@ -177,18 +206,47 @@
               })
           },
 
-          addName(row) {
-            this.userId = row.userId;
-            this.nowName = row.name;
-            this.modal2 = false;
+          getUserInfo(id) {
+            let that = this;
+            let url = that.BaseConfig + '/selectAssociationAll';
+            let params = {
+              userId: id,
+              pageNo: that.pageNo,
+              pageSize: 10,
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.assnInfo = that.assnInfo.concat(data.data.data);
+                  if(that.assnInfo.length < data.data.total) {
+                    that.pageNo++;
+                    that.getInfo();
+                  }
+                  that.assnInfo.map(item => {
+                    that.sortAssnList.push({
+                      value: item.id,
+                      label: item.associationName,
+                    })
+                  })
+                } else {
+                  that.$Message.error(data.retMsg);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
           },
 
           //获取部门列表
           getDepartList() {
             let that = this;
+            this.flag = 2;
             let url = that.BaseConfig + '/selectDepartmentAll';
             let params = {
-              associationId: '',
+              associationId: that.associationId1,
               pageNo: that.pageNo1,
               pageSize: 10,
             };
@@ -219,7 +277,21 @@
               })
           },
 
-          //查找是否有次用户
+          //更换会长
+          changePresident() {
+            this.searchUser();
+          },
+
+          //更换部长（可以跨部门）
+          changeMinister() {
+            if(this.flag === 1) {
+              this.searchUser();
+            } else {
+              this.searchUser1();
+            }
+          },
+
+          //查找社团是否有次用户
           searchUser() {
             if(this.associationId === null) {
               this.$Message.warning('请先选择社团');
@@ -253,19 +325,53 @@
               })
           },
 
-          //更换会长
-          changePresident() {
-            this.getAssnInfo();   //获取该社团信息
-            // this.changeIdentity(this.userId,2);
-            // if(this.oldId !== null) {
-            //   this.changeIdentity(this.oldId,3);
-            // }
-            // this.changeJob(this.userId,'会长');
-            // if(this.oldDepartId !== null) {
-            //   this.changeJob(this.oldDepartId,'社团成员');
-            // }
+          searchUser1() {
+            if(this.associationId1 === null) {
+              this.$Message.warning('请先选择社团');
+              return;
+            }
+            let that = this;
+            let url = that.BaseConfig + '/selectAssociationUserAll';
+            let params = {
+              name: that.nowDepartName,
+              associationId: that.associationId1,
+              pageNo: 1,
+              pageSize: 10,
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode === 0) {
+                  that.searchInfo = data.data.data;
+                  if(that.searchInfo.length >0) {
+                    that.modal2 = true;
+                  } else {
+                    that.$Message.warning('无此用户，请重新输入');
+                  }
+                  console.log(that.searchInfo);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
           },
 
+          addName(row) {
+            if(this.flag === 1) {
+              this.userId = row.userId;
+              this.nowName = row.name;
+              this.modal2 = false;
+              this.getAssnInfo();
+            } else {
+              this.nowDepartName = row.name;
+              this.userId = row.userId;
+              this.modal2 = false;
+              this.getDeInfo();
+            }
+          },
+          //修改社团的负责人
           getAssnInfo() {
             let that = this;
             let url = that.BaseConfig + '/selectAssociationById';
@@ -288,22 +394,18 @@
                 that.$Message.error('请求错误');
               })
           },
-
           changeAssnH() {
             let that = this;
             let url = that.BaseConfig + '/updateAssociation';
             that.assnHInfo.userId = that.userId;
-            that.assnHInfo.createTime = new Date().getTime();
+            that.assnHInfo.createTime = new Date(that.assnHInfo.createTime).getTime();
             let data = that.assnHInfo;
             that
               .$http(url, '', data, 'post')
               .then(res => {
                 data = res.data;
                 if(data.retCode ===0) {
-                  this.changeJob(this.userId,'会长');
-                  if(this.oldId !== null) {
-                    this.changeJob(this.oldId,'社团成员');
-                  }
+                  this.changeIdentityJ();
                 }
               })
               .catch(err => {
@@ -311,13 +413,14 @@
               })
           },
 
-          changeIdentity(userId,num) {
+          //修改旧社长的社团身份
+          changeIdentityJ() {
             let that = this;
             let url = that.BaseConfig + '/updateUserIdentity';
             let params = {
               associationId: that.associationId,
-              userId: userId,
-              identityId: num
+              userId: that.oldId,
+              identityId: 3  //会长退休后变成普通用户
             };
             let data = null;
             that
@@ -325,7 +428,8 @@
               .then(res => {
                 data = res.data;
                 if(data.retCode ===0) {
-                  this.$Message.success('更换成功!');
+                  this.changeJobJ();
+                  this.moveUser();
                 }
               })
               .catch(err => {
@@ -333,13 +437,12 @@
               })
           },
 
-          changeJob(userId,job) {
+          moveUser() {
             let that = this;
-            let url = that.BaseConfig + '/updateJob';
+            let url = that.BaseConfig + '/deleteUserInAssociation';
             let params = {
               associationId: that.associationId,
-              userId: userId,
-              job : job
+              userId: that.oldId,
             };
             let data = null;
             that
@@ -347,7 +450,223 @@
               .then(res => {
                 data = res.data;
                 if(data.retCode ===0) {
-                  this.$Message.success('更换成功');
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //将旧负责人的职位进行更改
+          changeJobJ() {
+            let that = this;
+            let url = that.BaseConfig + '/updateJob';
+            let params = {
+              associationId: that.associationId,
+              userId: that.oldId,
+              job : '普通成员'
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.changeIdentity();
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //修改新社长的社团身份
+          changeIdentity() {
+            let that = this;
+            let url = that.BaseConfig + '/updateUserIdentity';
+            let params = {
+              associationId: that.associationId,
+              userId: that.userId,
+              identityId: 2
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  this.changeJob();
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //将新负责人的职位进行更改
+          changeJob() {
+            let that = this;
+            let url = that.BaseConfig + '/updateJob';
+            let params;
+            if(this.flag === 1) {
+              params = {
+                associationId: that.associationId,
+                userId: that.userId,
+                job : '会长'
+              };
+            } else {
+              params = {
+                associationId: that.associationId,
+                userId: that.userId,
+                job : '部长'
+              };
+            }
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.$Message.success('修改成功！')
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //获取部门信息
+          getDeInfo() {
+            let that = this;
+            let url = that.BaseConfig + '/selectDepartmentAll';
+            let params = {
+              associationId: that.associationId1,
+              departmentName: that.departmentName,
+              pageNo: 1,
+              pageSize: 10,
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.assnBInfo = data.data.data[0];
+                  this.changeDepartH();
+                } else {
+                  that.$Message.error(data.retMsg);
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+          changeDepartH() {
+            let that = this;
+            let url = that.BaseConfig + '/updateDepartment';
+            that.assnBInfo.ministerUserId = that.userId;
+            that.assnBInfo.createTime = new Date(that.assnBInfo.createTime).getTime();
+            let data = that.assnBInfo;
+            that
+              .$http(url, '', data, 'post')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  this.changeIdentityD();
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //修改旧部长的身份
+          changeIdentityD() {
+            let that = this;
+            let url = that.BaseConfig + '/updateUserIdentity';
+            if(that.oldDepartId === null) {
+              that.changeDdentity();
+            } else  {
+              let params = {
+                associationId: that.associationId1,
+                userId: that.oldDepartId,
+                identityId: 3  //部长变成社团成员
+              };
+              let data = null;
+              that
+                .$http(url, params, data, 'get')
+                .then(res => {
+                  data = res.data;
+                  if(data.retCode ===0) {
+                    this.changeJobD();
+                  }
+                })
+                .catch(err => {
+                  that.$Message.error('请求错误');
+                })
+            }
+          },
+
+          changeJobD() {
+            let that = this;
+            let url = that.BaseConfig + '/updateJob';
+            let params = {
+              associationId: that.associationId1,
+              userId: that.oldDepartId,
+              job : '社团成员'
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.changeDdentity();
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          //修改新部长的身份
+          changeDdentity() {
+            let that = this;
+            let url = that.BaseConfig + '/updateUserIdentity';
+            let params = {
+              associationId: that.associationId1,
+              userId: that.userId,
+              identityId: 2
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  this.changeDJob();
+                }
+              })
+              .catch(err => {
+                that.$Message.error('请求错误');
+              })
+          },
+
+          changeDJob() {
+            let that = this;
+            let url = that.BaseConfig + '/updateJob';
+            let params = {
+              associationId: that.associationId1,
+              userId: that.userId,
+              job : '部长'
+            };
+            let data = null;
+            that
+              .$http(url, params, data, 'get')
+              .then(res => {
+                data = res.data;
+                if(data.retCode ===0) {
+                  that.$Message.success('修改成功！')
                 }
               })
               .catch(err => {

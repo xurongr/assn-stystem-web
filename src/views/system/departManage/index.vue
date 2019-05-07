@@ -198,6 +198,10 @@
     created() {
       this.access = JSON.parse(localStorage.getItem('access'));
       this.type = parseInt(localStorage.getItem('type'));
+      if(this.$route.query.id !== undefined) {
+        this.associationId = this.$route.query.id ;
+        this.getDepartList();
+      }
       if(this.type === 1) {
         this.associationId = this.access[0].associationId;
         this.getDepartList();
